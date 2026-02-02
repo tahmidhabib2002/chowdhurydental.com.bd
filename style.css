@@ -1689,6 +1689,7 @@ p {
 .footer-bottom .highlight {
     color: #FF9800;
     font-weight: 600;
+    text-decoration: none;
 }
 
 /* Floating Buttons */
