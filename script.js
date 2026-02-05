@@ -1271,3 +1271,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
     
     document.body.appendChild(installButton);
 });
+
+// ওয়েবসাইট লোড হওয়ার 1 সেকেন্ড পর পপ-আপ দেখাবে
+window.onload = function() {
+    setTimeout(function() {
+        var popup = document.getElementById('offerPopup');
+        if(popup) {
+            popup.style.display = 'flex';
+        }
+    }, 1000); 
+};
+
+function closePopup() {
+    document.getElementById('offerPopup').style.display = 'none';
+}
