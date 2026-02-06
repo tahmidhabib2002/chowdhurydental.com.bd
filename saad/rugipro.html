@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile - Chowdhury Dental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --warning: #ffc107; --bg: #f0f2f5; }
+        body { font-family: 'Hind Siliguri', sans-serif; background: var(--bg); margin: 0; padding: 10px; color: #333; }
+        .container { max-width: 800px; margin: auto; }
+        
+        /* রুগীর তথ্য হাইলাইট - বড় ফন্ট */
+        .patient-header { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 8px solid var(--primary); text-align: center; }
+        .patient-header h1 { margin: 0; font-size: 32px; color: #111; }
+        .patient-header p { margin: 8px 0; font-size: 20px; color: #444; }
+        .highlight-phone { color: var(--primary); font-weight: bold; font-size: 22px !important; }
+
+        /* স্ট্যাটাস কার্ড */
+        .stats-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { padding: 20px; border-radius: 12px; color: white; text-align: center; font-size: 18px; font-weight: 600; }
+        .stat-card strong { font-size: 32px; display: block; margin-top: 5px; }
+
+        /* পেমেন্ট বক্স */
+        .payment-box { background: #fffde7; padding: 25px; border-radius: 15px; border: 2px dashed var(--warning); margin-bottom: 25px; text-align: center; }
+        input[type="number"] { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 18px; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-pay { background: var(--success); color: white; border: none; cursor: pointer; padding: 15px; font-weight: bold; width: 100%; font-size: 20px; border-radius: 10px; }
+
+        /* স্মার্ট মেসেজ সেন্টার */
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        textarea { width: 100%; height: 100px; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; box-sizing: border-box; resize: none; }
+        .hidden { display: none; }
+
+        /* ইতিহাস কার্ড */
+        .history-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 8px solid var(--primary); }
+        .history-card h4 { margin: 0; font-size: 24px; color: var(--primary); }
+        
+        .payment-log { background: #e8f5e9; padding: 12px; border-radius: 8px; margin-top: 10px; border: 1px solid #c8e6c9; }
+        .log-row { display: flex; justify-content: space-between; font-size: 15px; border-bottom: 1px solid #ddd; padding: 6px 0; }
+        .log-row:last-child { border-bottom: none; }
+
+        @media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="patient-header">
+        <h1 id="pNameDisp">রুগীর নাম লোড হচ্ছে...</h1>
+        <p id="pAddressDisp">ঠিকানা: ---</p>
+        <p id="pPhoneDisp" class="highlight-phone">মোবাইল: ---</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card" style="background:var(--primary);">সর্বমোট বিল <strong id="statTotal">০</strong></div>
+        <div class="stat-card" style="background:var(--success);">মোট জমা <strong id="statPaid">০</strong></div>
+        <div class="stat-card" style="background:var(--danger);">মোট বকেয়া <strong id="statDue">০</strong></div>
+    </div>
+
+    <div class="payment-box" id="payBox" style="display:none;">
+        <h3 style="margin-top:0;">বকেয়া জমা নিন</h3>
+        <input type="number" id="globalPayInput" placeholder="টাকার পরিমাণ লিখুন">
+        <button class="btn-pay" id="btnConfirmPay">টাকা জমা দিন</button>
+    </div>
+
+    <div class="card" style="margin-top:20px; border-top: 5px solid var(--warning);">
+        <h3 style="text-align:center;">স্মার্ট মেসেজ সেন্টার</h3>
+        <div style="background:#f1f8ff; padding:15px; border-radius:15px; margin-bottom:15px;">
+            <label><b>বকেয়া বিলের মেসেজ:</b></label>
+            <textarea id="dueMsgBody"></textarea>
+            <p id="dueCharCount" style="text-align:right; font-weight:bold; font-size:14px; margin:0;">০/৭০</p>
+            <button id="btnSendDue" class="btn-pay" style="background:var(--primary); margin-top:5px;">বকেয়া SMS পাঠান</button>
+        </div>
+
+        <div id="crownSmsBox" class="hidden" style="background:#fff3e0; padding:15px; border-radius:15px;">
+            <label><b>ক্যাপ/ক্রাউন মেসেজ:</b></label>
+            <textarea id="crownMsgBody"></textarea>
+            <button id="btnSendCrown" class="btn-pay" style="background:#673ab7; margin-top:5px;">ক্যাপ আসার SMS পাঠান</button>
+        </div>
+    </div>
+
+    <h2 style="margin-bottom:15px; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-top: 20px;">চিকিৎসা ও পেমেন্ট ইতিহাস</h2>
+    <div id="treatmentHistory"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAcUZZB43QcphmnIEPNGNilKTjbu2qncT8",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const phone = urlParams.get('phone');
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) { loadPatientData(); } 
+        else { window.location.href = "log.html"; }
+    });
+
+    async function loadPatientData() {
+    if(!phone) return;
+    try {
+        const docRef = doc(db, "patients", phone);
+        const snap = await getDoc(docRef);
+
+        if(snap.exists()){
+            const d = snap.data();
+            document.getElementById('pNameDisp').innerText = d.name;
+            document.getElementById('pAddressDisp').innerText = "ঠিকানা: " + (d.address || "দেওয়া নেই");
+            document.getElementById('pPhoneDisp').innerText = "মোবাইল: " + d.phone;
+
+            let tBill = 0, tPaid = 0, tDue = 0;
+            let hasCrown = false;
+            let listHtml = "";
+            const history = [...d.treatments]; // অরিজিনাল অর্ডার
+
+            // ১. আগের কাজের বকেয়া হিসাব করা (সর্বশেষ কাজ বাদে)
+            let previousDue = 0;
+            for(let i = 0; i < history.length - 1; i++) {
+                previousDue += Number(history[i].due || 0);
+            }
+
+            // ২. রিসেন্ট (সর্বশেষ) কাজের হিসাব
+            const recent = history[history.length - 1];
+            const recentBill = Number(recent.total || 0);
+            const recentPaid = Number(recent.paid || 0);
+            const recentDue = Number(recent.due || 0);
+            const totalPayableDue = previousDue + recentDue;
+
+            // ৩. ইতিহাস দেখানোর জন্য রিভার্স লুপ
+            history.reverse().forEach(t => {
+                const bill = Number(t.total) || 0;
+                const paid = Number(t.paid) || 0;
+                const due = Number(t.due) || 0;
+                tBill += bill; tPaid += paid; tDue += due;
+                if(t.hasCrown) hasCrown = true;
+
+                let payLogs = "";
+                if(t.paymentHistory) {
+                    payLogs = `<div class="payment-log"><strong>পেমেন্ট লগ:</strong>`;
+                    t.paymentHistory.forEach(log => {
+                        payLogs += `<div class="log-row"><span>📅 ${log.time}</span> <span><b>+ ${log.amount} ৳</b></span></div>`;
+                    });
+                    payLogs += `</div>`;
+                }
+
+                listHtml += `
+                    <div class="history-card" style="border-left-color: ${due > 0 ? '#dc3545' : '#28a745'}">
+                        <div style="display:flex; justify-content:space-between;">
+                            <h4>${t.problem}</h4>
+                            <strong style="font-size:22px;">${bill} ৳</strong>
+                        </div>
+                        <p style="color:#666;">তারিখ: ${t.date}</p>
+                        <p><strong>বিবরণ:</strong> ${t.solution || 'নেই'}</p>
+                        <div style="text-align:right;">
+                            <span style="font-weight:bold; color:${due > 0 ? '#dc3545' : '#28a745'};">
+                                ${due > 0 ? 'বাকি: ' + due : 'পরিশোধিত'}
+                            </span>
+                        </div>
+                        ${payLogs}
+                    </div>`;
+            });
+
+            document.getElementById('statTotal').innerText = tBill;
+            document.getElementById('statPaid').innerText = tPaid;
+            document.getElementById('statDue').innerText = tDue;
+            document.getElementById('treatmentHistory').innerHTML = listHtml;
+            
+            // ৪. স্মার্ট বকেয়া মেসেজ লজিক
+            let msg = "";
+            if(previousDue > 0) {
+                // আগের ডিউ থাকলে
+                msg = `সম্মানিত গ্রাহক, ${d.name} এর ${recent.problem} বিল:${recentBill}/-,আগের বকেয়া:${previousDue}/-,মোট বকেয়া:${totalPayableDue}/-। চৌধুরী ডেন্টাল`;
+            } else {
+                // আগের ডিউ না থাকলে
+                msg = `সম্মানিত গ্রাহক, ${d.name} এর ${recent.problem} বিল:${recentBill}/-,জমা:${recentPaid}/-,বকেয়া:${recentDue}/-। চৌধুরী ডেন্টাল`;
+            }
+
+            document.getElementById('dueMsgBody').value = msg;
+            document.getElementById('dueCharCount').innerText = msg.length + "/৭০";
+
+            if(hasCrown) {
+                document.getElementById('crownSmsBox').classList.remove('hidden');
+                document.getElementById('crownMsgBody').value = `সম্মানিত গ্রাহক,আপনার দাঁতের ক্যাপ তৈরি হয়েছে। শুক্রবার ব্যতীত চেম্বার চলাকালীন সময়ে এসে ক্যাপ লাগিয়ে নেওয়ার জন্য অনুরোধ করা গেলো। ধন্যবাদ,চৌধুরী ডেন্টাল লালমোহন। 01715586670`;
+            }
+
+            if(tDue > 0) document.getElementById('payBox').style.display = "block";
+        }
+    } catch (err) { console.error(err); }
+}
+    // বকেয়া জমা ও অটো টাইমস্ট্যাম্প
+    document.getElementById('btnConfirmPay').addEventListener('click', async () => {
+        let amount = Number(document.getElementById('globalPayInput').value);
+        if(!amount || amount <= 0) return alert("টাকার পরিমাণ লিখুন!");
+
+        try {
+            const docRef = doc(db, "patients", phone);
+            const snap = await getDoc(docRef);
+            let data = snap.data();
+            const currentTime = new Date().toLocaleString('bn-BD', { hour12: true });
+
+            data.treatments.forEach(t => {
+                if(amount > 0 && t.due > 0) {
+                    let canPay = Math.min(amount, t.due);
+                    if(!t.paymentHistory) t.paymentHistory = [];
+                    t.paymentHistory.push({ time: currentTime, amount: canPay });
+                    t.paid = Number(t.paid) + canPay;
+                    t.due = Number(t.total) - t.paid;
+                    amount -= canPay;
+                }
+            });
+
+            await setDoc(docRef, data);
+            alert("বকেয়া সফলভাবে জমা নেওয়া হয়েছে!");
+            location.reload();
+        } catch (err) { alert("সমস্যা হয়েছে!"); }
+    });
+
+    // SMS এপিআই কল
+    const sendSms = async (msg) => {
+        const apiKey = "e66426c4087b334647fb3ae9d933045e959dc885";
+        const url = `https://bulksmsdhaka.net/api/sendtext?apikey=${apiKey}&callerID=1234&number=${phone}&message=${encodeURIComponent(msg)}`;
+        await fetch(url, { mode: 'no-cors' });
+        alert("মেসেজ পাঠানো হয়েছে!");
+    };
+
+    document.getElementById('btnSendDue').onclick = () => sendSms(document.getElementById('dueMsgBody').value);
+    document.getElementById('btnSendCrown').onclick = () => sendSms(document.getElementById('crownMsgBody').value);
+
+</script>
+</body>
+</html>
