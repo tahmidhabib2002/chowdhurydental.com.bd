@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chowdhury Dental - Pro Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --warning: #ff9800; --bg: #f0f4f8; }
+        body { font-family: 'Hind Siliguri', sans-serif; background: var(--bg); margin: 0; padding: 15px; }
+        .container { max-width: 900px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        h3 { color: #2c3e50; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        button { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; margin: 5px 0; width: 100%; }
+        .btn-save { background: var(--primary); font-size: 18px; }
+        .btn-search { background: var(--success); }
+        .btn-copy { background: var(--warning); }
+        .crown-section { background: #fffde7; padding: 15px; border-radius: 10px; border: 1px dashed var(--warning); margin: 10px 0; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>চৌধুরী ডেন্টাল কেস ম্যানেজমেন্ট</h2>
+        <button id="logoutBtn" style="background:var(--danger); width:auto; padding: 5px 15px;">লগ আউট</button>
+    </div>
+
+    <div class="card">
+        <h3>রুগীর প্রোফাইল খুঁজুন</h3>
+        <input type="tel" id="searchPhone" placeholder="মোবাইল নাম্বার দিন...">
+        <button id="btnSearch" class="btn-search">প্রোফাইল ওপেন ও এডিট করুন</button>
+    </div>
+
+    <div class="card">
+        <h3>নতুন চিকিৎসা এন্ট্রি</h3>
+        <form id="patientForm">
+            <div class="grid">
+                <input type="text" id="pName" placeholder="রুগীর নাম" required>
+                <input type="number" id="pAge" placeholder="বয়স">
+            </div>
+            <input type="text" id="pAddress" placeholder="ঠিকানা/গ্রামের নাম">
+            
+            <input type="tel" id="pPhone" placeholder="মোবাইল নাম্বার (English)" required>
+            
+            <select id="pProblem">
+                <option value="রুট ক্যানাল">রুট ক্যানাল</option>
+                <option value="দাঁত তোলা">দাঁত তোলা</option>
+                <option value="স্কেলিং ও পলিশিং">স্কেলিং ও পলিশিং</option>
+                <option value="স্থায়ী ফিলিং">স্থায়ী ফিলিং</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+            <input type="number" id="treatmentCost" placeholder="চিকিৎসা খরচ (৳)">
+            <textarea id="pSolution" placeholder="সমাধানের বিবরণ"></textarea>
+
+            <label style="font-weight: bold; color: var(--warning); cursor: pointer;">
+                <input type="checkbox" id="hasCrown" style="width: auto;"> ডেন্টাল ক্রাউন/ক্যাপ আছে?
+            </label>
+
+            <div id="crownDiv" class="crown-section hidden">
+                <div class="grid">
+                    <select id="crownType">
+                        <option value="পোর্সেলিন">পোর্সেলিন ক্রাউন</option>
+                        <option value="জিরকোনিয়া মাল্টি লেয়ার">জিরকোনিয়া মাল্টি লেয়ার</option>
+                    </select>
+                    <input type="number" id="crownQty" placeholder="কয়টি ক্রাউন?">
+                </div>
+                <input type="number" id="crownPricePer" placeholder="প্রতিটির দাম (৳)">
+            </div>
+
+            <div class="grid" style="margin-top:15px; background: #e9ecef; padding: 10px; border-radius: 10px;">
+                <div>টোটাল বিল: <input type="number" id="pTotal" readonly value="0"></div>
+                <div>আজকে জমা: <input type="number" id="pPaid" value="0"></div>
+                <div>বকেয়া: <input type="number" id="pDue" readonly value="0"></div>
+            </div>
+
+            <button type="submit" class="btn-save">কাজ সেভ করুন</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <button id="btnCopy" class="btn-copy">সব রুগীর নাম্বার কপি করুন</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAZHvWbXuG596xjgteFbzOHWETXyid2WL8",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "log.html"; });
+
+    document.getElementById('hasCrown').addEventListener('change', function(e) {
+        document.getElementById('crownDiv').classList.toggle('hidden', !e.target.checked);
+        updateCalculations();
+    });
+
+    function updateCalculations() {
+        const tCost = parseFloat(document.getElementById('treatmentCost').value) || 0;
+        const hasCrn = document.getElementById('hasCrown').checked;
+        const cQty = parseFloat(document.getElementById('crownQty').value) || 0;
+        const cPrice = parseFloat(document.getElementById('crownPricePer').value) || 0;
+        const paid = parseFloat(document.getElementById('pPaid').value) || 0;
+
+        let total = tCost;
+        if(hasCrn) { total += (cQty * cPrice); }
+
+        document.getElementById('pTotal').value = total;
+        document.getElementById('pDue').value = total - paid;
+    }
+
+    ['treatmentCost', 'crownQty', 'crownPricePer', 'pPaid'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateCalculations);
+    });
+
+    document.getElementById('patientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('pPhone').value.trim();
+        const address = document.getElementById('pAddress').value; // ঠিকানা ভেরিয়েবল
+        const time = new Date().toLocaleString('bn-BD', { hour12: true });
+
+        const treatment = {
+            id: Date.now(),
+            date: time,
+            problem: document.getElementById('pProblem').value,
+            solution: document.getElementById('pSolution').value,
+            treatmentCost: document.getElementById('treatmentCost').value,
+            hasCrown: document.getElementById('hasCrown').checked,
+            crown: document.getElementById('hasCrown').checked ? document.getElementById('crownType').value : "নাই",
+            qty: document.getElementById('crownQty').value || 0,
+            total: document.getElementById('pTotal').value,
+            paid: document.getElementById('pPaid').value,
+            due: document.getElementById('pDue').value
+        };
+
+        try {
+            const ref = doc(db, "patients", phone);
+            const snap = await getDoc(ref);
+            if(snap.exists()){
+                // যদি পুরাতন রুগী হয়, তবে ঠিকানা আপডেট হবে এবং নতুন চিকিৎসা যুক্ত হবে
+                await updateDoc(ref, { 
+                    address: address, 
+                    treatments: arrayUnion(treatment) 
+                });
+            } else {
+                // নতুন রুগীর ক্ষেত্রে সব ডাটা সেভ হবে
+                await setDoc(ref, { 
+                    name: document.getElementById('pName').value, 
+                    age: document.getElementById('pAge').value, 
+                    address: address, 
+                    phone: phone, 
+                    treatments: [treatment] 
+                });
+            }
+            alert("সফলভাবে সেভ হয়েছে!");
+            e.target.reset();
+            document.getElementById('crownDiv').classList.add('hidden');
+            updateCalculations();
+        } catch (err) { alert("সেভ হয়নি!"); }
+    });
+
+    document.getElementById('btnSearch').onclick = async () => {
+        const phone = document.getElementById('searchPhone').value.trim();
+        if(!phone) return alert("নাম্বার দিন!");
+        const snap = await getDoc(doc(db, "patients", phone));
+        if (snap.exists()) window.location.href = `rugipro.html?phone=${phone}`;
+        else alert("রুগী পাওয়া যায়নি!");
+    };
+
+    document.getElementById('btnCopy').onclick = async () => {
+        const snaps = await getDocs(collection(db, "patients"));
+        let nums = snaps.docs.map(d => d.id).join(', ');
+        navigator.clipboard.writeText(nums);
+        alert("সব নাম্বার কপি হয়েছে!");
+    };
+
+    document.getElementById('logoutBtn').onclick = () => { signOut(auth); };
+</script>
+</body>
+</html>
