@@ -51,7 +51,7 @@
             background: linear-gradient(180deg, var(--purple) 0%, #5a32a3 100%);
             color: white;
             padding: 20px 0;
-            z-log: 1000;
+            z-index: 1000;
             transition: var(--transition);
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
@@ -426,7 +426,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-log: 2000;
+            z-index: 2000;
         }
 
         .modal-overlay.active {
@@ -682,7 +682,7 @@
                 position: fixed;
                 top: 20px;
                 left: 20px;
-                z-log: 1001;
+                z-index: 1001;
                 background: var(--purple);
                 color: white;
                 border: none;
@@ -744,7 +744,7 @@
             border-radius: 10px;
             color: white;
             font-weight: 600;
-            z-log: 2000;
+            z-index: 2000;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             animation: slideInRight 0.3s ease-out;
             max-width: 400px;
@@ -1267,7 +1267,8 @@
             query,
             where,
             orderBy,
-            serverTimestamp 
+            serverTimestamp,
+            deleteDoc
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Firebase Configuration
@@ -1275,7 +1276,7 @@
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
             projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+            storageBucket: "plasma-raceway-465016-v0.appspot.com",
             messagingSenderId: "23620370976",
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
@@ -1285,8 +1286,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Authentication Check (COMMENT OUT FOR TESTING)
-        /*
+        // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "log.html"; // Login page
@@ -1296,12 +1296,6 @@
                 loadPaymentHistory();
             }
         });
-        */
-       
-       // For testing without login
-       loadLabsData();
-       loadLabHistory();
-       loadPaymentHistory();
 
         // UI Elements
         const sidebar = document.getElementById('sidebar');
@@ -1550,7 +1544,7 @@
             
             let html = '';
             
-            allLabs.forEach((lab, log) => {
+            allLabs.forEach((lab, index) => {
                 // Calculate stats for this lab
                 const labJobs = allLabJobs.filter(job => job.labId === lab.id);
                 const totalJobs = labJobs.length;
@@ -1558,7 +1552,7 @@
                 
                 html += `
                     <tr>
-                        <td>${log + 1}</td>
+                        <td>${index + 1}</td>
                         <td><strong>${lab.name}</strong></td>
                         <td>${lab.phone}</td>
                         <td>${lab.address || '-'}</td>
@@ -1607,7 +1601,7 @@
             
             let html = '';
             
-            filteredJobs.forEach((job, log) => {
+            filteredJobs.forEach((job, index) => {
                 const lab = allLabs.find(l => l.id === job.labId);
                 const labName = lab ? lab.name : 'Unknown Lab';
                 
@@ -1624,7 +1618,7 @@
                 
                 html += `
                     <tr>
-                        <td>${log + 1}</td>
+                        <td>${index + 1}</td>
                         <td>${job.date ? new Date(job.date).toLocaleDateString('bn-BD') : '-'}</td>
                         <td><strong>${job.patientName || '-'}</strong><br><small>${job.patientPhone || '-'}</small></td>
                         <td>${labName}</td>
@@ -2097,7 +2091,6 @@
         // View Lab Details
         window.viewLabDetails = function(labId) {
             navigateToSection('lab-history', 'ল্যাব হিস্ট্রি');
-            // Here you could filter by lab if needed
         };
 
         // Modal Controls
@@ -2135,11 +2128,11 @@
                 });
             }
             
-            filteredJobs.forEach((job, log) => {
+            filteredJobs.forEach((job, index) => {
                 const lab = allLabs.find(l => l.id === job.labId);
                 const labName = lab ? lab.name : 'Unknown Lab';
                 
-                csvContent += `${log + 1},${job.date ? new Date(job.date).toLocaleDateString('bn-BD') : '-'},${job.patientName || '-'},${job.patientPhone || '-'},${labName},${job.crownType || '-'},${job.quantity || 1},${job.totalPrice || 0},${job.due || 0},${job.status || '-'}\n`;
+                csvContent += `${index + 1},${job.date ? new Date(job.date).toLocaleDateString('bn-BD') : '-'},${job.patientName || '-'},${job.patientPhone || '-'},${labName},${job.crownType || '-'},${job.quantity || 1},${job.totalPrice || 0},${job.due || 0},${job.status || '-'}\n`;
             });
             
             // Create download link

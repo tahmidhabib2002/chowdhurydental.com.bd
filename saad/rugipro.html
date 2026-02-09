@@ -655,12 +655,12 @@
             Timestamp
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration - আপনার প্রোজেক্টের কনফিগারেশন
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
             projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+            storageBucket: "plasma-raceway-465016-v0.appspot.com",
             messagingSenderId: "23620370976",
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
@@ -673,24 +673,19 @@
         // Get patient ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const profileId = urlParams.get('profileId');
-        const phone = urlParams.get('phone'); // পুরাতন সিস্টেমের জন্য
+        const phone = urlParams.get('phone');
 
         console.log("Profile ID:", profileId);
         console.log("Phone:", phone);
 
-        // Authentication Check (COMMENT OUT FOR TESTING)
-        /*
+        // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = "index.html";
+                window.location.href = "log.html";
             } else {
                 loadPatientData();
             }
         });
-        */
-       
-       // For testing without login
-       loadPatientData();
 
         // Load Patient Data
         async function loadPatientData() {
@@ -698,11 +693,8 @@
                 let patientDoc;
                 
                 if (profileId) {
-                    // নতুন সিস্টেম: profileId ব্যবহার (phone_name ফরম্যাট)
                     patientDoc = doc(db, "patients", profileId);
                 } else if (phone) {
-                    // পুরাতন সিস্টেম: শুধু phone ব্যবহার
-                    // প্রথমে patientPhones থেকে নাম খুঁজে বের করুন
                     const phoneRef = doc(db, "patientPhones", phone);
                     const phoneSnap = await getDoc(phoneRef);
                     
@@ -732,7 +724,6 @@
                     displayPatientData(patientData);
                 } else {
                     showMessage("রোগীর তথ্য পাওয়া যায়নি!", "error");
-                    // ফিরে যান
                     setTimeout(() => {
                         window.location.href = "amarghor.html";
                     }, 2000);
@@ -764,7 +755,6 @@
             if (patientData.treatments && patientData.treatments.length > 0) {
                 totalTreatments = patientData.treatments.length;
                 
-                // Sort treatments by date (newest first)
                 const sortedTreatments = [...patientData.treatments].sort((a, b) => {
                     return new Date(b.date || b.id) - new Date(a.date || a.id);
                 });
@@ -782,7 +772,6 @@
                         hasCrown = true;
                     }
 
-                    // Create treatment card
                     const isPaid = treatmentDue <= 0;
                     const cardClass = isPaid ? 'history-card paid' : 'history-card due';
                     
@@ -910,7 +899,6 @@
                 const text = textarea.value;
                 countElement.textContent = `${text.length}/160`;
                 
-                // Update on input
                 textarea.addEventListener('input', function() {
                     countElement.textContent = `${this.value.length}/160`;
                 });
@@ -951,7 +939,6 @@
                 if (profileId) {
                     patientDoc = doc(db, "patients", profileId);
                 } else if (phone) {
-                    // Find the correct document
                     const phoneRef = doc(db, "patientPhones", phone);
                     const phoneSnap = await getDoc(phoneRef);
                     if (phoneSnap.exists()) {
@@ -978,12 +965,10 @@
                 const patientData = patientSnap.data();
                 const treatments = patientData.treatments || [];
                 
-                // Payment time
                 const paymentTime = date 
                     ? new Date(date).toLocaleString('bn-BD', { hour12: true })
                     : new Date().toLocaleString('bn-BD', { hour12: true });
                 
-                // Create payment log
                 const paymentLog = {
                     time: paymentTime,
                     amount: amount,
@@ -991,7 +976,6 @@
                     date: new Date().toISOString()
                 };
 
-                // Update treatments with payment
                 let remainingAmount = amount;
                 const updatedTreatments = treatments.map(treatment => {
                     if (remainingAmount <= 0) return treatment;
@@ -1000,13 +984,11 @@
                     if (treatmentDue > 0) {
                         const paymentForThisTreatment = Math.min(remainingAmount, treatmentDue);
                         
-                        // Add payment history
                         if (!treatment.paymentHistory) {
                             treatment.paymentHistory = [];
                         }
                         treatment.paymentHistory.push(paymentLog);
                         
-                        // Update paid and due
                         treatment.paid = (parseFloat(treatment.paid || 0) + paymentForThisTreatment);
                         treatment.due = treatmentDue - paymentForThisTreatment;
                         
@@ -1015,7 +997,6 @@
                     return treatment;
                 });
 
-                // Update patient document
                 await updateDoc(patientDoc, {
                     treatments: updatedTreatments,
                     lastUpdated: new Date().toISOString()
@@ -1023,12 +1004,10 @@
 
                 showMessage("পেমেন্ট সফলভাবে জমা দেওয়া হয়েছে!", "success");
                 
-                // Reset form
                 document.getElementById('paymentAmount').value = '';
                 document.getElementById('paymentNotes').value = '';
                 document.getElementById('paymentSection').classList.remove('active');
                 
-                // Reload data
                 loadPatientData();
 
             } catch (error) {
@@ -1058,13 +1037,8 @@
                 const apiKey = "e66426c4087b334647fb3ae9d933045e959dc885";
                 const url = `https://bulksmsdhaka.net/api/sendtext?apikey=${apiKey}&callerID=ChowdhuryDental&number=${phoneNumber}&message=${encodeURIComponent(message)}`;
                 
-                // Note: This will fail due to CORS in browser, needs backend proxy
-                // await fetch(url, { mode: 'no-cors' });
-                
-                // For demo purposes, show success
                 showMessage(`${type} এসএমএস পাঠানো হয়েছে!`, "success");
                 
-                // Log SMS in console
                 console.log("SMS Details:", {
                     to: phoneNumber,
                     message: message,
@@ -1101,12 +1075,10 @@
 
         // Other Actions
         document.getElementById('addTreatmentBtn').addEventListener('click', () => {
-            // Redirect to add treatment page or open modal
             window.location.href = `amarghor.html#new-patient`;
         });
 
         document.getElementById('editPatientBtn').addEventListener('click', () => {
-            // Open edit modal or redirect
             alert("এডিট ফিচার শীঘ্রই আসছে!");
         });
 
@@ -1124,19 +1096,15 @@
 
         // Show Message Function
         function showMessage(message, type) {
-            // Remove existing messages
             const existingMessages = document.querySelectorAll('.message-box');
             existingMessages.forEach(msg => msg.remove());
             
-            // Create message element
             const messageEl = document.createElement('div');
             messageEl.className = `message-box message-${type}`;
             messageEl.textContent = message;
             
-            // Add to page
             document.body.appendChild(messageEl);
             
-            // Remove after 4 seconds
             setTimeout(() => {
                 messageEl.style.animation = 'slideInRight 0.3s ease-out reverse';
                 setTimeout(() => messageEl.remove(), 300);
