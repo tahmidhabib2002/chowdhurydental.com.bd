@@ -900,16 +900,90 @@
             </p>
         </div>
         
-        <div id="patient-history" class="form-container">
-            <h3 class="form-title">
-                <i class="fas fa-history"></i>
-                রোগীর হিস্ট্রি (শীঘ্রই আসছে)
-            </h3>
-            <p style="text-align: center; padding: 50px; color: var(--gray);">
-                <i class="fas fa-tools" style="font-size: 3rem; margin-bottom: 20px; display: block;"></i>
-                রোগীর হিস্ট্রি সেকশনটি ডেভেলপমেন্ট চলছে। শীঘ্রই উপলব্ধ হবে।
-            </p>
+       <div id="patient-history" class="form-container">
+    <h3 class="form-title">
+        <i class="fas fa-history"></i>
+        রোগীর হিস্ট্রি
+    </h3>
+    
+    <!-- Filter Section -->
+    <div class="search-section" style="margin-bottom: 25px;">
+        <h4 style="margin-bottom: 15px; color: var(--primary);">
+            <i class="fas fa-filter"></i>
+            ফিল্টার অপশন
+        </h4>
+        <div class="search-input-group">
+            <input type="tel" id="filterPhone" class="search-input" placeholder="মোবাইল নাম্বার দিয়ে ফিল্টার করুন...">
+            <input type="text" id="filterName" class="search-input" placeholder="নাম দিয়ে ফিল্টার করুন...">
+            <button id="btnFilterClear" class="btn btn-warning">
+                <i class="fas fa-times"></i>
+                ফিল্টার সরান
+            </button>
         </div>
+        <p style="color: var(--gray); margin-top: 10px;">
+            <i class="fas fa-info-circle"></i>
+            সর্বশেষ এন্ট্রি করা রোগী সবার উপরে দেখানো হবে। পুরনো রোগী খুঁজতে উপরে মোবাইল নাম্বার দিয়ে ফিল্টার করুন।
+        </p>
+    </div>
+    
+    <!-- Patient History Table -->
+    <div class="table-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h4 style="color: var(--primary);">
+                <i class="fas fa-users"></i>
+                মোট রোগী: <span id="totalPatients">0</span>
+            </h4>
+            <button id="btnRefreshHistory" class="btn btn-success">
+                <i class="fas fa-sync-alt"></i>
+                রিফ্রেশ করুন
+            </button>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white;">
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">ক্রমিক</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">মোবাইল নাম্বার</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">রোগীর নাম</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">সমস্যা</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">মোট টাকা</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">জমা টাকা</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">বকেয়া</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">সর্বশেষ তারিখ</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">কর্ম</th>
+                    </tr>
+                </thead>
+                <tbody id="patientHistoryTable">
+                    <!-- Data will be loaded here -->
+                    <tr>
+                        <td colspan="9" style="padding: 40px; text-align: center; color: var(--gray);">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                            রোগীর তথ্য লোড হচ্ছে...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+            <div style="color: var(--gray);">
+                পৃষ্ঠা <span id="currentPage">1</span> এর <span id="totalPages">1</span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="btnPrevPage" class="btn btn-primary" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                    আগের
+                </button>
+                <button id="btnNextPage" class="btn btn-primary" disabled>
+                    পরের
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
         
         <div id="lab-history" class="form-container">
             <h3 class="form-title">
@@ -951,166 +1025,185 @@
     </main>
 
     <!-- Firebase Script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            updateDoc, 
-            arrayUnion, 
-            collection, 
-            getDocs,
-            query,
-            where 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+   // Firebase Script (সংস্করণ 2)
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged, 
+        signOut 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc, 
+        updateDoc, 
+        arrayUnion, 
+        collection, 
+        getDocs 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
-            authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
-            projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.appspot.com",
-            messagingSenderId: "23620370976",
-            appId: "1:23620370976:web:3bb119ceb9e15608a33245"
-        };
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.appspot.com",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        // Authentication Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "log.html"; // Login page
-            }
-        });
-
-        // UI Elements
-        const sidebar = document.getElementById('sidebar');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainContent = document.getElementById('mainContent');
-        const pageTitle = document.getElementById('pageTitle');
-        const sections = document.querySelectorAll('.section, .form-container');
-        const navItems = document.querySelectorAll('.nav-item');
-        const dashboardCards = document.querySelectorAll('.dashboard-card');
-
-        // Mobile Menu Toggle
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Navigation
-        function navigateToSection(sectionId, sectionName) {
-            // Hide all sections
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show target section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            
-            // Update page title
-            pageTitle.textContent = sectionName || 'চৌধুরী ডেন্টাল কেস ম্যানেজমেন্ট';
-            
-            // Update active nav item
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-target') === sectionId) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Close mobile menu
-            sidebar.classList.remove('active');
+    // Authentication Check
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "log.html"; // Login page
         }
+    });
 
-        // Navigation Event Listeners
+    // UI Elements
+    const sidebar = document.getElementById('sidebar');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mainContent = document.getElementById('mainContent');
+    const pageTitle = document.getElementById('pageTitle');
+    const sections = document.querySelectorAll('.section, .form-container');
+    const navItems = document.querySelectorAll('.nav-item');
+    const dashboardCards = document.querySelectorAll('.dashboard-card');
+
+    // Patient History Variables
+    let allPatients = [];
+    let filteredPatients = [];
+    let currentPage = 1;
+    const patientsPerPage = 15;
+    let historyLoaded = false;
+
+    // Mobile Menu Toggle
+    mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+    });
+
+    // Navigation Function
+    function navigateToSection(sectionId, sectionName) {
+        // Hide all sections
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Show target section
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        
+        // Update page title
+        pageTitle.textContent = sectionName || 'চৌধুরী ডেন্টাল কেস ম্যানেজমেন্ট';
+        
+        // Update active nav item
         navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = item.getAttribute('data-target');
-                const itemName = item.querySelector('span').textContent;
-                navigateToSection(target, itemName);
-            });
+            item.classList.remove('active');
+            if (item.getAttribute('data-target') === sectionId) {
+                item.classList.add('active');
+            }
         });
+        
+        // Close mobile menu
+        sidebar.classList.remove('active');
+        
+        // Auto-load patient history when the section is opened
+        if (sectionId === 'patient-history' && !historyLoaded) {
+            setTimeout(() => {
+                loadPatientHistory();
+                historyLoaded = true;
+            }, 300);
+        }
+    }
 
-        // Dashboard Cards Event Listeners
-        dashboardCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const target = card.getAttribute('data-target');
-                navigateToSection(target, card.querySelector('.card-title').textContent);
-            });
+    // Navigation Event Listeners
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = item.getAttribute('data-target');
+            const itemName = item.querySelector('span').textContent;
+            navigateToSection(target, itemName);
         });
+    });
 
-        // Crown Toggle
-        document.getElementById('hasCrown').addEventListener('change', function(e) {
-            const crownDiv = document.getElementById('crownDiv');
-            if (e.target.checked) {
-                crownDiv.classList.add('active');
-            } else {
-                crownDiv.classList.remove('active');
-            }
-            updateCalculations();
+    // Dashboard Cards Event Listeners
+    dashboardCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const target = card.getAttribute('data-target');
+            navigateToSection(target, card.querySelector('.card-title').textContent);
         });
+    });
 
-        // Calculation Update Function
-        function updateCalculations() {
-            // Get values
-            const treatmentCost = parseFloat(document.getElementById('treatmentCost').value) || 0;
-            const hasCrown = document.getElementById('hasCrown').checked;
-            const crownQty = parseFloat(document.getElementById('crownQty').value) || 0;
-            const crownPrice = parseFloat(document.getElementById('crownPricePer').value) || 0;
-            const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
-            const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
-            const paid = parseFloat(document.getElementById('pPaid').value) || 0;
-            
-            // Calculate total
-            let total = treatmentCost;
-            if (hasCrown) {
-                total += (crownQty * crownPrice);
-            }
-            
-            // Calculate discount
-            let discount = discountAmount;
-            if (discountPercent > 0 && discountAmount === 0) {
-                discount = (total * discountPercent) / 100;
-            }
-            
-            // Ensure discount doesn't exceed total
-            if (discount > total) {
-                discount = total;
-                document.getElementById('discountAmount').value = discount;
-                document.getElementById('discountPercent').value = 0;
-            }
-            
-            // Calculate final amount and due
-            const finalAmount = total - discount;
-            const due = finalAmount - paid;
-            
-            // Update display
-            document.getElementById('displayTotal').textContent = `৳ ${total.toLocaleString('bn-BD')}`;
-            document.getElementById('displayDiscount').textContent = `৳ ${discount.toLocaleString('bn-BD')}`;
-            document.getElementById('displayFinal').textContent = `৳ ${finalAmount.toLocaleString('bn-BD')}`;
-            document.getElementById('displayDue').textContent = `৳ ${due.toLocaleString('bn-BD')}`;
-            
-            // Update form fields
+    // Crown Toggle
+    document.getElementById('hasCrown').addEventListener('change', function(e) {
+        const crownDiv = document.getElementById('crownDiv');
+        if (e.target.checked) {
+            crownDiv.classList.add('active');
+        } else {
+            crownDiv.classList.remove('active');
+        }
+        updateCalculations();
+    });
+
+    // Calculation Update Function
+    function updateCalculations() {
+        // Get values
+        const treatmentCost = parseFloat(document.getElementById('treatmentCost').value) || 0;
+        const hasCrown = document.getElementById('hasCrown').checked;
+        const crownQty = parseFloat(document.getElementById('crownQty').value) || 0;
+        const crownPrice = parseFloat(document.getElementById('crownPricePer').value) || 0;
+        const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
+        const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+        const paid = parseFloat(document.getElementById('pPaid').value) || 0;
+        
+        // Calculate total
+        let total = treatmentCost;
+        if (hasCrown) {
+            total += (crownQty * crownPrice);
+        }
+        
+        // Calculate discount
+        let discount = discountAmount;
+        if (discountPercent > 0 && discountAmount === 0) {
+            discount = (total * discountPercent) / 100;
+        }
+        
+        // Ensure discount doesn't exceed total
+        if (discount > total) {
+            discount = total;
+            document.getElementById('discountAmount').value = discount;
+            document.getElementById('discountPercent').value = 0;
+        }
+        
+        // Calculate final amount and due
+        const finalAmount = total - discount;
+        const due = finalAmount - paid;
+        
+        // Update display
+        document.getElementById('displayTotal').textContent = `৳ ${total.toLocaleString('bn-BD')}`;
+        document.getElementById('displayDiscount').textContent = `৳ ${discount.toLocaleString('bn-BD')}`;
+        document.getElementById('displayFinal').textContent = `৳ ${finalAmount.toLocaleString('bn-BD')}`;
+        document.getElementById('displayDue').textContent = `৳ ${due.toLocaleString('bn-BD')}`;
+        
+        // Update form fields if they exist
+        if (document.getElementById('pTotal')) {
             document.getElementById('pTotal').value = finalAmount;
+        }
+        if (document.getElementById('pDue')) {
             document.getElementById('pDue').value = due;
         }
+    }
 
-        // Add calculation fields to the form
-        const form = document.getElementById('patientForm');
+    // Add calculation fields to the form
+    const form = document.getElementById('patientForm');
+    if (form) {
         const totalInput = document.createElement('input');
         totalInput.type = 'hidden';
         totalInput.id = 'pTotal';
@@ -1126,10 +1219,15 @@
 
         // Update calculations on input
         ['treatmentCost', 'crownQty', 'crownPricePer', 'discountPercent', 'discountAmount', 'pPaid'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateCalculations);
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', updateCalculations);
+            }
         });
+    }
 
-        // Form Submission
+    // Form Submission
+    if (document.getElementById('patientForm')) {
         document.getElementById('patientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1246,8 +1344,10 @@
                 showMessage('তথ্য সংরক্ষণে সমস্যা হয়েছে! আবার চেষ্টা করুন।', 'error');
             }
         });
+    }
 
-        // Search Patient
+    // Search Patient
+    if (document.getElementById('btnSearch')) {
         document.getElementById('btnSearch').addEventListener('click', async () => {
             const phone = document.getElementById('searchPhone').value.trim();
             
@@ -1289,8 +1389,10 @@
                 showMessage('সার্চ করতে সমস্যা হয়েছে!', 'error');
             }
         });
+    }
 
-        // Copy All Phone Numbers
+    // Copy All Phone Numbers
+    if (document.getElementById('btnCopy')) {
         document.getElementById('btnCopy').addEventListener('click', async () => {
             try {
                 const querySnapshot = await getDocs(collection(db, "patientPhones"));
@@ -1331,39 +1433,323 @@
                 showMessage('নাম্বার কপি করতে সমস্যা হয়েছে!', 'error');
             }
         });
+    }
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "log.html";
-            }).catch((error) => {
-                console.error("Logout error:", error);
+    // Load Patient History
+    async function loadPatientHistory() {
+        try {
+            const historyTable = document.getElementById('patientHistoryTable');
+            historyTable.innerHTML = `
+                <tr>
+                    <td colspan="9" style="padding: 40px; text-align: center; color: var(--gray);">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        রোগীর তথ্য লোড হচ্ছে...
+                    </td>
+                </tr>
+            `;
+            
+            // Get all patient phones
+            const phoneQuery = await getDocs(collection(db, "patientPhones"));
+            const phoneNumbers = [];
+            
+            phoneQuery.forEach(doc => {
+                phoneNumbers.push({
+                    phone: doc.id,
+                    names: doc.data().names || []
+                });
+            });
+            
+            // Get patient details for each phone
+            allPatients = [];
+            
+            for (const phoneData of phoneNumbers) {
+                const phone = phoneData.phone;
+                
+                for (const name of phoneData.names) {
+                    try {
+                        const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+                        const patientRef = doc(db, "patients", profileId);
+                        const patientSnap = await getDoc(patientRef);
+                        
+                        if (patientSnap.exists()) {
+                            const patientData = patientSnap.data();
+                            const treatments = patientData.treatments || [];
+                            
+                            if (treatments.length > 0) {
+                                // Get the latest treatment
+                                const latestTreatment = treatments[treatments.length - 1];
+                                
+                                allPatients.push({
+                                    id: profileId,
+                                    phone: phone,
+                                    name: name,
+                                    age: patientData.age || '',
+                                    address: patientData.address || '',
+                                    problem: latestTreatment.problem || 'নাই',
+                                    total: latestTreatment.total || 0,
+                                    paid: latestTreatment.paid || 0,
+                                    due: latestTreatment.due || 0,
+                                    lastDate: latestTreatment.date || patientData.lastUpdated,
+                                    treatmentCount: treatments.length,
+                                    allTreatments: treatments
+                                });
+                            }
+                        }
+                    } catch (err) {
+                        console.error(`Error loading patient ${phone}: ${name}`, err);
+                    }
+                }
+            }
+            
+            // Sort by latest date (descending)
+            allPatients.sort((a, b) => {
+                return new Date(b.lastDate) - new Date(a.lastDate);
+            });
+            
+            // Set filtered patients to all patients initially
+            filteredPatients = [...allPatients];
+            
+            // Update UI
+            updatePatientHistoryTable();
+            
+        } catch (err) {
+            console.error("Error loading patient history:", err);
+            const historyTable = document.getElementById('patientHistoryTable');
+            historyTable.innerHTML = `
+                <tr>
+                    <td colspan="9" style="padding: 40px; text-align: center; color: var(--danger);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        রোগীর তথ্য লোড করতে সমস্যা হয়েছে!
+                        <button id="btnRetryLoad" class="btn btn-primary" style="margin-top: 15px;">
+                            আবার চেষ্টা করুন
+                        </button>
+                    </td>
+                </tr>
+            `;
+            
+            document.getElementById('btnRetryLoad')?.addEventListener('click', loadPatientHistory);
+        }
+    }
+
+    // Update Patient History Table
+    function updatePatientHistoryTable() {
+        const historyTable = document.getElementById('patientHistoryTable');
+        const totalPatientsEl = document.getElementById('totalPatients');
+        
+        // Apply filters if any
+        let displayPatients = [...filteredPatients];
+        
+        // Filter by phone
+        const filterPhone = document.getElementById('filterPhone')?.value.trim() || '';
+        if (filterPhone) {
+            displayPatients = displayPatients.filter(patient => 
+                patient.phone.includes(filterPhone)
+            );
+        }
+        
+        // Filter by name
+        const filterName = document.getElementById('filterName')?.value.trim() || '';
+        if (filterName) {
+            displayPatients = displayPatients.filter(patient => 
+                patient.name.toLowerCase().includes(filterName.toLowerCase())
+            );
+        }
+        
+        if (totalPatientsEl) {
+            totalPatientsEl.textContent = displayPatients.length;
+        }
+        
+        // Calculate pagination
+        const totalPages = Math.ceil(displayPatients.length / patientsPerPage);
+        const startIndex = (currentPage - 1) * patientsPerPage;
+        const endIndex = startIndex + patientsPerPage;
+        const pagePatients = displayPatients.slice(startIndex, endIndex);
+        
+        // Update table
+        if (pagePatients.length === 0) {
+            historyTable.innerHTML = `
+                <tr>
+                    <td colspan="9" style="padding: 40px; text-align: center; color: var(--gray);">
+                        <i class="fas fa-user-slash" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
+                        কোনো রোগী পাওয়া যায়নি
+                    </td>
+                </tr>
+            `;
+        } else {
+            let tableHTML = '';
+            
+            pagePatients.forEach((patient, index) => {
+                const serial = startIndex + index + 1;
+                const lastDate = patient.lastDate ? 
+                    new Date(patient.lastDate).toLocaleDateString('bn-BD') : 
+                    'তারিখ নেই';
+                
+                tableHTML += `
+                    <tr style="border-bottom: 1px solid #eee; transition: var(--transition);" 
+                        onmouseover="this.style.backgroundColor='#f8f9fa'" 
+                        onmouseout="this.style.backgroundColor='white'">
+                        <td style="padding: 15px;">${serial}</td>
+                        <td style="padding: 15px; font-weight: 600;">${patient.phone}</td>
+                        <td style="padding: 15px;">
+                            <strong>${patient.name}</strong>
+                            ${patient.age ? `<br><small>বয়স: ${patient.age}</small>` : ''}
+                        </td>
+                        <td style="padding: 15px;">
+                            ${patient.problem}
+                            ${patient.treatmentCount > 1 ? `<br><small>${patient.treatmentCount} বার চিকিৎসা</small>` : ''}
+                        </td>
+                        <td style="padding: 15px; font-weight: 600; color: var(--primary);">৳ ${parseFloat(patient.total || 0).toLocaleString('bn-BD')}</td>
+                        <td style="padding: 15px; color: var(--success); font-weight: 600;">৳ ${parseFloat(patient.paid || 0).toLocaleString('bn-BD')}</td>
+                        <td style="padding: 15px; color: ${patient.due > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight: 600;">
+                            ৳ ${parseFloat(patient.due || 0).toLocaleString('bn-BD')}
+                        </td>
+                        <td style="padding: 15px;">${lastDate}</td>
+                        <td style="padding: 15px;">
+                            <button class="btn btn-primary btn-sm view-patient-btn" data-id="${patient.id}" style="padding: 8px 15px; font-size: 0.9rem; margin-bottom: 5px;">
+                                <i class="fas fa-eye"></i>
+                                দেখুন
+                            </button>
+                            <button class="btn btn-warning btn-sm add-treatment-btn" data-phone="${patient.phone}" data-name="${patient.name}" style="padding: 8px 15px; font-size: 0.9rem;">
+                                <i class="fas fa-plus"></i>
+                                চিকিৎসা
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            historyTable.innerHTML = tableHTML;
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-patient-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const patientId = this.getAttribute('data-id');
+                    window.location.href = `rugipro.html?profileId=${patientId}`;
+                });
+            });
+            
+            document.querySelectorAll('.add-treatment-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const phone = this.getAttribute('data-phone');
+                    const name = this.getAttribute('data-name');
+                    
+                    // Navigate to new treatment section with pre-filled data
+                    navigateToSection('new-patient', 'নতুন রোগী এন্ট্রি');
+                    
+                    // Fill form with existing patient data
+                    setTimeout(() => {
+                        document.getElementById('pName').value = name;
+                        document.getElementById('pPhone').value = phone;
+                        document.getElementById('pPhone').focus();
+                    }, 500);
+                });
+            });
+        }
+        
+        // Update pagination controls
+        if (document.getElementById('currentPage')) {
+            document.getElementById('currentPage').textContent = currentPage;
+        }
+        if (document.getElementById('totalPages')) {
+            document.getElementById('totalPages').textContent = totalPages;
+        }
+        
+        if (document.getElementById('btnPrevPage')) {
+            document.getElementById('btnPrevPage').disabled = currentPage <= 1;
+        }
+        if (document.getElementById('btnNextPage')) {
+            document.getElementById('btnNextPage').disabled = currentPage >= totalPages;
+        }
+    }
+
+    // Patient History Event Listeners
+    if (document.getElementById('filterPhone')) {
+        document.getElementById('filterPhone').addEventListener('input', function() {
+            currentPage = 1;
+            updatePatientHistoryTable();
+        });
+    }
+    
+    if (document.getElementById('filterName')) {
+        document.getElementById('filterName').addEventListener('input', function() {
+            currentPage = 1;
+            updatePatientHistoryTable();
+        });
+    }
+    
+    if (document.getElementById('btnFilterClear')) {
+        document.getElementById('btnFilterClear').addEventListener('click', function() {
+            document.getElementById('filterPhone').value = '';
+            document.getElementById('filterName').value = '';
+            currentPage = 1;
+            filteredPatients = [...allPatients];
+            updatePatientHistoryTable();
+        });
+    }
+    
+    if (document.getElementById('btnRefreshHistory')) {
+        document.getElementById('btnRefreshHistory').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...';
+            this.disabled = true;
+            
+            loadPatientHistory().finally(() => {
+                this.innerHTML = '<i class="fas fa-sync-alt"></i> রিফ্রেশ করুন';
+                this.disabled = false;
             });
         });
+    }
+    
+    if (document.getElementById('btnPrevPage')) {
+        document.getElementById('btnPrevPage').addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePatientHistoryTable();
+            }
+        });
+    }
+    
+    if (document.getElementById('btnNextPage')) {
+        document.getElementById('btnNextPage').addEventListener('click', function() {
+            const totalPages = Math.ceil(filteredPatients.length / patientsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePatientHistoryTable();
+            }
+        });
+    }
 
-        // Show Message Function
-        function showMessage(message, type) {
-            // Remove existing messages
-            const existingMessages = document.querySelectorAll('.message-box');
-            existingMessages.forEach(msg => msg.remove());
-            
-            // Create message element
-            const messageEl = document.createElement('div');
-            messageEl.className = `message-box message-${type}`;
-            messageEl.textContent = message;
-            
-            // Add to page
-            document.body.appendChild(messageEl);
-            
-            // Remove after 4 seconds
-            setTimeout(() => {
-                messageEl.style.animation = 'slideInRight 0.3s ease-out reverse';
-                setTimeout(() => messageEl.remove(), 300);
-            }, 4000);
-        }
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            window.location.href = "log.html";
+        }).catch((error) => {
+            console.error("Logout error:", error);
+        });
+    });
 
-        // Initialize calculations
-        updateCalculations();
-    </script>
+    // Show Message Function
+    function showMessage(message, type) {
+        // Remove existing messages
+        const existingMessages = document.querySelectorAll('.message-box');
+        existingMessages.forEach(msg => msg.remove());
+        
+        // Create message element
+        const messageEl = document.createElement('div');
+        messageEl.className = `message-box message-${type}`;
+        messageEl.textContent = message;
+        
+        // Add to page
+        document.body.appendChild(messageEl);
+        
+        // Remove after 4 seconds
+        setTimeout(() => {
+            messageEl.style.animation = 'slideInRight 0.3s ease-out reverse';
+            setTimeout(() => messageEl.remove(), 300);
+        }, 4000);
+    }
+
+    // Initialize calculations
+    updateCalculations();
+</script>
 </body>
 </html>
