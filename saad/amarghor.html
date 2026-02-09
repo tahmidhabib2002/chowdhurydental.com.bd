@@ -50,7 +50,7 @@
             background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             padding: 20px 0;
-            z-index: 1000;
+            z-log: 1000;
             transition: var(--transition);
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
@@ -547,7 +547,7 @@
                 position: fixed;
                 top: 20px;
                 left: 20px;
-                z-index: 1001;
+                z-log: 1001;
                 background: var(--primary);
                 color: white;
                 border: none;
@@ -602,7 +602,7 @@
             border-radius: 10px;
             color: white;
             font-weight: 600;
-            z-index: 2000;
+            z-log: 2000;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             animation: slideInRight 0.3s ease-out;
             max-width: 400px;
@@ -989,7 +989,7 @@
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = "index.html"; // Login page
+                window.location.href = "log.html"; // Login page
             }
         });
 
@@ -1271,8 +1271,8 @@
                     } else if (names.length > 1) {
                         // Multiple patients with same phone
                         let message = `এই নাম্বারে ${names.length} জন রোগী পাওয়া গেছে:\n\n`;
-                        names.forEach((name, index) => {
-                            message += `${index + 1}. ${name}\n`;
+                        names.forEach((name, log) => {
+                            message += `${log + 1}. ${name}\n`;
                         });
                         message += '\nকোন রোগী দেখতে চান?';
                         
@@ -1313,9 +1313,9 @@
                                 মোট ${phoneNumbers.length}টি নাম্বার
                             </h4>
                             <div style="background: white; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto;">
-                                ${phoneNumbers.map((phone, index) => `
+                                ${phoneNumbers.map((phone, log) => `
                                     <div style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                                        <strong>${index + 1}.</strong> ${phone}
+                                        <strong>${log + 1}.</strong> ${phone}
                                     </div>
                                 `).join('')}
                             </div>
@@ -1335,7 +1335,7 @@
         // Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
             signOut(auth).then(() => {
-                window.location.href = "index.html";
+                window.location.href = "log.html";
             }).catch((error) => {
                 console.error("Logout error:", error);
             });

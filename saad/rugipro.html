@@ -458,7 +458,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-log: 1000;
         }
 
         .modal-overlay.active {
@@ -628,7 +628,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 100;
+            z-log: 100;
             transition: var(--transition);
             display: flex;
             align-items: center;
@@ -952,7 +952,7 @@
             emptyState.classList.add('hidden');
             
             let tableHTML = '';
-            patients.forEach((patient, index) => {
+            patients.forEach((patient, log) => {
                 // Get latest treatment
                 const latestTreatment = patient.treatments && patient.treatments.length > 0 
                     ? patient.treatments[patient.treatments.length - 1]
@@ -970,7 +970,7 @@
                 
                 tableHTML += `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${log + 1}</td>
                         <td>
                             <div class="patient-name">${patientName}</div>
                             <div class="patient-address">${patientAddress}</div>
@@ -1187,7 +1187,7 @@
             
             let csvContent = "ক্রমিক,নাম,মোবাইল,ঠিকানা,সমস্যা,তারিখ,বিল,স্ট্যাটাস\n";
             
-            filteredPatients.forEach((patient, index) => {
+            filteredPatients.forEach((patient, log) => {
                 const latestTreatment = patient.treatments && patient.treatments.length > 0 
                     ? patient.treatments[patient.treatments.length - 1]
                     : null;
@@ -1198,7 +1198,7 @@
                 const due = latestTreatment ? parseFloat(latestTreatment.due || 0) : 0;
                 const status = due > 0 ? 'বকেয়া' : 'পরিশোধিত';
                 
-                csvContent += `${index + 1},${patient.name || ''},${patient.phone || ''},${patient.address || ''},${problem},${date},${total},${status}\n`;
+                csvContent += `${log + 1},${patient.name || ''},${patient.phone || ''},${patient.address || ''},${problem},${date},${total},${status}\n`;
             });
             
             // Create download link
@@ -1254,7 +1254,7 @@
                 border-radius: 10px;
                 color: white;
                 font-weight: 600;
-                z-index: 1000;
+                z-log: 1000;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
                 animation: slideIn 0.3s ease-out;
                 max-width: 400px;
