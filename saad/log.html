@@ -4,26 +4,490 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>লগইন - চৌধুরী ডেন্টাল</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
-        h2 { text-align: center; color: #007bff; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e6f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 123, 255, 0.05);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .circle:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 3s;
+        }
+
+        .circle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 15%;
+            animation-delay: 6s;
+        }
+
+        .circle:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            left: 85%;
+            animation-delay: 9s;
+        }
+
+        .circle:nth-child(5) {
+            width: 180px;
+            height: 180px;
+            top: 70%;
+            left: 10%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            33% {
+                transform: translateY(-30px) translateX(20px);
+            }
+            66% {
+                transform: translateY(20px) translateX(-20px);
+            }
+        }
+
+        /* Login Container */
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px 35px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            color: #007bff;
+            margin-right: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .clinic-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #007bff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .clinic-subtitle {
+            color: #555;
+            font-size: 1rem;
+            font-weight: 400;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+            font-size: 1rem;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: #007bff;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #007bff;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #777;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: color 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: #007bff;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        /* Google Login Button */
+        .google-login-btn {
+            width: 100%;
+            padding: 16px;
+            background: white;
+            color: #444;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .google-login-btn:hover {
+            border-color: #db4437;
+            background: #f9f9f9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 25px;
+                max-width: 400px;
+            }
+            
+            .clinic-name {
+                font-size: 1.9rem;
+            }
+            
+            .login-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .login-container {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+            
+            .clinic-name {
+                font-size: 1.7rem;
+            }
+            
+            .logo-icon {
+                font-size: 2.4rem;
+            }
+            
+            .login-title {
+                font-size: 1.4rem;
+            }
+            
+            .form-input {
+                padding: 14px 14px 14px 45px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>এডমিন লগইন</h2>
-        <input type="email" id="email" placeholder="আপনার ইমেইল">
-        <input type="password" id="password" placeholder="পাসওয়ার্ড">
-        <button onclick="login()">প্রবেশ করুন</button>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-tooth logo-icon"></i>
+                <div>
+                    <h1 class="clinic-name">চৌধুরী ডেন্টাল</h1>
+                    <p class="clinic-subtitle">সুস্থ হাসি, সুস্থ জীবন</p>
+                </div>
+            </div>
+            <h2 class="login-title">এডমিন লগইন</h2>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email" class="form-label">ইমেইল ঠিকানা</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" class="form-input" placeholder="আপনার ইমেইল ঠিকানা" required>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">পাসওয়ার্ড</label>
+                <div class="input-container">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" class="form-input" placeholder="আপনার পাসওয়ার্ড" required>
+                    <button type="button" id="togglePassword" class="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Button -->
+            <button type="button" class="login-btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i>
+                প্রবেশ করুন
+                <div class="loading" id="loginLoading"></div>
+            </button>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>অথবা</span>
+            </div>
+
+            <!-- Google Login Button -->
+            <button type="button" class="google-login-btn" onclick="googleLogin()">
+                <div class="google-icon">G</div>
+                Google দিয়ে লগইন করুন
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© ২০২৬ চৌধুরী ডেন্টাল | সর্বস্বত্ব সংরক্ষিত</p>
+          
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            GoogleAuthProvider, 
+            signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
@@ -33,16 +497,183 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-        window.login = () => {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('password').value;
-            signInWithEmailAndPassword(auth, e, p)
-                .then(() => window.location.href = "amarghor.html") // সফল হলে ড্যাশবোর্ডে যাবে
-                .catch(err => alert("ইমেইল বা পাসওয়ার্ড ভুল!"));
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Email/Password Login
+        window.login = async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.querySelector('.login-btn');
+            const loading = document.getElementById('loginLoading');
+            
+            // Input validation
+            if (!email || !password) {
+                showMessage('ইমেইল ও পাসওয়ার্ড অবশ্যই পূরণ করতে হবে', 'error');
+                return;
+            }
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('লগইন সফল! ড্যাশবোর্ডে যাচ্ছেন...', 'success');
+                
+                // Redirect after successful login
+                setTimeout(() => {
+                    window.location.href = "amarghor.html";
+                }, 1500);
+            } catch (error) {
+                console.error("Login error:", error);
+                
+                // Show appropriate error message
+                let errorMessage = "ইমেইল বা পাসওয়ার্ড ভুল!";
+                if (error.code === 'auth/invalid-email') {
+                    errorMessage = "ইমেইল ঠিকানা সঠিক নয়!";
+                } else if (error.code === 'auth/user-not-found') {
+                    errorMessage = "এই ইমেইলে কোনো অ্যাকাউন্ট নেই!";
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = "পাসওয়ার্ড ভুল হয়েছে!";
+                }
+                
+                showMessage(errorMessage, 'error');
+            } finally {
+                // Hide loading
+                loginBtn.disabled = false;
+                loading.style.display = 'none';
+            }
         };
+
+        // Google Login
+        window.googleLogin = async () => {
+            const googleBtn = document.querySelector('.google-login-btn');
+            
+            // Show loading on button
+            googleBtn.disabled = true;
+            const originalText = googleBtn.innerHTML;
+            googleBtn.innerHTML = '<div class="loading" style="display:block; margin:0 auto;"></div>';
+            
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                showMessage(`স্বাগতম ${user.displayName || user.email}! লগইন সফল হয়েছে।`, 'success');
+                
+                // Redirect after successful login
+                setTimeout(() => {
+                    window.location.href = "amarghor.html";
+                }, 1500);
+            } catch (error) {
+                console.error("Google login error:", error);
+                
+                // Show appropriate error message
+                let errorMessage = "Google লগইন ব্যর্থ হয়েছে!";
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = "লগইন পপআপ বন্ধ করা হয়েছে!";
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    errorMessage = "লগইন রিকোয়েস্ট বাতিল করা হয়েছে!";
+                }
+                
+                showMessage(errorMessage, 'error');
+            } finally {
+                // Restore button
+                googleBtn.disabled = false;
+                googleBtn.innerHTML = originalText;
+            }
+        };
+
+        // Show message function
+        function showMessage(message, type) {
+            // Remove any existing message
+            const existingMessage = document.querySelector('.message-popup');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message-popup ${type}`;
+            messageEl.textContent = message;
+            
+            // Style the message
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 10px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                animation: slideInRight 0.3s ease-out;
+                max-width: 350px;
+            `;
+            
+            // Set background color based on type
+            if (type === 'success') {
+                messageEl.style.background = 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)';
+            } else {
+                messageEl.style.background = 'linear-gradient(135deg, #dc3545 0%, #bd2130 100%)';
+            }
+            
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Add to page
+            document.body.appendChild(messageEl);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                messageEl.style.animation = 'slideInRight 0.3s ease-out reverse';
+                setTimeout(() => messageEl.remove(), 300);
+            }, 4000);
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            login();
+        });
+
+        // Add focus effects
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.parentElement.classList.remove('focused');
+            });
+        });
     </script>
 </body>
 </html>
