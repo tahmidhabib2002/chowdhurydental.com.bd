@@ -1717,14 +1717,14 @@
                         </label>
                         <input type="number" id="crownQuantity" class="form-control" 
                                placeholder="কয়টি ক্রাউন?" 
-                               min="1" max="20" value="1" required>
+                               min="1" max="50" value="1" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="unitPrice" class="form-label">প্রতি ক্রাউনের দাম (৳)</label>
+                        <label for="unitPrice" class="form-label">প্রতি ক্রাউনের দাম (৳)<span class="required">*</span></label>
                         <input type="number" id="unitPrice" class="form-control" 
                                placeholder="প্রতি ক্রাউনের দাম" 
-                               min="0" step="100">
+                               min="0" step="100" required>
                     </div>
                     
                     <div class="form-group">
@@ -1751,9 +1751,9 @@
                     <div class="form-group">
                         <label for="labStatus" class="form-label">স্ট্যাটাস</label>
                         <select id="labStatus" class="form-control">
-                            <option value="pending">পেন্ডিং</option>
-                            <option value="processing">প্রসেসিং</option>
-                            <option value="completed">কমপ্লিটেড</option>
+                            <option value="pending">বাকি</option>
+                            <option value="processing">প্রস্তুত হচ্ছে</option>
+                            <option value="completed">প্রস্তুত</option>
                             <option value="delivered">ডেলিভার্ড</option>
                         </select>
                     </div>
@@ -1795,9 +1795,9 @@
                     </select>
                     <select id="statusFilter" class="filter-select">
                         <option value="all">সব স্ট্যাটাস</option>
-                        <option value="pending">পেন্ডিং</option>
-                        <option value="processing">প্রসেসিং</option>
-                        <option value="completed">কমপ্লিটেড</option>
+                        <option value="pending">বাকি</option>
+                        <option value="processing">প্রস্তুত হচ্ছে</option>
+                        <option value="completed">প্রস্তুত</option>
                         <option value="delivered">ডেলিভার্ড</option>
                     </select>
                 </div>
@@ -1856,6 +1856,141 @@
                     <i class="fas fa-inbox"></i>
                     <h4>কোনো ল্যাব কাজ পাওয়া যায়নি</h4>
                     <p>নতুন ল্যাব এন্ট্রি তৈরি করুন</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lab Payment Section -->
+        <div id="lab-payment" class="form-container">
+            <div class="form-header">
+                <h3 class="form-title">
+                    <i class="fas fa-money-bill-wave"></i>
+                    ল্যাব পেমেন্ট
+                </h3>
+                <div class="form-actions">
+                    <button class="btn btn-outline" id="refreshPayments">
+                        <i class="fas fa-sync-alt"></i>
+                        রিফ্রেশ
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Payment Summary -->
+            <div class="stats-overview" id="paymentSummary">
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: var(--gradient-primary);">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-title">মোট বকেয়া</div>
+                        <div class="stat-card-value" id="totalDueAmount">৳ 0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: var(--gradient-success);">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-title">মোট পরিশোধিত</div>
+                        <div class="stat-card-value" id="totalPaidAmount">৳ 0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: var(--gradient-secondary);">
+                        <i class="fas fa-clinic-medical"></i>
+                    </div>
+                    <div class="stat-card-content">
+                        <div class="stat-card-title">বকেয়া আছে এমন ল্যাব</div>
+                        <div class="stat-card-value" id="labsWithDue">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="form-container" style="margin-bottom: 30px; box-shadow: var(--box-shadow);">
+                <h4 style="margin-bottom: 25px; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-plus-circle"></i>
+                    নতুন পেমেন্ট যোগ করুন
+                </h4>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="paymentLabId" class="form-label">
+                            ল্যাব নির্বাচন করুন <span class="required">*</span>
+                        </label>
+                        <select id="paymentLabId" class="form-control">
+                            <option value="">ল্যাব নির্বাচন করুন</option>
+                            <!-- Labs with due will be loaded dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentAmount" class="form-label">
+                            পেমেন্টের পরিমাণ (৳) <span class="required">*</span>
+                        </label>
+                        <input type="number" id="paymentAmount" class="form-control" 
+                               placeholder="পেমেন্টের পরিমাণ" 
+                               min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentDate" class="form-label">পেমেন্ট তারিখ</label>
+                        <input type="date" id="paymentDate" class="form-control"
+                               value="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentMethod" class="form-label">পেমেন্ট মাধ্যম</label>
+                        <select id="paymentMethod" class="form-control">
+                            <option value="cash">নগদ</option>
+                            <option value="bank">ব্যাংক</option>
+                            <option value="mobile_banking">মোবাইল ব্যাংকিং</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentNote" class="form-label">মন্তব্য (যদি থাকে)</label>
+                    <textarea id="paymentNote" class="form-control" 
+                              placeholder="পেমেন্ট সম্পর্কিত যেকোনো মন্তব্য..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button id="btnAddPayment" class="btn btn-success" style="flex: 1;">
+                        <i class="fas fa-money-bill"></i>
+                        পেমেন্ট সংরক্ষণ করুন
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Recent Payments -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="fas fa-history"></i>
+                        সাম্প্রতিক পেমেন্ট
+                    </h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="patients-table">
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>ল্যাব</th>
+                                <th>পরিমাণ (৳)</th>
+                                <th>পেমেন্ট মাধ্যম</th>
+                                <th>মন্তব্য</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentPaymentsTable">
+                            <!-- Recent payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyPayments" class="empty-state" style="display: none;">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h4>কোনো পেমেন্ট রেকর্ড নেই</h4>
+                    <p>নতুন পেমেন্ট যোগ করুন</p>
                 </div>
             </div>
         </div>
@@ -2024,8 +2159,10 @@
         // Global Variables
         let allLabs = [];
         let allLabJobs = [];
+        let allPayments = [];
         let currentUser = null;
         let isDataLoading = false;
+        let refreshInProgress = false;
 
         // Initialize the application
         function initApp() {
@@ -2107,9 +2244,10 @@
             document.getElementById('clearForm')?.addEventListener('click', clearLabForm);
             
             // Refresh buttons
-            document.getElementById('refreshRecentJobs')?.addEventListener('click', loadRecentJobs);
-            document.getElementById('btnRefreshHistory')?.addEventListener('click', loadLabHistory);
-            document.getElementById('refreshLabs')?.addEventListener('click', loadLabsData);
+            document.getElementById('refreshRecentJobs')?.addEventListener('click', () => refreshAllData());
+            document.getElementById('btnRefreshHistory')?.addEventListener('click', () => refreshAllData());
+            document.getElementById('refreshLabs')?.addEventListener('click', () => refreshAllData());
+            document.getElementById('refreshPayments')?.addEventListener('click', () => refreshAllData());
             
             // Export and print
             document.getElementById('btnExportHistory')?.addEventListener('click', exportHistory);
@@ -2117,6 +2255,9 @@
             
             // Add new lab
             document.getElementById('btnAddLab')?.addEventListener('click', addNewLab);
+            
+            // Add payment
+            document.getElementById('btnAddPayment')?.addEventListener('click', addNewPayment);
             
             // Logout
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
@@ -2236,12 +2377,14 @@
                 navigateToSection('lab-entry');
             } else if (currentSection === 'manage-labs') {
                 document.getElementById('newLabName').focus();
+            } else if (currentSection === 'lab-payment') {
+                document.getElementById('paymentLabId').focus();
             }
         }
 
         // Update FAB visibility
         function updateFabVisibility(sectionId) {
-            const showFabSections = ['dashboard', 'lab-history', 'manage-labs'];
+            const showFabSections = ['dashboard', 'lab-history', 'manage-labs', 'lab-payment'];
             if (showFabSections.includes(sectionId)) {
                 fab.style.display = 'flex';
                 const fabIcon = fab.querySelector('i');
@@ -2249,6 +2392,8 @@
                     fabIcon.className = 'fas fa-plus';
                 } else if (sectionId === 'manage-labs') {
                     fabIcon.className = 'fas fa-clinic-medical';
+                } else if (sectionId === 'lab-payment') {
+                    fabIcon.className = 'fas fa-money-bill';
                 }
             } else {
                 fab.style.display = 'none';
@@ -2283,6 +2428,9 @@
                 case 'lab-history':
                     loadLabHistory();
                     break;
+                case 'lab-payment':
+                    loadPaymentData();
+                    break;
                 case 'manage-labs':
                     loadLabsData();
                     break;
@@ -2293,9 +2441,18 @@
         function calculateTotalPrice() {
             const quantity = parseInt(document.getElementById('crownQuantity').value) || 0;
             const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
-            const totalPrice = quantity * unitPrice;
             
-            document.getElementById('totalPrice').value = totalPrice || 0;
+            // Validation
+            if (quantity < 1) {
+                document.getElementById('crownQuantity').value = 1;
+            }
+            if (quantity > 50) {
+                document.getElementById('crownQuantity').value = 50;
+                showToast("একসাথে সর্বোচ্চ ৫০টি ক্রাউন পাঠানো যায়!", "warning");
+            }
+            
+            const totalPrice = quantity * unitPrice;
+            document.getElementById('totalPrice').value = totalPrice.toFixed(2);
         }
 
         // Fetch patient data
@@ -2334,7 +2491,7 @@
             }
         }
 
-        // Handle lab form submission - CORRECTED VERSION
+        // Handle lab form submission
         async function handleLabFormSubmit(e) {
             e.preventDefault();
             
@@ -2348,7 +2505,7 @@
             const patientName = document.getElementById('labPatientName').value.trim();
             const labId = document.getElementById('labType').value;
             const crownType = document.getElementById('crownType').value;
-            const quantity = parseInt(document.getElementById('crownQuantity').value) || 1;
+            const quantity = parseInt(document.getElementById('crownQuantity').value) || 0;
             const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
             const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
             const deliveryDate = document.getElementById('deliveryDate').value;
@@ -2356,14 +2513,39 @@
             const status = document.getElementById('labStatus').value;
             
             // Validation
-            if (!patientPhone || !patientName || !labId || !crownType) {
-                showToast("সব প্রয়োজনীয় তথ্য দিন!", "error");
+            if (!patientPhone || !/^01[3-9]\d{8}$/.test(patientPhone)) {
+                showToast("সঠিক মোবাইল নাম্বার দিন!", "error");
+                document.getElementById('labPatientPhone').focus();
                 return;
             }
             
-            const lab = allLabs.find(l => l.id === labId);
-            if (!lab) {
+            if (!patientName) {
+                showToast("রোগীর নাম দিন!", "error");
+                document.getElementById('labPatientName').focus();
+                return;
+            }
+            
+            if (!labId) {
                 showToast("ল্যাব নির্বাচন করুন!", "error");
+                document.getElementById('labType').focus();
+                return;
+            }
+            
+            if (!crownType) {
+                showToast("ক্রাউনের ধরন নির্বাচন করুন!", "error");
+                document.getElementById('crownType').focus();
+                return;
+            }
+            
+            if (quantity <= 0) {
+                showToast("ক্রাউনের সংখ্যা ১ বা তার বেশি হতে হবে!", "error");
+                document.getElementById('crownQuantity').focus();
+                return;
+            }
+            
+            if (unitPrice <= 0) {
+                showToast("প্রতি ক্রাউনের দাম দিন!", "error");
+                document.getElementById('unitPrice').focus();
                 return;
             }
             
@@ -2379,15 +2561,15 @@
                 const jobId = `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 const now = new Date();
                 
-                // Prepare job data - USE PLAIN OBJECT WITHOUT Timestamp
+                // Prepare job data
                 const jobData = {
                     id: jobId,
                     patientPhone: patientPhone,
                     patientName: patientName,
                     labId: labId,
-                    labName: lab.name,
-                    labPhone: lab.phone,
-                    labAddress: lab.address || '',
+                    labName: allLabs.find(l => l.id === labId)?.name || '',
+                    labPhone: allLabs.find(l => l.id === labId)?.phone || '',
+                    labAddress: allLabs.find(l => l.id === labId)?.address || '',
                     crownType: crownType,
                     quantity: quantity,
                     unitPrice: unitPrice,
@@ -2398,22 +2580,25 @@
                     deliveryDate: deliveryDate || null,
                     notes: notes || '',
                     status: status,
-                    createdAt: serverTimestamp(), // Use serverTimestamp for accurate time
+                    createdAt: serverTimestamp(),
                     createdBy: currentUser?.uid || 'system'
                 };
-                
-                console.log("Saving job data:", jobData);
                 
                 // Save to Firestore
                 await setDoc(doc(db, "labJobs", jobId), jobData);
                 
                 // Update lab's jobs array and total due
                 const labRef = doc(db, "labs", labId);
-                await updateDoc(labRef, {
-                    jobs: arrayUnion(jobId),
-                    totalDue: (parseFloat(lab.totalDue || 0) + totalPrice),
-                    lastUpdated: serverTimestamp()
-                });
+                const labSnap = await getDoc(labRef);
+                
+                if (labSnap.exists()) {
+                    const labData = labSnap.data();
+                    await updateDoc(labRef, {
+                        jobs: arrayUnion(jobId),
+                        totalDue: (parseFloat(labData.totalDue || 0) + totalPrice),
+                        lastUpdated: serverTimestamp()
+                    });
+                }
                 
                 // Show success message
                 showToast("ল্যাব কাজ সফলভাবে সংরক্ষণ হয়েছে!", "success");
@@ -2421,13 +2606,13 @@
                 // Reset form
                 clearLabForm();
                 
+                // Reload all data
+                await refreshAllData();
+                
                 // Navigate to history
                 setTimeout(() => {
                     navigateToSection('lab-history');
                 }, 1500);
-                
-                // Reload data
-                await loadAllData();
                 
             } catch (error) {
                 console.error("Error saving lab job:", error);
@@ -2483,11 +2668,32 @@
             try {
                 await Promise.all([
                     loadLabsData(),
-                    loadLabHistory()
+                    loadLabHistory(),
+                    loadPayments()
                 ]);
             } catch (error) {
                 console.error("Error loading all data:", error);
                 showToast("ডেটা লোড করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        // Refresh all data
+        async function refreshAllData() {
+            if (refreshInProgress) return;
+            
+            refreshInProgress = true;
+            try {
+                await Promise.all([
+                    loadLabsData(),
+                    loadLabHistory(),
+                    loadPayments()
+                ]);
+                showToast("ডেটা রিফ্রেশ করা হয়েছে!", "success");
+            } catch (error) {
+                console.error("Error refreshing data:", error);
+                showToast("ডেটা রিফ্রেশ করতে সমস্যা হয়েছে!", "error");
+            } finally {
+                refreshInProgress = false;
             }
         }
 
@@ -2507,8 +2713,10 @@
                 allLabs.sort((a, b) => a.name.localeCompare(b.name));
                 
                 updateLabSelect();
+                updatePaymentLabSelect();
                 updateLabsTable();
                 updateBadges();
+                updatePaymentSummary();
                 
             } catch (error) {
                 console.error("Error loading labs:", error);
@@ -2526,14 +2734,9 @@
                     const jobData = doc.data();
                     jobData.id = doc.id;
                     
-                    // Handle Firestore timestamps
-                    if (jobData.createdAt && jobData.createdAt.toDate) {
-                        jobData.createdAt = jobData.createdAt.toDate();
-                    }
-                    
-                    // Convert date string to Date object if needed
+                    // Convert date string to Date object
                     if (jobData.date && typeof jobData.date === 'string') {
-                        jobData.date = new Date(jobData.date);
+                        jobData.date = new Date(jobData.date + 'T00:00:00');
                     }
                     
                     allLabJobs.push(jobData);
@@ -2541,8 +2744,8 @@
                 
                 // Sort by date (newest first)
                 allLabJobs.sort((a, b) => {
-                    const dateA = a.date || a.createdAt || new Date(0);
-                    const dateB = b.date || b.createdAt || new Date(0);
+                    const dateA = a.date || new Date(0);
+                    const dateB = b.date || new Date(0);
                     return dateB - dateA;
                 });
                 
@@ -2550,11 +2753,52 @@
                 updateBadges();
                 updateRecentJobs();
                 updateDashboardStats();
+                updatePaymentSummary();
                 
             } catch (error) {
                 console.error("Error loading lab history:", error);
                 showToast("ল্যাব হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
             }
+        }
+
+        // Load payments
+        async function loadPayments() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "labPayments"));
+                allPayments = [];
+                
+                querySnapshot.forEach(doc => {
+                    const paymentData = doc.data();
+                    paymentData.id = doc.id;
+                    
+                    // Convert date string to Date object
+                    if (paymentData.date && typeof paymentData.date === 'string') {
+                        paymentData.date = new Date(paymentData.date + 'T00:00:00');
+                    }
+                    
+                    allPayments.push(paymentData);
+                });
+                
+                // Sort by date (newest first)
+                allPayments.sort((a, b) => {
+                    const dateA = a.date || new Date(0);
+                    const dateB = b.date || new Date(0);
+                    return dateB - dateA;
+                });
+                
+                updateRecentPaymentsTable();
+                
+            } catch (error) {
+                console.error("Error loading payments:", error);
+                showToast("পেমেন্ট ডেটা লোড করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        // Load payment data
+        async function loadPaymentData() {
+            await loadPayments();
+            updatePaymentLabSelect();
+            updatePaymentSummary();
         }
 
         // Update labs table
@@ -2589,7 +2833,7 @@
                         <td>${lab.address || '-'}</td>
                         <td>${lab.contactPerson || '-'}</td>
                         <td>${totalJobs}</td>
-                        <td><strong>৳ ${formatNumber(totalDue)}</strong></td>
+                        <td><strong style="color: ${totalDue > 0 ? 'var(--danger)' : 'var(--success)'};">৳ ${formatNumber(totalDue)}</strong></td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn-small btn-warning" onclick="editLab('${lab.id}')">
@@ -2678,6 +2922,9 @@
                                         ${job.status === 'delivered' ? 'disabled' : ''}>
                                     <i class="fas fa-check"></i>
                                 </button>
+                                <button class="btn-small btn-primary" onclick="addPaymentForJob('${job.id}')">
+                                    <i class="fas fa-money-bill"></i>
+                                </button>
                                 <button class="btn-small btn-warning" onclick="editLabJob('${job.id}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -2739,10 +2986,99 @@
             recentLabJobs.innerHTML = html;
         }
 
-        // Load recent jobs
-        async function loadRecentJobs() {
-            await loadLabHistory();
-            showToast("সাম্প্রতিক কাজ রিফ্রেশ করা হয়েছে!", "success");
+        // Update payment lab select
+        function updatePaymentLabSelect() {
+            const paymentLabSelect = document.getElementById('paymentLabId');
+            if (!paymentLabSelect) return;
+            
+            // Filter labs with due amount
+            const labsWithDue = allLabs.filter(lab => {
+                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
+                const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
+                return totalDue > 0;
+            });
+            
+            paymentLabSelect.innerHTML = '<option value="">ল্যাব নির্বাচন করুন</option>';
+            
+            labsWithDue.forEach(lab => {
+                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
+                const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
+                
+                const option = document.createElement('option');
+                option.value = lab.id;
+                option.textContent = `${lab.name} - বকেয়া: ৳ ${formatNumber(totalDue)}`;
+                option.setAttribute('data-due', totalDue);
+                paymentLabSelect.appendChild(option);
+            });
+        }
+
+        // Update recent payments table
+        function updateRecentPaymentsTable() {
+            const recentPaymentsTable = document.getElementById('recentPaymentsTable');
+            const emptyPayments = document.getElementById('emptyPayments');
+            
+            if (!recentPaymentsTable) return;
+            
+            // Get last 10 payments
+            const recentPayments = allPayments.slice(0, 10);
+            
+            if (recentPayments.length === 0) {
+                recentPaymentsTable.innerHTML = '';
+                if (emptyPayments) emptyPayments.style.display = 'block';
+                return;
+            }
+            
+            if (emptyPayments) emptyPayments.style.display = 'none';
+            
+            let html = '';
+            
+            recentPayments.forEach(payment => {
+                const lab = allLabs.find(l => l.id === payment.labId);
+                const labName = lab ? lab.name : 'অজানা ল্যাব';
+                
+                // Format date
+                const dateStr = payment.date ? formatDate(payment.date) : '-';
+                
+                // Format payment method
+                const methodText = {
+                    'cash': 'নগদ',
+                    'bank': 'ব্যাংক',
+                    'mobile_banking': 'মোবাইল ব্যাংকিং'
+                }[payment.method] || payment.method;
+                
+                html += `
+                    <tr>
+                        <td>${dateStr}</td>
+                        <td><strong>${labName}</strong></td>
+                        <td><strong style="color: var(--success);">৳ ${formatNumber(payment.amount || 0)}</strong></td>
+                        <td>${methodText}</td>
+                        <td>${payment.note || '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            recentPaymentsTable.innerHTML = html;
+        }
+
+        // Update payment summary
+        function updatePaymentSummary() {
+            // Calculate total due
+            const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
+            
+            // Calculate total paid
+            const totalPaid = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.paid || 0)), 0);
+            
+            // Calculate labs with due
+            const labsWithDue = allLabs.filter(lab => {
+                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
+                const labDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
+                return labDue > 0;
+            }).length;
+            
+            // Update UI
+            document.getElementById('totalDueAmount').textContent = `৳ ${formatNumber(totalDue)}`;
+            document.getElementById('totalPaidAmount').textContent = `৳ ${formatNumber(totalPaid)}`;
+            document.getElementById('labsWithDue').textContent = labsWithDue;
         }
 
         // Load dashboard data
@@ -2928,6 +3264,135 @@
             }
         }
 
+        // Add new payment
+        async function addNewPayment() {
+            const labId = document.getElementById('paymentLabId').value;
+            const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+            const paymentDate = document.getElementById('paymentDate').value;
+            const method = document.getElementById('paymentMethod').value;
+            const note = document.getElementById('paymentNote').value.trim();
+            
+            // Validation
+            if (!labId) {
+                showToast("ল্যাব নির্বাচন করুন!", "error");
+                document.getElementById('paymentLabId').focus();
+                return;
+            }
+            
+            if (amount <= 0) {
+                showToast("পেমেন্টের পরিমাণ দিন!", "error");
+                document.getElementById('paymentAmount').focus();
+                return;
+            }
+            
+            // Get selected lab
+            const selectedLab = allLabs.find(lab => lab.id === labId);
+            if (!selectedLab) {
+                showToast("ল্যাবটি পাওয়া যায়নি!", "error");
+                return;
+            }
+            
+            // Calculate lab's total due
+            const labJobs = allLabJobs.filter(job => job.labId === labId);
+            const labTotalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
+            
+            if (amount > labTotalDue) {
+                showToast(`পেমেন্টের পরিমাণ বকেয়ার চেয়ে বেশি! বকেয়া: ৳ ${formatNumber(labTotalDue)}`, "error");
+                return;
+            }
+            
+            try {
+                // Generate payment ID
+                const paymentId = `payment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                const now = new Date();
+                
+                // Prepare payment data
+                const paymentData = {
+                    id: paymentId,
+                    labId: labId,
+                    labName: selectedLab.name,
+                    amount: amount,
+                    date: paymentDate || now.toISOString().split('T')[0],
+                    method: method,
+                    note: note || '',
+                    createdAt: serverTimestamp(),
+                    createdBy: currentUser?.uid || 'system'
+                };
+                
+                // Save payment
+                await setDoc(doc(db, "labPayments", paymentId), paymentData);
+                
+                // Distribute payment to lab jobs
+                await distributePaymentToJobs(labId, amount);
+                
+                // Show success message
+                showToast("পেমেন্ট সফলভাবে সংরক্ষণ হয়েছে!", "success");
+                
+                // Reset form
+                document.getElementById('paymentAmount').value = '';
+                document.getElementById('paymentNote').value = '';
+                
+                // Reload all data
+                await refreshAllData();
+                
+                // Navigate to payment section
+                navigateToSection('lab-payment');
+                
+            } catch (error) {
+                console.error("Error adding payment:", error);
+                showToast("পেমেন্ট সংরক্ষণে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        // Distribute payment to lab jobs
+        async function distributePaymentToJobs(labId, paymentAmount) {
+            const labJobs = allLabJobs.filter(job => job.labId === labId && job.due > 0);
+            
+            // Sort jobs by date (oldest first)
+            labJobs.sort((a, b) => {
+                const dateA = a.date || new Date(0);
+                const dateB = b.date || new Date(0);
+                return dateA - dateB;
+            });
+            
+            let remainingPayment = paymentAmount;
+            
+            for (const job of labJobs) {
+                if (remainingPayment <= 0) break;
+                
+                const jobDue = parseFloat(job.due || 0);
+                if (jobDue <= 0) continue;
+                
+                const paymentForThisJob = Math.min(jobDue, remainingPayment);
+                const newDue = jobDue - paymentForThisJob;
+                const newPaid = parseFloat(job.paid || 0) + paymentForThisJob;
+                
+                // Update job
+                await updateDoc(doc(db, "labJobs", job.id), {
+                    due: newDue,
+                    paid: newPaid,
+                    status: newDue === 0 ? 'delivered' : job.status,
+                    updatedAt: serverTimestamp()
+                });
+                
+                remainingPayment -= paymentForThisJob;
+            }
+            
+            // Update lab total due
+            const labRef = doc(db, "labs", labId);
+            const labSnap = await getDoc(labRef);
+            
+            if (labSnap.exists()) {
+                const labData = labSnap.data();
+                const newLabDue = Math.max(0, (labData.totalDue || 0) - paymentAmount);
+                
+                await updateDoc(labRef, {
+                    totalDue: newLabDue,
+                    lastUpdated: serverTimestamp()
+                });
+            }
+        }
+
         // Export history
         function exportHistory() {
             // Get filter values
@@ -3001,17 +3466,46 @@
             try {
                 const jobRef = doc(db, "labJobs", jobId);
                 
-                await updateDoc(jobRef, {
-                    status: newStatus
-                });
+                const updates = {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                };
+                
+                // যদি ডেলিভার্ড হয়, তাহলে ডিউ 0 করুন
+                if (newStatus === 'delivered') {
+                    updates.due = 0;
+                    updates.paid = updates.totalPrice;
+                }
+                
+                await updateDoc(jobRef, updates);
                 
                 showToast("স্ট্যাটাস আপডেট করা হয়েছে!", "success");
-                loadLabHistory();
+                await refreshAllData();
                 
             } catch (error) {
                 console.error("Error updating job status:", error);
                 showToast("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে!", "error");
             }
+        };
+
+        window.addPaymentForJob = function(jobId) {
+            const job = allLabJobs.find(j => j.id === jobId);
+            if (!job) {
+                showToast("কাজটি পাওয়া যায়নি!", "error");
+                return;
+            }
+            
+            // Navigate to payment section
+            navigateToSection('lab-payment');
+            
+            // Fill payment form with job data
+            setTimeout(() => {
+                document.getElementById('paymentLabId').value = job.labId;
+                document.getElementById('paymentAmount').value = job.due || 0;
+                document.getElementById('paymentAmount').focus();
+                
+                showToast("এই কাজের জন্য পেমেন্ট ফর্ম প্রস্তুত", "info");
+            }, 500);
         };
 
         window.deleteLabJob = async function(jobId) {
@@ -3049,7 +3543,7 @@
                 }
                 
                 showToast("ল্যাব কাজ ডিলিট করা হয়েছে!", "success");
-                loadLabHistory();
+                await refreshAllData();
                 
             } catch (error) {
                 console.error("Error deleting lab job:", error);
@@ -3120,7 +3614,7 @@
                 
                 await deleteDoc(doc(db, "labs", labId));
                 showToast("ল্যাব ডিলিট করা হয়েছে!", "success");
-                loadLabsData();
+                await refreshAllData();
                 
             } catch (error) {
                 console.error("Error deleting lab:", error);
@@ -3209,9 +3703,9 @@
         // Get status badge HTML
         function getStatusBadge(status) {
             const badges = {
-                'pending': '<span class="status-badge status-pending"><i class="fas fa-clock"></i> পেন্ডিং</span>',
-                'processing': '<span class="status-badge status-processing"><i class="fas fa-cog fa-spin"></i> প্রসেসিং</span>',
-                'completed': '<span class="status-badge status-completed"><i class="fas fa-check"></i> কমপ্লিটেড</span>',
+                'pending': '<span class="status-badge status-pending"><i class="fas fa-clock"></i> বাকি</span>',
+                'processing': '<span class="status-badge status-processing"><i class="fas fa-cog fa-spin"></i> প্রস্তুত হচ্ছে</span>',
+                'completed': '<span class="status-badge status-completed"><i class="fas fa-check"></i> প্রস্তুত</span>',
                 'delivered': '<span class="status-badge status-delivered"><i class="fas fa-truck"></i> ডেলিভার্ড</span>'
             };
             
