@@ -1335,10 +1335,18 @@
 
         // Navigation Function
         function navigateToSection(sectionId) {
-            // Hide all sections
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
+    // যদি টার্গেট 'lab-entry' হয়, তবে নতুন পেজে নিয়ে যাবে
+    if (sectionId === 'lab-entry') {
+        window.location.href = "labghor.html";
+        return; // বাকি কোড আর রান হবে না
+    }
+
+    // বাকি আগের কোডগুলো এখানে থাকবে...
+    sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    // ...
+}
             
             // Show target section
             const targetSection = document.getElementById(sectionId);
@@ -1372,7 +1380,7 @@
                     loadPatientHistory();
                 }, 300);
             }
-        }
+        
 
         // Navigation Event Listeners
         mobileNavItems.forEach(item => {
