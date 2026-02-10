@@ -193,6 +193,7 @@
             border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            user-select: none;
         }
 
         .dashboard-card:active {
@@ -289,6 +290,7 @@
             padding: 15px;
             border-bottom: 1px solid var(--light-gray);
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .recent-item:active {
@@ -373,6 +375,7 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            user-select: none;
         }
 
         .quick-action-btn:active {
@@ -463,9 +466,9 @@
             font-size: 1rem;
             transition: var(--transition);
             background: #fcfcfc;
-        -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
         .form-control:focus {
@@ -494,6 +497,7 @@
             cursor: pointer;
             margin-bottom: 20px;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .toggle-checkbox {
@@ -624,6 +628,7 @@
             width: 100%;
             min-height: 54px;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .btn:active {
@@ -807,6 +812,8 @@
             padding: 8px 10px;
             border-radius: 10px;
             min-width: 60px;
+            cursor: pointer;
+            user-select: none;
         }
 
         .bottom-nav-item.active {
@@ -867,9 +874,91 @@
         button, .btn, .mobile-nav-link, .dashboard-card, .quick-action-btn {
             min-height: 44px;
         }
+
+        /* Form Error Styles */
+        .form-control.error {
+            border-color: var(--danger);
+            background-color: #fff5f5;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error-message i {
+            font-size: 0.9rem;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .loading-overlay p {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>লোড হচ্ছে...</p>
+    </div>
+
     <!-- Mobile Header -->
     <header class="mobile-header">
         <div>
@@ -959,9 +1048,9 @@
                 </h3>
                 <div class="recent-list" id="recentPatientsList">
                     <!-- Dynamic content will be loaded here -->
-                    <div style="text-align: center; padding: 30px; color: var(--gray);">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i>
-                        লোড হচ্ছে...
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <h4>লোড হচ্ছে...</h4>
                     </div>
                 </div>
             </div>
@@ -1009,6 +1098,10 @@
                 <div class="form-group">
                     <label for="pName" class="form-label">রোগীর নাম *</label>
                     <input type="text" id="pName" class="form-control" placeholder="রোগীর পূর্ণ নাম" required>
+                    <div id="nameError" class="error-message" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        নাম অবশ্যই দিতে হবে
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -1018,7 +1111,12 @@
                 
                 <div class="form-group">
                     <label for="pPhone" class="form-label">মোবাইল নাম্বার *</label>
-                    <input type="tel" id="pPhone" class="form-control" placeholder="মোবাইল নাম্বার (ইংরেজিতে)" required>
+                    <input type="tel" id="pPhone" class="form-control" placeholder="মোবাইল নাম্বার (ইংরেজিতে)" 
+                           pattern="01[3-9]\d{8}" required>
+                    <div id="phoneError" class="error-message" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        সঠিক মোবাইল নাম্বার দিন (01XXXXXXXXX)
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -1038,6 +1136,10 @@
                         <option value="দাঁতের ব্যথা">দাঁতের ব্যথা</option>
                         <option value="অন্যান্য">অন্যান্য</option>
                     </select>
+                    <div id="problemError" class="error-message" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        সমস্যা নির্বাচন করুন
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -1137,7 +1239,7 @@
                 <input type="hidden" id="pTotal" value="0">
                 <input type="hidden" id="pDue" value="0">
                 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     <i class="fas fa-save"></i>
                     রোগীর তথ্য সংরক্ষণ করুন
                 </button>
@@ -1153,7 +1255,8 @@
             
             <div class="filter-section">
                 <div class="form-group">
-                    <input type="tel" id="filterPhone" class="filter-input" placeholder="মোবাইল নাম্বার দিয়ে খুঁজুন...">
+                    <input type="tel" id="filterPhone" class="filter-input" placeholder="মোবাইল নাম্বার দিয়ে খুঁজুন..." 
+                           pattern="01[3-9]\d{0,8}">
                     <input type="text" id="filterName" class="filter-input" placeholder="নাম দিয়ে খুঁজুন...">
                 </div>
                 <div style="display: flex; gap: 10px;">
@@ -1229,10 +1332,10 @@
                 </button>
             </div>
             <div id="phoneList" style="background: #f8f9fa; padding: 20px; border-radius: 12px; min-height: 200px; max-height: 400px; overflow-y: auto;">
-                <p style="text-align: center; color: var(--gray); padding: 30px;">
+                <div class="empty-state">
                     <i class="fas fa-spinner fa-spin"></i>
-                    নাম্বার লোড হচ্ছে...
-                </p>
+                    <h4>নাম্বার লোড হচ্ছে...</h4>
+                </div>
             </div>
         </div>
     </main>
@@ -1294,12 +1397,26 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Loading overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Show loading
+        function showLoading(message = 'লোড হচ্ছে...') {
+            loadingOverlay.querySelector('p').textContent = message;
+            loadingOverlay.classList.add('active');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            loadingOverlay.classList.remove('active');
+        }
+
         // Authentication Check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "log.html";
             } else {
-                // Load recent patients when authenticated
+                // Load initial data
                 setTimeout(() => {
                     loadRecentPatients();
                     loadAllPhoneNumbers();
@@ -1333,20 +1450,18 @@
             sidebarOverlay.classList.remove('active');
         });
 
-        // Navigation Function
+        // Navigation Function - CORRECTED VERSION
         function navigateToSection(sectionId) {
-    // যদি টার্গেট 'lab-entry' হয়, তবে নতুন পেজে নিয়ে যাবে
-    if (sectionId === 'lab-entry') {
-        window.location.href = "labghor.html";
-        return; // বাকি কোড আর রান হবে না
-    }
-
-    // বাকি আগের কোডগুলো এখানে থাকবে...
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-    // ...
-}
+            // যদি টার্গেট 'lab-entry' হয়, তবে নতুন পেজে নিয়ে যাবে
+            if (sectionId === 'lab-entry') {
+                window.location.href = "labghor.html";
+                return; // বাকি কোড আর রান হবে না
+            }
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
             
             // Show target section
             const targetSection = document.getElementById(sectionId);
@@ -1380,7 +1495,7 @@
                     loadPatientHistory();
                 }, 300);
             }
-        
+        }
 
         // Navigation Event Listeners
         mobileNavItems.forEach(item => {
@@ -1486,10 +1601,56 @@
             });
         }
 
-        // Form Submission
+        // Form Validation Function
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.form-control.error').forEach(el => {
+                el.classList.remove('error');
+            });
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate name
+            const name = document.getElementById('pName').value.trim();
+            if (!name) {
+                document.getElementById('pName').classList.add('error');
+                document.getElementById('nameError').style.display = 'flex';
+                isValid = false;
+            }
+            
+            // Validate phone
+            const phone = document.getElementById('pPhone').value.trim();
+            const phoneRegex = /^01[3-9]\d{8}$/;
+            if (!phone || !phoneRegex.test(phone)) {
+                document.getElementById('pPhone').classList.add('error');
+                document.getElementById('phoneError').style.display = 'flex';
+                isValid = false;
+            }
+            
+            // Validate problem
+            const problem = document.getElementById('pProblem').value;
+            if (!problem) {
+                document.getElementById('pProblem').classList.add('error');
+                document.getElementById('problemError').style.display = 'flex';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Form Submission with improved error handling
         if (document.getElementById('patientForm')) {
             document.getElementById('patientForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                // Validate form
+                if (!validateForm()) {
+                    showMessage('দয়া করে সকল প্রয়োজনীয় তথ্য সঠিকভাবে দিন', 'error');
+                    return;
+                }
                 
                 // Get form values
                 const name = document.getElementById('pName').value.trim();
@@ -1508,12 +1669,6 @@
                 const total = document.getElementById('pTotal').value;
                 const paid = document.getElementById('pPaid').value;
                 const due = document.getElementById('pDue').value;
-                
-                // Validation
-                if (!name || !phone) {
-                    showMessage('রোগীর নাম ও মোবাইল নাম্বার অবশ্যই দিতে হবে', 'error');
-                    return;
-                }
                 
                 // Generate current date and time in Bengali format
                 const now = new Date();
@@ -1549,7 +1704,15 @@
                     due: due
                 };
                 
+                // Disable submit button and show loading
+                const submitBtn = document.getElementById('submitBtn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> সংরক্ষণ হচ্ছে...';
+                submitBtn.disabled = true;
+                
                 try {
+                    showLoading('রোগীর তথ্য সংরক্ষণ করা হচ্ছে...');
+                    
                     // Create a unique ID combining phone and name for individual profiles
                     const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
                     const patientRef = doc(db, "patients", profileId);
@@ -1605,6 +1768,7 @@
                         });
                     }
                     
+                    hideLoading();
                     showMessage('রোগীর তথ্য সফলভাবে সংরক্ষণ হয়েছে!', 'success');
                     
                     // Reset form
@@ -1621,7 +1785,12 @@
                     
                 } catch (err) {
                     console.error("Error saving patient:", err);
+                    hideLoading();
                     showMessage('তথ্য সংরক্ষণে সমস্যা হয়েছে! আবার চেষ্টা করুন।', 'error');
+                } finally {
+                    // Re-enable submit button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 }
             });
         }
@@ -1631,9 +1800,9 @@
             try {
                 const recentList = document.getElementById('recentPatientsList');
                 recentList.innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: var(--gray);">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px; display: block;"></i>
-                        লোড হচ্ছে...
+                    <div class="empty-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <h4>লোড হচ্ছে...</h4>
                     </div>
                 `;
                 
@@ -1692,9 +1861,10 @@
                 // Update UI
                 if (recentPatients.length === 0) {
                     recentList.innerHTML = `
-                        <div style="text-align: center; padding: 30px; color: var(--gray);">
-                            <i class="fas fa-user-slash" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
-                            এখনও কোনো রোগী নেই
+                        <div class="empty-state">
+                            <i class="fas fa-user-slash"></i>
+                            <h4>এখনও কোনো রোগী নেই</h4>
+                            <p>নতুন রোগী যোগ করুন</p>
                         </div>
                     `;
                 } else {
@@ -1724,7 +1894,8 @@
                     
                     // Add event listeners to view buttons
                     document.querySelectorAll('.view-recent-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
                             const patientId = this.getAttribute('data-id');
                             window.location.href = `rugipro.html?profileId=${patientId}`;
                         });
@@ -1745,9 +1916,10 @@
                 console.error("Error loading recent patients:", err);
                 const recentList = document.getElementById('recentPatientsList');
                 recentList.innerHTML = `
-                    <div style="text-align: center; padding: 30px; color: var(--danger);">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i>
-                        তথ্য লোড করতে সমস্যা হয়েছে
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>তথ্য লোড করতে সমস্যা হয়েছে</h4>
+                        <p>রিফ্রেশ করে আবার চেষ্টা করুন</p>
                     </div>
                 `;
             }
@@ -1756,6 +1928,7 @@
         // Load Patient History
         async function loadPatientHistory() {
             try {
+                showLoading('রোগীর হিস্ট্রি লোড হচ্ছে...');
                 const historyTable = document.getElementById('patientHistoryTable');
                 const totalPatientsEl = document.getElementById('totalPatients');
                 
@@ -1829,9 +2002,11 @@
                 
                 // Update UI
                 updatePatientHistoryTable();
+                hideLoading();
                 
             } catch (err) {
                 console.error("Error loading patient history:", err);
+                hideLoading();
                 const historyTable = document.getElementById('patientHistoryTable');
                 historyTable.innerHTML = `
                     <tr>
@@ -1923,6 +2098,7 @@
         // Load All Phone Numbers
         async function loadAllPhoneNumbers() {
             try {
+                showLoading('নাম্বার লোড হচ্ছে...');
                 const phoneListDiv = document.getElementById('phoneList');
                 
                 const querySnapshot = await getDocs(collection(db, "patientPhones"));
@@ -1934,10 +2110,11 @@
                 
                 if (phoneNumbers.length === 0) {
                     phoneListDiv.innerHTML = `
-                        <p style="text-align: center; color: var(--gray); padding: 30px;">
+                        <div class="empty-state">
                             <i class="fas fa-phone-slash"></i>
-                            কোনো রোগীর নাম্বার নেই
-                        </p>
+                            <h4>কোনো রোগীর নাম্বার নেই</h4>
+                            <p>নতুন রোগী যোগ করুন</p>
+                        </div>
                     `;
                 } else {
                     // Sort phone numbers
@@ -1967,18 +2144,25 @@
                     document.querySelectorAll('.copy-single-btn').forEach(btn => {
                         btn.addEventListener('click', async function() {
                             const phone = this.getAttribute('data-phone');
-                            await navigator.clipboard.writeText(phone);
-                            showMessage('নাম্বার কপি হয়েছে!', 'success');
+                            try {
+                                await navigator.clipboard.writeText(phone);
+                                showMessage('নাম্বার কপি হয়েছে!', 'success');
+                            } catch (err) {
+                                showMessage('নাম্বার কপি করতে সমস্যা হয়েছে!', 'error');
+                            }
                         });
                     });
                 }
+                hideLoading();
             } catch (err) {
                 console.error("Error loading phone numbers:", err);
+                hideLoading();
                 document.getElementById('phoneList').innerHTML = `
-                    <p style="text-align: center; color: var(--danger); padding: 30px;">
+                    <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
-                        নাম্বার লোড করতে সমস্যা হয়েছে
-                    </p>
+                        <h4>নাম্বার লোড করতে সমস্যা হয়েছে</h4>
+                        <p>রিফ্রেশ করে আবার চেষ্টা করুন</p>
+                    </div>
                 `;
             }
         }
@@ -1986,6 +2170,7 @@
         // Copy All Phone Numbers
         document.getElementById('btnCopyNumbers')?.addEventListener('click', async () => {
             try {
+                showLoading('নাম্বার কপি করা হচ্ছে...');
                 const querySnapshot = await getDocs(collection(db, "patientPhones"));
                 const phoneNumbers = [];
                 
@@ -1996,15 +2181,18 @@
                 if (phoneNumbers.length > 0) {
                     const phoneList = phoneNumbers.join(', ');
                     await navigator.clipboard.writeText(phoneList);
+                    hideLoading();
                     showMessage(`${phoneNumbers.length}টি নাম্বার কপি হয়েছে!`, 'success');
                     
                     // Reload phone numbers
                     loadAllPhoneNumbers();
                 } else {
+                    hideLoading();
                     showMessage('কোনো রোগীর নাম্বার পাওয়া যায়নি!', 'warning');
                 }
             } catch (err) {
                 console.error("Copy error:", err);
+                hideLoading();
                 showMessage('নাম্বার কপি করতে সমস্যা হয়েছে!', 'error');
             }
         });
@@ -2024,6 +2212,22 @@
         // Refresh History
         document.getElementById('btnRefreshHistory')?.addEventListener('click', () => {
             loadPatientHistory();
+        });
+
+        // Real-time search on filter input
+        document.getElementById('filterPhone')?.addEventListener('input', function() {
+            // Validate phone number format as user types
+            const phone = this.value.trim();
+            if (phone.length >= 3) {
+                updatePatientHistoryTable();
+            }
+        });
+
+        document.getElementById('filterName')?.addEventListener('input', function() {
+            const name = this.value.trim();
+            if (name.length >= 2) {
+                updatePatientHistoryTable();
+            }
         });
 
         // Show Message Function
@@ -2055,6 +2259,23 @@
             setTimeout(() => {
                 document.getElementById('pName')?.focus();
             }, 500);
+        });
+        
+        // Prevent form refresh on Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+            }
+        });
+        
+        // Handle back button
+        window.addEventListener('popstate', function(e) {
+            // You can add back button handling here if needed
+        });
+        
+        // Auto-calculate when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCalculations();
         });
     </script>
 </body>
