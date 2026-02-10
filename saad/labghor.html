@@ -242,15 +242,15 @@
         }
 
         .page-title i {
-    margin-right: 15px;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text; /* এটি যোগ করুন */
-    -webkit-text-fill-color: transparent;
-    color: transparent; /* ব্যাকআপ হিসেবে */
-    font-size: 2rem;
-    display: inline-block; /* আইকনের ক্ষেত্রে এটি খুব জরুরি */
-}
+            margin-right: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            font-size: 2rem;
+            display: inline-block;
+        }
 
         .user-info {
             display: flex;
@@ -384,18 +384,15 @@
         }
 
         .stat-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    background: var(--gradient-primary);
-    
-    /* টেক্সট গ্রাডিয়েন্ট কাজ করার জন্য নিচের ৩টি লাইন জরুরি */
-    -webkit-background-clip: text; /* Chrome, Safari, Edge এর জন্য */
-    background-clip: text;         /* Standard প্রোপার্টি */
-    -webkit-text-fill-color: transparent; 
-    
-    /* কিছু ব্রাউজারে কালার ট্রান্সপারেন্ট না হলে গ্রাডিয়েন্ট দেখা যায় না */
-    color: transparent; 
-}
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
         .stat-label {
             font-size: 0.9rem;
             color: var(--gray);
@@ -1991,8 +1988,7 @@
             where,
             orderBy,
             deleteDoc,
-            Timestamp,
-            onSnapshot
+            serverTimestamp
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Firebase Configuration
@@ -2028,14 +2024,8 @@
         // Global Variables
         let allLabs = [];
         let allLabJobs = [];
-        let allPayments = [];
         let currentUser = null;
-        let realTimeListeners = [];
-
-        // Performance Optimization Flags
         let isDataLoading = false;
-        let lastRefreshTime = 0;
-        const REFRESH_COOLDOWN = 2000; // 2 seconds cooldown
 
         // Initialize the application
         function initApp() {
@@ -2043,22 +2033,6 @@
             updateCurrentTime();
             setInterval(updateCurrentTime, 1000);
             setupOfflineDetection();
-            setupServiceWorker();
-        }
-
-        // Setup Service Worker for PWA
-        function setupServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/lab-management-sw.js')
-                        .then(registration => {
-                            console.log('ServiceWorker registration successful');
-                        })
-                        .catch(err => {
-                            console.log('ServiceWorker registration failed: ', err);
-                        });
-                });
-            }
         }
 
         // Setup Offline Detection
@@ -2066,7 +2040,6 @@
             window.addEventListener('online', () => {
                 offlineIndicator.classList.remove('show');
                 showToast('আপনি এখন অনলাইনে রয়েছেন', 'success');
-                // Refresh data when coming back online
                 setTimeout(() => {
                     loadAllData();
                 }, 1000);
@@ -2077,7 +2050,6 @@
                 showToast('আপনি অফলাইনে রয়েছেন', 'warning');
             });
 
-            // Initial check
             if (!navigator.onLine) {
                 offlineIndicator.classList.add('show');
             }
@@ -2154,21 +2126,11 @@
             document.getElementById('yearSelect')?.addEventListener('change', updateLabHistoryTable);
             document.getElementById('statusFilter')?.addEventListener('change', updateLabHistoryTable);
             
-            // Search patient for lab
-            document.getElementById('btnSearchPatientForLab')?.addEventListener('click', searchPatientForLab);
-            
             // Handle window resize
             window.addEventListener('resize', handleResize);
             
             // Handle back button
             window.addEventListener('popstate', handlePopState);
-            
-            // Prevent form refresh
-            document.addEventListener('submit', e => {
-                if (e.target.tagName === 'FORM') {
-                    e.preventDefault();
-                }
-            });
         }
 
         // Handle navigation
@@ -2271,10 +2233,8 @@
             if (currentSection === 'dashboard') {
                 navigateToSection('lab-entry');
             } else if (currentSection === 'lab-history') {
-                // Quick add from history
                 navigateToSection('lab-entry');
             } else if (currentSection === 'manage-labs') {
-                // Quick add lab
                 document.getElementById('newLabName').focus();
             }
         }
@@ -2284,8 +2244,6 @@
             const showFabSections = ['dashboard', 'lab-history', 'manage-labs'];
             if (showFabSections.includes(sectionId)) {
                 fab.style.display = 'flex';
-                
-                // Update FAB icon based on section
                 const fabIcon = fab.querySelector('i');
                 if (sectionId === 'dashboard' || sectionId === 'lab-history') {
                     fabIcon.className = 'fas fa-plus';
@@ -2349,7 +2307,6 @@
                 return;
             }
             
-            // Validate Bangladeshi phone number
             const phoneRegex = /^01[3-9]\d{8}$/;
             if (!phoneRegex.test(phone)) {
                 showToast("সঠিক বাংলাদেশী মোবাইল নাম্বার দিন (11 ডিজিট)", "error");
@@ -2357,7 +2314,6 @@
             }
             
             try {
-                // Search for patient in patientPhones collection
                 const phoneRef = doc(db, "patientPhones", phone);
                 const phoneSnap = await getDoc(phoneRef);
                 
@@ -2378,7 +2334,7 @@
             }
         }
 
-        // Handle lab form submission
+        // Handle lab form submission - CORRECTED VERSION
         async function handleLabFormSubmit(e) {
             e.preventDefault();
             
@@ -2423,7 +2379,7 @@
                 const jobId = `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 const now = new Date();
                 
-                // Prepare job data
+                // Prepare job data - USE PLAIN OBJECT WITHOUT Timestamp
                 const jobData = {
                     id: jobId,
                     patientPhone: patientPhone,
@@ -2438,24 +2394,25 @@
                     totalPrice: totalPrice,
                     due: totalPrice, // Initially all due
                     paid: 0,
-                    date: Timestamp.fromDate(now),
+                    date: now.toISOString().split('T')[0], // Store as string YYYY-MM-DD
                     deliveryDate: deliveryDate || null,
                     notes: notes || '',
                     status: status,
-                    createdAt: Timestamp.fromDate(now),
-                    createdBy: currentUser?.uid || 'system',
-                    lastUpdated: Timestamp.fromDate(now)
+                    createdAt: serverTimestamp(), // Use serverTimestamp for accurate time
+                    createdBy: currentUser?.uid || 'system'
                 };
+                
+                console.log("Saving job data:", jobData);
                 
                 // Save to Firestore
                 await setDoc(doc(db, "labJobs", jobId), jobData);
                 
-                // Update lab's jobs array
+                // Update lab's jobs array and total due
                 const labRef = doc(db, "labs", labId);
                 await updateDoc(labRef, {
                     jobs: arrayUnion(jobId),
                     totalDue: (parseFloat(lab.totalDue || 0) + totalPrice),
-                    lastUpdated: Timestamp.fromDate(now)
+                    lastUpdated: serverTimestamp()
                 });
                 
                 // Show success message
@@ -2470,11 +2427,11 @@
                 }, 1500);
                 
                 // Reload data
-                loadAllData();
+                await loadAllData();
                 
             } catch (error) {
                 console.error("Error saving lab job:", error);
-                showToast("ল্যাব কাজ সংরক্ষণে সমস্যা হয়েছে!", "error");
+                showToast("ল্যাব কাজ সংরক্ষণে সমস্যা হয়েছে: " + error.message, "error");
             } finally {
                 // Reset loading state
                 isDataLoading = false;
@@ -2526,8 +2483,7 @@
             try {
                 await Promise.all([
                     loadLabsData(),
-                    loadLabHistory(),
-                    loadPaymentHistory()
+                    loadLabHistory()
                 ]);
             } catch (error) {
                 console.error("Error loading all data:", error);
@@ -2569,49 +2525,35 @@
                 querySnapshot.forEach(doc => {
                     const jobData = doc.data();
                     jobData.id = doc.id;
-                    // Convert Firestore timestamp to Date
-                    if (jobData.date && jobData.date.toDate) {
-                        jobData.date = jobData.date.toDate();
-                    }
+                    
+                    // Handle Firestore timestamps
                     if (jobData.createdAt && jobData.createdAt.toDate) {
                         jobData.createdAt = jobData.createdAt.toDate();
                     }
-                    if (jobData.lastUpdated && jobData.lastUpdated.toDate) {
-                        jobData.lastUpdated = jobData.lastUpdated.toDate();
+                    
+                    // Convert date string to Date object if needed
+                    if (jobData.date && typeof jobData.date === 'string') {
+                        jobData.date = new Date(jobData.date);
                     }
+                    
                     allLabJobs.push(jobData);
                 });
                 
                 // Sort by date (newest first)
-                allLabJobs.sort((a, b) => (b.date || b.createdAt) - (a.date || a.createdAt));
+                allLabJobs.sort((a, b) => {
+                    const dateA = a.date || a.createdAt || new Date(0);
+                    const dateB = b.date || b.createdAt || new Date(0);
+                    return dateB - dateA;
+                });
                 
                 updateLabHistoryTable();
                 updateBadges();
                 updateRecentJobs();
+                updateDashboardStats();
                 
             } catch (error) {
                 console.error("Error loading lab history:", error);
                 showToast("ল্যাব হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
-        // Load payment history
-        async function loadPaymentHistory() {
-            try {
-                const querySnapshot = await getDocs(collection(db, "labPayments"));
-                allPayments = [];
-                
-                querySnapshot.forEach(doc => {
-                    const paymentData = doc.data();
-                    paymentData.id = doc.id;
-                    allPayments.push(paymentData);
-                });
-                
-                updatePaymentHistoryTable();
-                
-            } catch (error) {
-                console.error("Error loading payment history:", error);
-                showToast("পেমেন্ট হিস্ট্রি লোড করতে সমস্যা হয়েছে!", "error");
             }
         }
 
@@ -2820,8 +2762,9 @@
             today.setHours(0, 0, 0, 0);
             
             const todayEntries = allLabJobs.filter(job => {
-                const jobDate = job.date || job.createdAt;
-                return jobDate && jobDate >= today;
+                if (!job.date) return false;
+                const jobDate = job.date;
+                return jobDate >= today;
             }).length;
             
             const pendingJobs = allLabJobs.filter(job => 
@@ -2946,7 +2889,6 @@
             try {
                 // Generate lab ID
                 const labId = `lab_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-                const now = new Date();
                 
                 // Prepare lab data
                 const labData = {
@@ -2958,9 +2900,8 @@
                     jobs: [],
                     totalDue: 0,
                     totalPaid: 0,
-                    createdAt: Timestamp.fromDate(now),
-                    createdBy: currentUser?.uid || 'system',
-                    lastUpdated: Timestamp.fromDate(now)
+                    createdAt: serverTimestamp(),
+                    createdBy: currentUser?.uid || 'system'
                 };
                 
                 // Save to Firestore
@@ -3053,120 +2994,15 @@
             window.print();
         }
 
-        // Search patient for lab
-        async function searchPatientForLab() {
-            const phone = document.getElementById('searchPatientPhone').value.trim();
-            
-            if (!phone) {
-                showToast("রোগীর মোবাইল নাম্বার দিন!", "error");
-                return;
-            }
-            
-            // Validate phone number
-            const phoneRegex = /^01[3-9]\d{8}$/;
-            if (!phoneRegex.test(phone)) {
-                showToast("সঠিক বাংলাদেশী মোবাইল নাম্বার দিন (11 ডিজিট)", "error");
-                return;
-            }
-            
-            try {
-                // Get patient's lab jobs
-                const patientLabJobs = allLabJobs.filter(job => job.patientPhone === phone);
-                
-                const patientLabHistory = document.getElementById('patientLabHistory');
-                if (!patientLabHistory) return;
-                
-                if (patientLabJobs.length === 0) {
-                    patientLabHistory.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-user-injured"></i>
-                            <h4>এই রোগীর কোনো ল্যাব কাজ নেই</h4>
-                            <p>রোগী: ${phone}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Group by patient name (in case multiple patients share same phone)
-                const patientNames = [...new Set(patientLabJobs.map(job => job.patientName))];
-                
-                let html = `
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h3 class="table-title">
-                                <i class="fas fa-user-injured"></i>
-                                রোগীর ল্যাব হিস্ট্রি
-                            </h3>
-                            <div class="table-actions">
-                                <span style="color: var(--gray);">
-                                    মোট কাজ: ${patientLabJobs.length}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="patients-table">
-                                <thead>
-                                    <tr>
-                                        <th>তারিখ</th>
-                                        <th>রোগীর নাম</th>
-                                        <th>ল্যাব</th>
-                                        <th>ক্রাউন টাইপ</th>
-                                        <th>সংখ্যা</th>
-                                        <th>মোট দাম</th>
-                                        <th>ডিউ</th>
-                                        <th>স্ট্যাটাস</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                `;
-                
-                patientLabJobs.forEach(job => {
-                    const lab = allLabs.find(l => l.id === job.labId);
-                    const labName = lab ? lab.name : 'অজানা ল্যাব';
-                    const dateStr = job.date ? formatDate(job.date) : '-';
-                    const statusBadge = getStatusBadge(job.status);
-                    
-                    html += `
-                        <tr>
-                            <td>${dateStr}</td>
-                            <td><strong>${job.patientName || '-'}</strong></td>
-                            <td>${labName}</td>
-                            <td>${job.crownType || '-'}</td>
-                            <td>${job.quantity || 1}</td>
-                            <td><strong>৳ ${formatNumber(job.totalPrice || 0)}</strong></td>
-                            <td><strong style="color: var(--danger);">৳ ${formatNumber(job.due || 0)}</strong></td>
-                            <td>${statusBadge}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-                
-                patientLabHistory.innerHTML = html;
-                showToast(`রোগীর ${patientLabJobs.length} টি ল্যাব কাজ পাওয়া গেছে`, "success");
-                
-            } catch (error) {
-                console.error("Error searching patient:", error);
-                showToast("রোগী সার্চ করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
         // Global functions for table actions
         window.updateLabJobStatus = async function(jobId, newStatus) {
             if (!confirm("আপনি কি এই কাজের স্ট্যাটাস আপডেট করতে চান?")) return;
             
             try {
                 const jobRef = doc(db, "labJobs", jobId);
-                const now = new Date();
                 
                 await updateDoc(jobRef, {
-                    status: newStatus,
-                    lastUpdated: Timestamp.fromDate(now)
+                    status: newStatus
                 });
                 
                 showToast("স্ট্যাটাস আপডেট করা হয়েছে!", "success");
@@ -3182,7 +3018,36 @@
             if (!confirm("আপনি কি এই ল্যাব কাজ ডিলিট করতে চান?")) return;
             
             try {
-                await deleteDoc(doc(db, "labJobs", jobId));
+                // First get the job to know which lab it belongs to
+                const jobRef = doc(db, "labJobs", jobId);
+                const jobSnap = await getDoc(jobRef);
+                
+                if (!jobSnap.exists()) {
+                    showToast("কাজটি পাওয়া যায়নি!", "error");
+                    return;
+                }
+                
+                const jobData = jobSnap.data();
+                
+                // Delete the job
+                await deleteDoc(jobRef);
+                
+                // Update lab's total due
+                if (jobData.labId) {
+                    const labRef = doc(db, "labs", jobData.labId);
+                    const labSnap = await getDoc(labRef);
+                    
+                    if (labSnap.exists()) {
+                        const labData = labSnap.data();
+                        const newTotalDue = Math.max(0, (labData.totalDue || 0) - (jobData.due || 0));
+                        
+                        await updateDoc(labRef, {
+                            totalDue: newTotalDue,
+                            jobs: labData.jobs?.filter(id => id !== jobId) || []
+                        });
+                    }
+                }
+                
                 showToast("ল্যাব কাজ ডিলিট করা হয়েছে!", "success");
                 loadLabHistory();
                 
@@ -3211,7 +3076,12 @@
                 document.getElementById('crownQuantity').value = job.quantity || 1;
                 document.getElementById('unitPrice').value = job.unitPrice || 0;
                 document.getElementById('totalPrice').value = job.totalPrice || 0;
-                document.getElementById('deliveryDate').value = job.deliveryDate || '';
+                
+                // Format date for input
+                if (job.deliveryDate) {
+                    document.getElementById('deliveryDate').value = job.deliveryDate;
+                }
+                
                 document.getElementById('labNotes').value = job.notes || '';
                 document.getElementById('labStatus').value = job.status || 'pending';
                 
@@ -3271,11 +3141,9 @@
 
         // Show toast notification
         function showToast(message, type = 'info') {
-            // Create toast element
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
             
-            // Set icon based on type
             let icon = 'info-circle';
             switch(type) {
                 case 'success': icon = 'check-circle'; break;
@@ -3296,17 +3164,14 @@
                 </button>
             `;
             
-            // Add to container
             toastContainer.appendChild(toast);
             
-            // Add close event
             const closeBtn = toast.querySelector('.toast-close');
             closeBtn.addEventListener('click', () => {
                 toast.style.animation = 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse';
                 setTimeout(() => toast.remove(), 300);
             });
             
-            // Auto remove after 5 seconds
             setTimeout(() => {
                 if (toast.parentNode) {
                     toast.style.animation = 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse';
