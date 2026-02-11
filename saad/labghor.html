@@ -37,7 +37,6 @@
             --gradient-danger: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
         }
 
-        /* ============ GLOBAL STYLES ============ */
         * {
             margin: 0;
             padding: 0;
@@ -54,7 +53,6 @@
             line-height: 1.7;
         }
 
-        /* ============ LOADING SCREEN ============ */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -89,7 +87,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ============ SIDEBAR ============ */
         .sidebar {
             position: fixed;
             top: 0;
@@ -213,7 +210,6 @@
             font-weight: 600;
         }
 
-        /* ============ MAIN CONTENT ============ */
         .main-content {
             margin-left: 280px;
             padding: 25px;
@@ -221,7 +217,6 @@
             transition: var(--transition);
         }
 
-        /* ============ HEADER BAR ============ */
         .header-bar {
             display: flex;
             justify-content: space-between;
@@ -277,7 +272,6 @@
             font-weight: 500;
         }
 
-        /* ============ DASHBOARD CARDS ============ */
         .dashboard-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -378,7 +372,6 @@
             color: var(--gray);
         }
 
-        /* ============ STATS OVERVIEW ============ */
         .stats-overview {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -445,7 +438,6 @@
             color: var(--danger);
         }
 
-        /* ============ QUICK ACTIONS ============ */
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -490,7 +482,6 @@
             font-size: 0.75rem;
         }
 
-        /* ============ FORM CONTAINER ============ */
         .form-container {
             background: white;
             border-radius: var(--border-radius);
@@ -542,7 +533,6 @@
             font-weight: 600;
         }
 
-        /* ============ FORM ELEMENTS ============ */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -623,7 +613,6 @@
             margin-bottom: 0;
         }
 
-        /* ============ AUTO DATE INFO ============ */
         .auto-date-info {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             border: 2px solid #0ea5e9;
@@ -651,7 +640,6 @@
             font-size: 0.85rem;
         }
 
-        /* ============ BUTTONS ============ */
         .btn {
             padding: 14px 25px;
             border: none;
@@ -735,7 +723,6 @@
             transform: none !important;
         }
 
-        /* ============ TABLE STYLES ============ */
         .table-container {
             background: white;
             border-radius: var(--border-radius);
@@ -812,7 +799,6 @@
             flex-wrap: wrap;
         }
 
-        /* ============ STATUS BADGES ============ */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -848,7 +834,6 @@
             color: #6b21a8;
         }
 
-        /* ============ FILTER SECTION ============ */
         .filter-section {
             background: white;
             border-radius: var(--border-radius);
@@ -891,7 +876,6 @@
             border-color: var(--primary);
         }
 
-        /* ============ EMPTY STATE ============ */
         .empty-state {
             text-align: center;
             padding: 50px 20px;
@@ -914,7 +898,6 @@
             font-size: 0.9rem;
         }
 
-        /* ============ MOBILE MENU ============ */
         .mobile-menu-btn {
             position: fixed;
             top: 15px;
@@ -934,7 +917,6 @@
             justify-content: center;
         }
 
-        /* ============ FLOATING ACTION BUTTON ============ */
         .fab {
             position: fixed;
             bottom: 25px;
@@ -960,7 +942,6 @@
             box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
         }
 
-        /* ============ TOAST NOTIFICATIONS ============ */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -1027,7 +1008,6 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ============ OFFLINE INDICATOR ============ */
         .offline-indicator {
             position: fixed;
             top: 0;
@@ -1048,7 +1028,6 @@
             transform: translateY(0);
         }
 
-        /* ============ RESPONSIVE DESIGN ============ */
         @media (max-width: 1200px) {
             .sidebar { width: 260px; }
             .main-content { margin-left: 260px; }
@@ -1098,6 +1077,24 @@
             .btn { padding: 12px 20px; }
             .quick-actions { grid-template-columns: 1fr; }
             .toast-container { left: 20px; right: 20px; max-width: none; }
+        }
+        
+        /* ল্যাব এড ফর্মের জন্য স্টাইল */
+        .lab-add-form {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            border: 2px solid var(--light-gray);
+        }
+        
+        .lab-add-form h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -1439,12 +1436,13 @@
                     </div>
                 </div>
                 
-                <div class="form-container" style="margin-bottom: 30px; box-shadow: var(--box-shadow); background: #f0f9ff;">
-                    <h4 style="margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                <!-- ল্যাব এড করার ফর্ম - ফিক্সড -->
+                <div class="lab-add-form" style="background: #f0f9ff; border: 2px solid var(--primary);">
+                    <h3 style="color: var(--primary);">
                         <i class="fas fa-plus-circle"></i> নতুন ল্যাব প্রতিষ্ঠান যোগ করুন
-                    </h4>
-                    <p style="color: var(--gray); margin-bottom: 20px; font-size: 0.9rem;">
-                        <i class="fas fa-info-circle"></i> এখানে ল্যাবের তথ্য দিন। তারপর রোগীর জন্য "নতুন ল্যাব এন্ট্রি" তে এই ল্যাব নির্বাচন করতে পারবেন।
+                    </h3>
+                    <p style="color: var(--gray); margin-bottom: 20px; font-size: 0.95rem;">
+                        <i class="fas fa-info-circle"></i> নিচের ফর্ম পূরণ করে নতুন ল্যাব যোগ করুন। তারপর রোগীর জন্য ল্যাব এন্ট্রি করতে পারবেন।
                     </p>
                     
                     <div class="form-grid">
@@ -1478,8 +1476,8 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button id="btnAddLab" class="btn btn-success" style="flex: 1;">
-                            <i class="fas fa-plus"></i> ল্যাব যোগ করুন
+                        <button id="btnAddLab" class="btn btn-success" style="width: 100%;">
+                            <i class="fas fa-save"></i> ল্যাব যোগ করুন
                         </button>
                     </div>
                 </div>
@@ -1645,7 +1643,7 @@
                     </div>
                 </div>
                 
-                <div class="form-container" style="margin-bottom: 30px; box-shadow: var(--box-shadow); background: #f0fdf4;">
+                <div class="lab-add-form" style="margin-bottom: 30px; background: #f0fdf4;">
                     <h4 style="margin-bottom: 20px; color: var(--success); display: flex; align-items: center; gap: 10px;">
                         <i class="fas fa-plus-circle"></i> নতুন পেমেন্ট যোগ করুন
                     </h4>
@@ -1690,7 +1688,7 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button id="btnAddPayment" class="btn btn-success" style="flex: 1;">
+                        <button id="btnAddPayment" class="btn btn-success" style="width: 100%;">
                             <i class="fas fa-money-bill"></i> পেমেন্ট সংরক্ষণ করুন
                         </button>
                     </div>
@@ -1723,13 +1721,41 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- ============ PATIENT SEARCH SECTION ============ -->
+            <div id="patient-search" class="form-container">
+                <div class="form-header">
+                    <h3 class="form-title">
+                        <i class="fas fa-search"></i>
+                        রোগী সার্চ
+                    </h3>
+                </div>
+                
+                <div class="filter-section" style="justify-content: center;">
+                    <div class="filter-group" style="width: 100%;">
+                        <input type="text" id="searchPatientInput" class="form-control" 
+                               placeholder="মোবাইল নাম্বার বা রোগীর নাম লিখুন..." style="min-width: 250px;">
+                        <button id="btnSearchPatient" class="btn btn-primary">
+                            <i class="fas fa-search"></i> খুঁজুন
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="patientSearchResults">
+                    <div class="empty-state">
+                        <i class="fas fa-user-md"></i>
+                        <h4>রোগী খুঁজুন</h4>
+                        <p>উপরের বক্সে মোবাইল নাম্বার বা নাম লিখে সার্চ বাটন চাপুন</p>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Firebase Script -->
+    <!-- Firebase Script - সম্পূর্ণ ঠিক করা হয়েছে -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
@@ -1751,7 +1777,9 @@
             orderBy,
             deleteDoc,
             serverTimestamp,
-            addDoc
+            addDoc,
+            onSnapshot,
+            limit
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // ============ FIREBASE CONFIGURATION ============
@@ -1759,7 +1787,7 @@
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
             projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.firebaseapp.com",
+            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
             messagingSenderId: "23620370976",
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
@@ -1792,31 +1820,21 @@
         const toastContainer = document.getElementById('toastContainer');
 
         // ============ AUTHENTICATION CHECK ============
-        // This uses your existing login system - no separate login page needed
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // No user logged in - redirect to your login page
                 console.log("No user found, redirecting to login...");
-                window.location.href = "log.html"; // আপনার login page
+                window.location.href = "log.html";
                 return;
             } else {
-                // User is logged in - proceed
                 console.log("User logged in:", user.email);
                 currentUser = user;
                 currentClinicId = user.uid;
                 
-                // Update UI with user info
-                const userEmailEl = document.getElementById('userEmail');
-                const userAvatar = document.getElementById('userAvatar');
-                const clinicNameEl = document.getElementById('clinicName');
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userAvatar').innerHTML = user.email ? 
+                    '<span>' + user.email[0].toUpperCase() + '</span>' : 
+                    '<i class="fas fa-user"></i>';
                 
-                if (userEmailEl) userEmailEl.textContent = user.email;
-                if (userAvatar) {
-                    userAvatar.textContent = user.email ? user.email[0].toUpperCase() : 'A';
-                }
-                if (clinicNameEl) clinicNameEl.textContent = 'চৌধুরী ডেন্টাল';
-                
-                // Get or create clinic document
                 try {
                     const clinicRef = doc(db, "clinics", user.uid);
                     const clinicSnap = await getDoc(clinicRef);
@@ -1832,244 +1850,64 @@
                     console.error("Error with clinic document:", error);
                 }
                 
-                // Load all data
-                await loadAllData();
+                // ডাটা লোড এবং রিয়েল-টাইম লিসেনার সেটআপ
+                await loadLabsData();
+                await loadLabJobsData();
+                await loadPaymentsData();
                 
-                // Initialize app
+                setupRealtimeListeners();
                 initApp();
                 
-                // Hide loading screen and show main app
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    if (mainApp) mainApp.style.display = 'block';
+                    mainApp.style.display = 'block';
                 }, 500);
             }
         });
 
-        // ============ LOGOUT FUNCTION ============
-        async function handleLogout() {
-            try {
-                await signOut(auth);
-                window.location.href = "log.html"; // আপনার login page
-            } catch (error) {
-                console.error("Logout error:", error);
-                showToast("লগ আউট করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
-        // ============ INITIALIZATION ============
-        function initApp() {
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Update current time
-            updateCurrentTime();
-            setInterval(updateCurrentTime, 1000);
-            
-            // Setup offline detection
-            setupOfflineDetection();
-            
-            // Set default dates
-            const today = new Date().toISOString().split('T')[0];
-            const paymentDate = document.getElementById('paymentDate');
-            if (paymentDate) paymentDate.value = today;
-            
-            const deliveryDate = document.getElementById('deliveryDate');
-            if (deliveryDate) deliveryDate.min = today;
-            
-            // Check URL hash for section
-            const hash = window.location.hash.replace('#', '');
-            if (hash && document.getElementById(hash)) {
-                navigateToSection(hash);
-            } else {
-                navigateToSection('dashboard');
-            }
-        }
-
-        // ============ EVENT LISTENERS ============
-        function setupEventListeners() {
-            // Logout button
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', handleLogout);
-            }
-            
-            // Mobile menu toggle
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-            }
-            
-            // Navigation
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            // Dashboard cards
-            dashboardCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            // Quick action buttons
-            quickActionBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            // FAB
-            if (fab) {
-                fab.addEventListener('click', handleFabClick);
-            }
-            
-            // Lab form calculations
-            const crownQuantity = document.getElementById('crownQuantity');
-            const unitPrice = document.getElementById('unitPrice');
-            if (crownQuantity) crownQuantity.addEventListener('input', calculateTotalPrice);
-            if (unitPrice) unitPrice.addEventListener('input', calculateTotalPrice);
-            
-            // Fetch patient
-            const btnFetchPatient = document.getElementById('btnFetchPatient');
-            if (btnFetchPatient) {
-                btnFetchPatient.addEventListener('click', fetchPatientData);
-            }
-            
-            // Lab form submit
-            const labForm = document.getElementById('labForm');
-            if (labForm) {
-                labForm.addEventListener('submit', handleLabFormSubmit);
-            }
-            
-            // Clear form
-            const clearForm = document.getElementById('clearForm');
-            if (clearForm) {
-                clearForm.addEventListener('click', clearLabForm);
-            }
-            
-            // Add lab
-            const btnAddLab = document.getElementById('btnAddLab');
-            if (btnAddLab) {
-                btnAddLab.addEventListener('click', addNewLab);
-            }
-            
-            // Add payment
-            const btnAddPayment = document.getElementById('btnAddPayment');
-            if (btnAddPayment) {
-                btnAddPayment.addEventListener('click', addNewPayment);
-            }
-            
-            // Refresh buttons
-            const refreshRecentJobs = document.getElementById('refreshRecentJobs');
-            if (refreshRecentJobs) {
-                refreshRecentJobs.addEventListener('click', () => loadAllData());
-            }
-            
-            const btnRefreshHistory = document.getElementById('btnRefreshHistory');
-            if (btnRefreshHistory) {
-                btnRefreshHistory.addEventListener('click', () => loadAllData());
-            }
-            
-            // Export history
-            const btnExportHistory = document.getElementById('btnExportHistory');
-            if (btnExportHistory) {
-                btnExportHistory.addEventListener('click', exportHistory);
-            }
-            
-            // Filters
-            const monthSelect = document.getElementById('monthSelect');
-            const yearSelect = document.getElementById('yearSelect');
-            const statusFilter = document.getElementById('statusFilter');
-            
-            if (monthSelect) monthSelect.addEventListener('change', updateLabHistoryTable);
-            if (yearSelect) yearSelect.addEventListener('change', updateLabHistoryTable);
-            if (statusFilter) statusFilter.addEventListener('change', updateLabHistoryTable);
-            
-            // Window resize
-            window.addEventListener('resize', handleResize);
-        }
-
-        // ============ NAVIGATION ============
-        function navigateToSection(sectionId) {
-            // Hide all sections
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show target section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            
-            // Update page title
-            const titles = {
-                'dashboard': 'ড্যাশবোর্ড',
-                'lab-entry': 'নতুন ল্যাব এন্ট্রি - রোগীর জন্য',
-                'lab-history': 'ল্যাব হিস্ট্রি',
-                'lab-payment': 'ল্যাব পেমেন্ট',
-                'manage-labs': 'ল্যাব যোগ করুন - প্রতিষ্ঠান',
-                'patient-search': 'রোগী সার্চ'
-            };
-            if (pageTitle) pageTitle.textContent = titles[sectionId] || 'ল্যাব ম্যানেজমেন্ট';
-            
-            // Update active nav
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-target') === sectionId) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Close mobile menu
-            if (sidebar) sidebar.classList.remove('active');
-            if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            
-            // Update URL hash
-            window.location.hash = sectionId;
-            
-            // Load section data
-            if (sectionId === 'dashboard') {
-                updateDashboardStats();
-                updateRecentJobs();
-            } else if (sectionId === 'lab-entry') {
-                loadLabFormData();
-            }
-        }
-
-        // ============ DATA LOADING ============
-        async function loadAllData() {
-            try {
-                await Promise.all([
-                    loadLabsData(),
-                    loadLabJobsData(),
-                    loadPaymentsData()
-                ]);
-            } catch (error) {
-                console.error("Error loading all data:", error);
-            }
-        }
-
-        async function loadLabsData() {
+        // ============ রিয়েল-টাইম লিসেনার ============
+        function setupRealtimeListeners() {
             if (!currentClinicId) return;
             
-            try {
-                const labsQuery = query(
-                    collection(db, "Labs"),
-                    where("clinicId", "==", currentClinicId)
-                );
+            // ল্যাব জবস রিয়েল-টাইম লিসেনার
+            const jobsQuery = query(
+                collection(db, "LabJobs"),
+                where("clinicId", "==", currentClinicId),
+                orderBy("createdAt", "desc")
+            );
+            
+            onSnapshot(jobsQuery, (snapshot) => {
+                allLabJobs = [];
+                snapshot.forEach(doc => {
+                    const jobData = doc.data();
+                    jobData.id = doc.id;
+                    if (jobData.date && typeof jobData.date === 'string') {
+                        jobData.date = new Date(jobData.date + 'T00:00:00');
+                    }
+                    allLabJobs.push(jobData);
+                });
                 
-                const querySnapshot = await getDocs(labsQuery);
+                // সব UI আপডেট
+                updateLabHistoryTable();
+                updateBadges();
+                updateRecentJobs();
+                updateDashboardStats();
+                updatePaymentSummary();
+                updatePaymentLabSelect();
+                console.log(`🔄 ${allLabJobs.length} টি ল্যাব জব আপডেট হয়েছে`);
+            }, (error) => {
+                console.error("Realtime listener error:", error);
+            });
+            
+            // ল্যাব রিয়েল-টাইম লিসেনার
+            const labsQuery = query(
+                collection(db, "Labs"),
+                where("clinicId", "==", currentClinicId)
+            );
+            
+            onSnapshot(labsQuery, (snapshot) => {
                 allLabs = [];
-                
-                querySnapshot.forEach(doc => {
+                snapshot.forEach(doc => {
                     const labData = doc.data();
                     labData.id = doc.id;
                     allLabs.push(labData);
@@ -2081,92 +1919,265 @@
                 updatePaymentLabSelect();
                 updateLabsTable();
                 updateBadges();
+                updateDashboardStats();
+                console.log(`🔄 ${allLabs.length} টি ল্যাব আপডেট হয়েছে`);
+            });
+            
+            // পেমেন্ট রিয়েল-টাইম লিসেনার
+            const paymentsQuery = query(
+                collection(db, "LabPayments"),
+                where("clinicId", "==", currentClinicId),
+                orderBy("createdAt", "desc"),
+                limit(20)
+            );
+            
+            onSnapshot(paymentsQuery, (snapshot) => {
+                allPayments = [];
+                snapshot.forEach(doc => {
+                    const paymentData = doc.data();
+                    paymentData.id = doc.id;
+                    if (paymentData.date && typeof paymentData.date === 'string') {
+                        paymentData.date = new Date(paymentData.date + 'T00:00:00');
+                    }
+                    allPayments.push(paymentData);
+                });
                 
-                return allLabs;
-                
+                updateRecentPaymentsTable();
+                updatePaymentSummary();
+            });
+        }
+
+        // ============ ডাটা লোড ফাংশন ============
+        async function loadLabsData() {
+            if (!currentClinicId) return;
+            try {
+                const labsQuery = query(
+                    collection(db, "Labs"),
+                    where("clinicId", "==", currentClinicId)
+                );
+                const querySnapshot = await getDocs(labsQuery);
+                allLabs = [];
+                querySnapshot.forEach(doc => {
+                    const labData = doc.data();
+                    labData.id = doc.id;
+                    allLabs.push(labData);
+                });
+                allLabs.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             } catch (error) {
                 console.error("Error loading labs:", error);
-                allLabs = [];
-                return [];
             }
         }
 
         async function loadLabJobsData() {
             if (!currentClinicId) return;
-            
             try {
                 const jobsQuery = query(
                     collection(db, "LabJobs"),
                     where("clinicId", "==", currentClinicId),
                     orderBy("createdAt", "desc")
                 );
-                
                 const querySnapshot = await getDocs(jobsQuery);
                 allLabJobs = [];
-                
                 querySnapshot.forEach(doc => {
                     const jobData = doc.data();
                     jobData.id = doc.id;
-                    
                     if (jobData.date && typeof jobData.date === 'string') {
                         jobData.date = new Date(jobData.date + 'T00:00:00');
                     }
-                    
                     allLabJobs.push(jobData);
                 });
-                
-                updateLabHistoryTable();
-                updateBadges();
-                updateRecentJobs();
-                updateDashboardStats();
-                updatePaymentSummary();
-                
-                return allLabJobs;
-                
             } catch (error) {
                 console.error("Error loading lab jobs:", error);
-                allLabJobs = [];
-                return [];
             }
         }
 
         async function loadPaymentsData() {
             if (!currentClinicId) return;
-            
             try {
                 const paymentsQuery = query(
                     collection(db, "LabPayments"),
                     where("clinicId", "==", currentClinicId),
-                    orderBy("createdAt", "desc")
+                    orderBy("createdAt", "desc"),
+                    limit(20)
                 );
-                
                 const querySnapshot = await getDocs(paymentsQuery);
                 allPayments = [];
-                
                 querySnapshot.forEach(doc => {
                     const paymentData = doc.data();
                     paymentData.id = doc.id;
-                    
                     if (paymentData.date && typeof paymentData.date === 'string') {
                         paymentData.date = new Date(paymentData.date + 'T00:00:00');
                     }
-                    
                     allPayments.push(paymentData);
                 });
-                
-                updateRecentPaymentsTable();
-                updatePaymentSummary();
-                
-                return allPayments;
-                
             } catch (error) {
                 console.error("Error loading payments:", error);
-                allPayments = [];
-                return [];
             }
         }
 
-        // ============ UI UPDATE FUNCTIONS ============
+        // ============ ল্যাব এড ফাংশন (ঠিক করা হয়েছে) ============
+        window.addNewLab = async function() {
+            const name = document.getElementById('newLabName')?.value.trim();
+            const phone = document.getElementById('newLabPhone')?.value.trim();
+            const address = document.getElementById('newLabAddress')?.value.trim();
+            const contactPerson = document.getElementById('newLabContactPerson')?.value.trim();
+            
+            if (!name) {
+                showToast("ল্যাবের নাম দিন!", "error");
+                document.getElementById('newLabName')?.focus();
+                return;
+            }
+            
+            if (!phone) {
+                showToast("ল্যাবের ফোন নাম্বার দিন!", "error");
+                document.getElementById('newLabPhone')?.focus();
+                return;
+            }
+            
+            const phoneRegex = /^01[3-9]\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                showToast("সঠিক মোবাইল নাম্বার দিন (১১ ডিজিট)", "error");
+                document.getElementById('newLabPhone')?.focus();
+                return;
+            }
+            
+            try {
+                showToast("ল্যাব যোগ করা হচ্ছে...", "info");
+                
+                const labData = {
+                    name: name,
+                    phone: phone,
+                    address: address || '',
+                    contactPerson: contactPerson || '',
+                    clinicId: currentClinicId,
+                    jobs: [],
+                    totalDue: 0,
+                    totalPaid: 0,
+                    createdAt: serverTimestamp()
+                };
+                
+                await addDoc(collection(db, "Labs"), labData);
+                
+                showToast("✅ ল্যাব সফলভাবে যোগ করা হয়েছে!", "success");
+                
+                document.getElementById('newLabName').value = '';
+                document.getElementById('newLabPhone').value = '';
+                document.getElementById('newLabAddress').value = '';
+                document.getElementById('newLabContactPerson').value = '';
+                
+            } catch (error) {
+                console.error("Error adding lab:", error);
+                showToast("❌ ল্যাব যোগ করতে সমস্যা হয়েছে: " + error.message, "error");
+            }
+        };
+
+        // ============ ইনিশিয়ালাইজেশন ============
+        function initApp() {
+            setupEventListeners();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            setupOfflineDetection();
+            
+            const today = new Date().toISOString().split('T')[0];
+            if (document.getElementById('paymentDate')) 
+                document.getElementById('paymentDate').value = today;
+            if (document.getElementById('deliveryDate')) 
+                document.getElementById('deliveryDate').min = today;
+            
+            const hash = window.location.hash.replace('#', '');
+            navigateToSection(hash || 'dashboard');
+        }
+
+        // ============ ইভেন্ট লিসেনার ============
+        function setupEventListeners() {
+            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+            mobileMenuBtn?.addEventListener('click', toggleMobileMenu);
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    if (target) navigateToSection(target);
+                });
+            });
+            
+            dashboardCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+                    if (target) navigateToSection(target);
+                });
+            });
+            
+            quickActionBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    if (target) navigateToSection(target);
+                });
+            });
+            
+            fab?.addEventListener('click', handleFabClick);
+            
+            document.getElementById('crownQuantity')?.addEventListener('input', calculateTotalPrice);
+            document.getElementById('unitPrice')?.addEventListener('input', calculateTotalPrice);
+            document.getElementById('btnFetchPatient')?.addEventListener('click', fetchPatientData);
+            document.getElementById('labForm')?.addEventListener('submit', handleLabFormSubmit);
+            
+            // ল্যাব এড বাটন - ফিক্সড
+            document.getElementById('btnAddLab')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.addNewLab();
+            });
+            
+            document.getElementById('btnAddPayment')?.addEventListener('click', addNewPayment);
+            document.getElementById('refreshRecentJobs')?.addEventListener('click', () => loadAllData());
+            document.getElementById('btnRefreshHistory')?.addEventListener('click', () => loadAllData());
+            document.getElementById('btnExportHistory')?.addEventListener('click', exportHistory);
+            
+            document.getElementById('monthSelect')?.addEventListener('change', updateLabHistoryTable);
+            document.getElementById('yearSelect')?.addEventListener('change', updateLabHistoryTable);
+            document.getElementById('statusFilter')?.addEventListener('change', updateLabHistoryTable);
+            document.getElementById('btnSearchPatient')?.addEventListener('click', searchPatient);
+            
+            window.addEventListener('resize', handleResize);
+        }
+
+        // ============ নেভিগেশন ============
+        function navigateToSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) targetSection.classList.add('active');
+            
+            const titles = {
+                'dashboard': 'ড্যাশবোর্ড',
+                'lab-entry': 'নতুন ল্যাব এন্ট্রি - রোগীর জন্য',
+                'lab-history': 'ল্যাব হিস্ট্রি',
+                'lab-payment': 'ল্যাব পেমেন্ট',
+                'manage-labs': 'ল্যাব যোগ করুন - প্রতিষ্ঠান',
+                'patient-search': 'রোগী সার্চ'
+            };
+            if (pageTitle) pageTitle.textContent = titles[sectionId] || 'ল্যাব ম্যানেজমেন্ট';
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === sectionId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            sidebar?.classList.remove('active');
+            if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            window.location.hash = sectionId;
+            
+            if (sectionId === 'dashboard') {
+                updateDashboardStats();
+                updateRecentJobs();
+            } else if (sectionId === 'lab-entry') {
+                loadLabFormData();
+            }
+        }
+
+        // ============ ল্যাব সিলেক্ট আপডেট ============
         function updateLabSelect() {
             const labSelect = document.getElementById('labType');
             const labSelectMessage = document.getElementById('labSelectMessage');
@@ -2184,18 +2195,13 @@
                 labSelect.appendChild(option);
                 
                 if (labSelectMessage) {
-                    labSelectMessage.innerHTML = 'কোনো ল্যাব নেই! <a href="#" data-target="manage-labs" style="color: var(--primary); font-weight: 600;">এখানে ক্লিক করে ল্যাব যোগ করুন</a>';
-                    labSelectMessage.style.color = 'var(--warning)';
+                    labSelectMessage.innerHTML = 'কোনো ল্যাব নেই! "ল্যাব যোগ করুন" সেকশন থেকে ল্যাব যোগ করুন';
                 }
-                
                 if (submitBtn) submitBtn.disabled = true;
-                
             } else {
                 if (labSelectMessage) {
                     labSelectMessage.innerHTML = `${allLabs.length} টি ল্যাব পাওয়া গেছে`;
-                    labSelectMessage.style.color = 'var(--gray)';
                 }
-                
                 if (submitBtn) submitBtn.disabled = false;
                 
                 allLabs.forEach(lab => {
@@ -2207,6 +2213,7 @@
             }
         }
 
+        // ============ UI আপডেট ফাংশন ============
         function updateLabsTable() {
             const labsTable = document.getElementById('labsTable');
             const emptyLabs = document.getElementById('emptyLabs');
@@ -2228,7 +2235,6 @@
             if (labCountBadge2) labCountBadge2.textContent = allLabs.length;
             
             let html = '';
-            
             allLabs.forEach((lab, index) => {
                 const labJobs = allLabJobs.filter(job => job.labId === lab.id);
                 const totalJobs = labJobs.length;
@@ -2256,7 +2262,6 @@
                     </tr>
                 `;
             });
-            
             labsTable.innerHTML = html;
         }
 
@@ -2267,7 +2272,6 @@
             
             if (!labHistoryTable) return;
             
-            // Get filter values
             const month = document.getElementById('monthSelect')?.value || 'all';
             const year = document.getElementById('yearSelect')?.value || '2024';
             const status = document.getElementById('statusFilter')?.value || 'all';
@@ -2297,7 +2301,6 @@
             if (totalJobsCount) totalJobsCount.textContent = filteredJobs.length;
             
             let html = '';
-            
             filteredJobs.slice(0, 50).forEach((job, index) => {
                 const lab = allLabs.find(l => l.id === job.labId);
                 const labName = lab ? lab.name : (job.labName || 'অজানা ল্যাব');
@@ -2338,7 +2341,6 @@
                     </tr>
                 `;
             });
-            
             labHistoryTable.innerHTML = html;
         }
 
@@ -2359,7 +2361,6 @@
             if (emptyRecentJobs) emptyRecentJobs.style.display = 'none';
             
             let html = '';
-            
             recentJobs.forEach(job => {
                 const lab = allLabs.find(l => l.id === job.labId);
                 const labName = lab ? lab.name : (job.labName || 'অজানা ল্যাব');
@@ -2378,7 +2379,6 @@
                     </tr>
                 `;
             });
-            
             recentLabJobs.innerHTML = html;
         }
 
@@ -2406,7 +2406,6 @@
             labsWithDue.forEach(lab => {
                 const labJobs = allLabJobs.filter(job => job.labId === lab.id);
                 const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-                
                 const option = document.createElement('option');
                 option.value = lab.id;
                 option.textContent = `${lab.name} - বকেয়া: ৳ ${formatNumber(totalDue)}`;
@@ -2431,7 +2430,6 @@
             if (emptyPayments) emptyPayments.style.display = 'none';
             
             let html = '';
-            
             recentPayments.forEach(payment => {
                 const lab = allLabs.find(l => l.id === payment.labId);
                 const labName = lab ? lab.name : (payment.labName || 'অজানা ল্যাব');
@@ -2453,7 +2451,6 @@
                     </tr>
                 `;
             });
-            
             recentPaymentsTable.innerHTML = html;
         }
 
@@ -2467,13 +2464,9 @@
                 return labDue > 0;
             }).length;
             
-            const totalDueAmount = document.getElementById('totalDueAmount');
-            const totalPaidAmount = document.getElementById('totalPaidAmount');
-            const labsWithDueEl = document.getElementById('labsWithDue');
-            
-            if (totalDueAmount) totalDueAmount.textContent = `৳ ${formatNumber(totalDue)}`;
-            if (totalPaidAmount) totalPaidAmount.textContent = `৳ ${formatNumber(totalPaid)}`;
-            if (labsWithDueEl) labsWithDueEl.textContent = labsWithDue;
+            document.getElementById('totalDueAmount').textContent = `৳ ${formatNumber(totalDue)}`;
+            document.getElementById('totalPaidAmount').textContent = `৳ ${formatNumber(totalPaid)}`;
+            document.getElementById('labsWithDue').textContent = labsWithDue;
         }
 
         function updateDashboardStats() {
@@ -2497,11 +2490,7 @@
             const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
             const totalRevenue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.totalPrice || 0)), 0);
             
-            const todayEntriesEl = document.getElementById('todayEntries');
-            const pendingJobsEl = document.getElementById('pendingJobs');
-            
-            if (todayEntriesEl) todayEntriesEl.textContent = todayEntries;
-            if (pendingJobsEl) pendingJobsEl.textContent = pendingJobs;
+            document.getElementById('todayEntries').textContent = todayEntries;
             
             statsOverview.innerHTML = `
                 <div class="stat-card">
@@ -2550,74 +2539,13 @@
             const pendingJobs = allLabJobs.filter(job => 
                 job.status === 'pending' || job.status === 'processing'
             ).length;
-            
-            const pendingBadge = document.getElementById('pendingBadge');
-            if (pendingBadge) pendingBadge.textContent = pendingJobs;
+            document.getElementById('pendingBadge').textContent = pendingJobs;
             
             const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-            const dueBadge = document.getElementById('dueBadge');
-            if (dueBadge) dueBadge.textContent = `৳ ${formatNumber(totalDue)}`;
-            
-            const labCountBadge = document.getElementById('labCountBadge');
-            if (labCountBadge) labCountBadge.textContent = allLabs.length;
+            document.getElementById('dueBadge').textContent = `৳ ${formatNumber(totalDue)}`;
         }
 
-        // ============ CRUD OPERATIONS ============
-        async function addNewLab() {
-            const name = document.getElementById('newLabName').value.trim();
-            const phone = document.getElementById('newLabPhone').value.trim();
-            const address = document.getElementById('newLabAddress').value.trim();
-            const contactPerson = document.getElementById('newLabContactPerson').value.trim();
-            
-            if (!name) {
-                showToast("ল্যাবের নাম দিন!", "error");
-                document.getElementById('newLabName').focus();
-                return;
-            }
-            
-            if (!phone) {
-                showToast("ল্যাবের ফোন নাম্বার দিন!", "error");
-                document.getElementById('newLabPhone').focus();
-                return;
-            }
-            
-            const phoneRegex = /^01[3-9]\d{8}$/;
-            if (!phoneRegex.test(phone)) {
-                showToast("সঠিক মোবাইল নাম্বার দিন (১১ ডিজিট)", "error");
-                document.getElementById('newLabPhone').focus();
-                return;
-            }
-            
-            try {
-                const labData = {
-                    name: name,
-                    phone: phone,
-                    address: address || '',
-                    contactPerson: contactPerson || '',
-                    clinicId: currentClinicId,
-                    jobs: [],
-                    totalDue: 0,
-                    totalPaid: 0,
-                    createdAt: serverTimestamp()
-                };
-                
-                await addDoc(collection(db, "Labs"), labData);
-                
-                showToast("ল্যাব সফলভাবে যোগ করা হয়েছে!", "success");
-                
-                document.getElementById('newLabName').value = '';
-                document.getElementById('newLabPhone').value = '';
-                document.getElementById('newLabAddress').value = '';
-                document.getElementById('newLabContactPerson').value = '';
-                
-                await loadLabsData();
-                
-            } catch (error) {
-                console.error("Error adding lab:", error);
-                showToast("ল্যাব যোগ করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
+        // ============ CRUD অপারেশন ============
         async function addNewPayment() {
             const labId = document.getElementById('paymentLabId').value;
             const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
@@ -2659,7 +2587,6 @@
                 
                 await addDoc(collection(db, "LabPayments"), paymentData);
                 
-                // Distribute payment to jobs
                 let remaining = amount;
                 const sortedJobs = [...labJobs].sort((a, b) => {
                     const dateA = a.date || new Date(0);
@@ -2686,34 +2613,40 @@
                     remaining -= paymentForJob;
                 }
                 
-                showToast("পেমেন্ট সফলভাবে সংরক্ষণ হয়েছে!", "success");
+                showToast("✅ পেমেন্ট সফলভাবে সংরক্ষণ হয়েছে!", "success");
                 
                 document.getElementById('paymentAmount').value = '';
                 document.getElementById('paymentNote').value = '';
                 
-                await loadAllData();
-                
             } catch (error) {
                 console.error("Error adding payment:", error);
-                showToast("পেমেন্ট সংরক্ষণে সমস্যা হয়েছে!", "error");
+                showToast("❌ পেমেন্ট সংরক্ষণে সমস্যা হয়েছে!", "error");
             }
         }
 
-        // ============ UTILITY FUNCTIONS ============
+        // ============ ইউটিলিটি ফাংশন ============
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+                window.location.href = "log.html";
+            } catch (error) {
+                console.error("Logout error:", error);
+                showToast("লগ আউট করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
         function toggleMobileMenu() {
             if (sidebar) {
                 sidebar.classList.toggle('active');
-                if (mobileMenuBtn) {
-                    mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
-                        ? '<i class="fas fa-times"></i>' 
-                        : '<i class="fas fa-bars"></i>';
-                }
+                mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
             }
         }
 
         function handleResize() {
-            if (window.innerWidth > 992) {
-                if (sidebar) sidebar.classList.remove('active');
+            if (window.innerWidth > 992 && sidebar) {
+                sidebar.classList.remove('active');
                 if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             }
         }
@@ -2723,7 +2656,6 @@
             if (!activeSection) return;
             
             const id = activeSection.id;
-            
             if (id === 'dashboard' || id === 'lab-history') {
                 navigateToSection('lab-entry');
             } else if (id === 'manage-labs') {
@@ -2733,16 +2665,19 @@
             }
         }
 
+        async function loadAllData() {
+            await Promise.all([
+                loadLabsData(),
+                loadLabJobsData(),
+                loadPaymentsData()
+            ]);
+        }
+
         function loadLabFormData() {
             updateLabSelect();
-            
             const today = new Date().toISOString().split('T')[0];
             const deliveryDate = document.getElementById('deliveryDate');
             if (deliveryDate) deliveryDate.min = today;
-            
-            const quantityInput = document.getElementById('crownQuantity');
-            if (quantityInput && !quantityInput.value) quantityInput.value = 1;
-            
             calculateTotalPrice();
         }
 
@@ -2760,21 +2695,6 @@
             if (totalPriceInput) totalPriceInput.value = totalPrice;
         }
 
-        function clearLabForm() {
-            const form = document.getElementById('labForm');
-            if (form) {
-                form.reset();
-                const totalPriceInput = document.getElementById('totalPrice');
-                if (totalPriceInput) totalPriceInput.value = '0';
-                
-                const today = new Date().toISOString().split('T')[0];
-                const deliveryDate = document.getElementById('deliveryDate');
-                if (deliveryDate) deliveryDate.min = today;
-                
-                calculateTotalPrice();
-            }
-        }
-
         async function fetchPatientData() {
             const phone = document.getElementById('labPatientPhone').value.trim();
             
@@ -2790,13 +2710,13 @@
             }
             
             try {
-                const patientsQuery = query(
-                    collection(db, "Patients"),
+                const patientsRef = collection(db, "Patients");
+                const q = query(patientsRef, 
                     where("phone", "==", phone),
                     where("clinicId", "==", currentClinicId)
                 );
                 
-                const querySnapshot = await getDocs(patientsQuery);
+                const querySnapshot = await getDocs(q);
                 
                 if (!querySnapshot.empty) {
                     const patientData = querySnapshot.docs[0].data();
@@ -2813,6 +2733,7 @@
                             clinicId: currentClinicId,
                             createdAt: serverTimestamp()
                         });
+                        showToast("নতুন রোগী যোগ করা হয়েছে!", "success");
                     }
                 }
             } catch (error) {
@@ -2836,7 +2757,6 @@
             const notes = document.getElementById('labNotes').value;
             const status = document.getElementById('labStatus').value;
             
-            // Validation
             if (!patientPhone || !/^01[3-9]\d{8}$/.test(patientPhone)) {
                 showToast("সঠিক মোবাইল নাম্বার দিন!", "error");
                 return;
@@ -2894,42 +2814,17 @@
                     createdAt: serverTimestamp()
                 };
                 
-                const jobRef = await addDoc(collection(db, "LabJobs"), jobData);
+                await addDoc(collection(db, "LabJobs"), jobData);
                 
-                // Update lab
-                const labRef = doc(db, "Labs", labId);
-                const labSnap = await getDoc(labRef);
+                showToast("✅ ল্যাব কাজ সংরক্ষণ হয়েছে!", "success");
                 
-                if (labSnap.exists()) {
-                    const labData = labSnap.data();
-                    await updateDoc(labRef, {
-                        jobs: arrayUnion(jobRef.id),
-                        totalDue: (parseFloat(labData.totalDue || 0) + totalPrice)
-                    });
-                }
-                
-                // Save patient
-                const patientsQuery = query(
-                    collection(db, "Patients"),
-                    where("phone", "==", patientPhone),
-                    where("clinicId", "==", currentClinicId)
-                );
-                
-                const patientsSnap = await getDocs(patientsQuery);
-                
-                if (patientsSnap.empty) {
-                    await addDoc(collection(db, "Patients"), {
-                        name: patientName,
-                        phone: patientPhone,
-                        clinicId: currentClinicId,
-                        createdAt: serverTimestamp()
-                    });
-                }
-                
-                showToast("ল্যাব কাজ সংরক্ষণ হয়েছে!", "success");
-                
-                clearLabForm();
-                await loadAllData();
+                document.getElementById('labForm').reset();
+                document.getElementById('labPatientPhone').value = '';
+                document.getElementById('labPatientName').value = '';
+                document.getElementById('crownQuantity').value = '1';
+                document.getElementById('unitPrice').value = '';
+                document.getElementById('totalPrice').value = '0';
+                document.getElementById('labStatus').value = 'pending';
                 
                 setTimeout(() => {
                     navigateToSection('lab-history');
@@ -2937,7 +2832,7 @@
                 
             } catch (error) {
                 console.error("Error saving lab job:", error);
-                showToast("সংরক্ষণে সমস্যা হয়েছে!", "error");
+                showToast("❌ সংরক্ষণে সমস্যা হয়েছে: " + error.message, "error");
             } finally {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -2971,7 +2866,77 @@
             showToast("হিস্ট্রি এক্সপোর্ট করা হয়েছে!", "success");
         }
 
-        // ============ GLOBAL FUNCTIONS FOR ONCLICK ============
+        async function searchPatient() {
+            const searchTerm = document.getElementById('searchPatientInput').value.trim();
+            const resultsDiv = document.getElementById('patientSearchResults');
+            
+            if (!searchTerm) {
+                showToast("সার্চ করার জন্য নাম বা মোবাইল নাম্বার দিন!", "error");
+                return;
+            }
+            
+            try {
+                let patients = [];
+                
+                const phoneQuery = query(
+                    collection(db, "Patients"),
+                    where("phone", ">=", searchTerm),
+                    where("phone", "<=", searchTerm + "\uf8ff"),
+                    where("clinicId", "==", currentClinicId)
+                );
+                
+                const phoneSnapshot = await getDocs(phoneQuery);
+                phoneSnapshot.forEach(doc => patients.push(doc.data()));
+                
+                if (patients.length === 0) {
+                    const nameQuery = query(
+                        collection(db, "Patients"),
+                        where("name", ">=", searchTerm),
+                        where("name", "<=", searchTerm + "\uf8ff"),
+                        where("clinicId", "==", currentClinicId)
+                    );
+                    
+                    const nameSnapshot = await getDocs(nameQuery);
+                    nameSnapshot.forEach(doc => patients.push(doc.data()));
+                }
+                
+                if (patients.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-user-slash"></i>
+                            <h4>কোনো রোগী পাওয়া যায়নি</h4>
+                            <p>"${searchTerm}" এর সাথে মিলে এমন কোনো রোগী নেই</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '<div class="table-container"><div class="table-header"><h3 class="table-title">সার্চ রেজাল্ট</h3></div><div class="table-responsive"><table class="patients-table"><thead><tr><th>নাম</th><th>মোবাইল</th><th>কর্ম</th></tr></thead><tbody>';
+                
+                patients.forEach(patient => {
+                    html += `
+                        <tr>
+                            <td><strong>${patient.name || '-'}</strong></td>
+                            <td>${patient.phone || '-'}</td>
+                            <td>
+                                <button class="btn-small btn-primary" onclick="document.getElementById('labPatientPhone').value='${patient.phone}'; document.getElementById('labPatientName').value='${patient.name}'; navigateToSection('lab-entry');">
+                                    ল্যাব এন্ট্রি
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table></div></div>';
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error("Search error:", error);
+                showToast("সার্চ করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        // ============ গ্লোবাল ফাংশন ============
         window.updateLabJobStatus = async function(jobId, newStatus) {
             if (!confirm("স্ট্যাটাস আপডেট করবেন?")) return;
             
@@ -2993,9 +2958,7 @@
                 }
                 
                 await updateDoc(jobRef, updates);
-                
                 showToast("স্ট্যাটাস আপডেট করা হয়েছে!", "success");
-                await loadAllData();
                 
             } catch (error) {
                 console.error("Error updating job status:", error);
@@ -3014,20 +2977,11 @@
             
             setTimeout(() => {
                 const paymentLabSelect = document.getElementById('paymentLabId');
-                if (paymentLabSelect) {
-                    paymentLabSelect.value = job.labId || '';
-                }
-                
+                if (paymentLabSelect) paymentLabSelect.value = job.labId || '';
                 const paymentAmount = document.getElementById('paymentAmount');
-                if (paymentAmount) {
-                    paymentAmount.value = job.due || 0;
-                }
-                
+                if (paymentAmount) paymentAmount.value = job.due || 0;
                 const paymentDate = document.getElementById('paymentDate');
-                if (paymentDate) {
-                    paymentDate.value = new Date().toISOString().split('T')[0];
-                }
-                
+                if (paymentDate) paymentDate.value = new Date().toISOString().split('T')[0];
                 showToast("পেমেন্ট ফর্ম প্রস্তুত", "info");
             }, 500);
         };
@@ -3045,7 +2999,6 @@
                 }
                 
                 const jobData = jobSnap.data();
-                
                 await deleteDoc(jobRef);
                 
                 if (jobData.labId) {
@@ -3055,16 +3008,11 @@
                     if (labSnap.exists()) {
                         const labData = labSnap.data();
                         const newTotalDue = Math.max(0, (labData.totalDue || 0) - (jobData.due || 0));
-                        
-                        await updateDoc(labRef, {
-                            totalDue: newTotalDue,
-                            jobs: (labData.jobs || []).filter(id => id !== jobId)
-                        });
+                        await updateDoc(labRef, { totalDue: newTotalDue });
                     }
                 }
                 
                 showToast("ল্যাব কাজ ডিলিট করা হয়েছে!", "success");
-                await loadAllData();
                 
             } catch (error) {
                 console.error("Error deleting lab job:", error);
@@ -3088,16 +3036,10 @@
                 document.getElementById('crownType').value = job.crownType || '';
                 document.getElementById('crownQuantity').value = job.quantity || 1;
                 document.getElementById('unitPrice').value = job.unitPrice || 0;
-                
                 calculateTotalPrice();
-                
-                if (job.deliveryDate) {
-                    document.getElementById('deliveryDate').value = job.deliveryDate;
-                }
-                
+                if (job.deliveryDate) document.getElementById('deliveryDate').value = job.deliveryDate;
                 document.getElementById('labNotes').value = job.notes || '';
                 document.getElementById('labStatus').value = job.status || 'pending';
-                
                 showToast("কাজটি এডিট করুন", "info");
             }, 500);
         };
@@ -3116,8 +3058,6 @@
             try {
                 await deleteDoc(doc(db, "Labs", labId));
                 showToast("ল্যাব ডিলিট করা হয়েছে!", "success");
-                await loadAllData();
-                
             } catch (error) {
                 console.error("Error deleting lab:", error);
                 showToast("ডিলিট করতে সমস্যা হয়েছে!", "error");
@@ -3138,28 +3078,25 @@
                 document.getElementById('newLabPhone').value = lab.phone || '';
                 document.getElementById('newLabAddress').value = lab.address || '';
                 document.getElementById('newLabContactPerson').value = lab.contactPerson || '';
-                
                 showToast("ল্যাব তথ্য এডিট করুন", "info");
                 document.getElementById('newLabName').focus();
             }, 500);
         };
 
-        // ============ UTILITY FUNCTIONS ============
+        // ============ ইউটিলিটি ফাংশন ============
         function setupOfflineDetection() {
             window.addEventListener('online', () => {
-                if (offlineIndicator) offlineIndicator.classList.remove('show');
+                offlineIndicator?.classList.remove('show');
                 showToast('অনলাইনে ফিরেছেন', 'success');
                 loadAllData();
             });
             
             window.addEventListener('offline', () => {
-                if (offlineIndicator) offlineIndicator.classList.add('show');
+                offlineIndicator?.classList.add('show');
                 showToast('অফলাইনে আছেন', 'warning');
             });
             
-            if (!navigator.onLine && offlineIndicator) {
-                offlineIndicator.classList.add('show');
-            }
+            if (!navigator.onLine) offlineIndicator?.classList.add('show');
         }
 
         function updateCurrentTime() {
@@ -3179,11 +3116,7 @@
         function formatDate(date, format = 'display') {
             if (!date) return '-';
             const d = date instanceof Date ? date : new Date(date);
-            
-            if (format === 'csv') {
-                return d.toISOString().split('T')[0];
-            }
-            
+            if (format === 'csv') return d.toISOString().split('T')[0];
             const day = d.getDate().toString().padStart(2, '0');
             const month = (d.getMonth() + 1).toString().padStart(2, '0');
             const year = d.getFullYear();
@@ -3237,14 +3170,12 @@
             
             toastContainer.appendChild(toast);
             
-            toast.querySelector('.toast-close').addEventListener('click', () => {
-                toast.remove();
-            });
-            
-            setTimeout(() => {
-                if (toast.parentNode) toast.remove();
-            }, 5000);
+            toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 5000);
         }
+
+        // উইন্ডোতে ফাংশন এক্সপোর্ট
+        window.navigateToSection = navigateToSection;
     </script>
 </body>
 </html>
