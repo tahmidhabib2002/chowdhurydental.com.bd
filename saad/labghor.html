@@ -2,3180 +2,1484 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ল্যাব ম্যানেজমেন্ট - চৌধুরী ডেন্টাল</title>
-    <!-- Formal Bengali Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>চৌধুরী ডেন্টাল - ল্যাব ম্যানেজমেন্ট</title>
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ============ ROOT VARIABLES ============ */
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --secondary: #06b6d4;
-            --success: #10b981;
-            --success-dark: #059669;
-            --danger: #ef4444;
-            --danger-dark: #dc2626;
-            --warning: #f59e0b;
-            --warning-dark: #d97706;
-            --purple: #8b5cf6;
-            --teal: #14b8a6;
-            --light: #f8fafc;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light-gray: #e2e8f0;
-            --border-radius: 14px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --box-shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
-            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, var(--teal) 100%);
-            --gradient-success: linear-gradient(135deg, var(--success) 0%, var(--teal) 100%);
-            --gradient-warning: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
-            --gradient-danger: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Serif Bengali', 'Baloo Da 2', 'Hind Siliguri', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Hind Siliguri', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            color: var(--dark);
-            min-height: 100vh;
-            font-size: 16px;
-            line-height: 1.7;
+            background: #f5f7fa;
+            padding: 16px;
+            padding-bottom: 85px;
         }
 
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+        /* Main Container */
+        .lab-dashboard {
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--gradient-primary);
+        /* Header */
+        .lab-header {
+            background: linear-gradient(145deg, #6f42c1, #5a32a3);
             color: white;
-            padding: 20px 0;
-            z-index: 1000;
-            transition: var(--transition);
-            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
-            overflow-y: auto;
-            transform: translateX(0);
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .sidebar-header {
-            text-align: center;
-            padding: 0 20px 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 24px;
             margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(111, 66, 193, 0.25);
         }
 
-        .clinic-logo {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .clinic-logo i {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        .sidebar-header h1 {
-            font-size: 1.6rem;
+        .lab-header h1 {
+            font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 5px;
-            color: white;
         }
 
-        .sidebar-header p {
-            font-size: 0.85rem;
+        .lab-header p {
             opacity: 0.9;
-            font-weight: 300;
+            font-size: 0.95rem;
         }
 
-        .current-time {
-            font-size: 0.8rem;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 5px 10px;
-            border-radius: 20px;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0 15px;
-        }
-
-        .nav-item {
-            margin-bottom: 8px;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(5px);
-        }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: inset 3px 0 0 white;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .nav-link i {
-            font-size: 1.2rem;
-            margin-right: 15px;
-            width: 25px;
-            text-align: center;
-        }
-
-        .nav-badge {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .main-content {
-            margin-left: 280px;
-            padding: 25px;
-            min-height: 100vh;
-            transition: var(--transition);
-        }
-
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 20px 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .page-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-        }
-
-        .page-title i {
-            margin-right: 15px;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.8rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-        }
-
-        #userEmail {
-            color: var(--dark);
-            font-weight: 500;
-        }
-
-        .dashboard-cards {
+        /* Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .dashboard-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
-            border: 2px solid transparent;
-            min-height: 180px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dashboard-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-lg);
-            border-color: var(--primary);
-        }
-
-        .card-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-size: 1.6rem;
-            color: white;
-            background: var(--gradient-primary);
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .card-lab-entry .card-icon {
-            background: var(--gradient-secondary);
-        }
-
-        .card-lab-history .card-icon {
-            background: var(--gradient-success);
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .card-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .card-stats {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: auto;
-            padding-top: 12px;
-            border-top: 1px solid var(--light-gray);
-            width: 100%;
-        }
-
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: 700;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
             background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--box-shadow);
+            padding: 18px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: var(--transition);
         }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--box-shadow-lg);
-        }
-
-        .stat-card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #e2d9f3;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: white;
+            margin-right: 12px;
+            color: #6f42c1;
+            font-size: 1.4rem;
         }
 
-        .stat-card-content {
-            flex: 1;
-        }
-
-        .stat-card-title {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 3px;
-        }
-
-        .stat-card-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 3px;
-        }
-
-        .stat-card-change {
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .change-positive {
-            color: var(--success);
-        }
-
-        .change-negative {
-            color: var(--danger);
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .quick-action-btn {
-            background: white;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--dark);
-        }
-
-        .quick-action-btn:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: var(--box-shadow);
-        }
-
-        .quick-action-btn i {
-            font-size: 1.8rem;
-            color: var(--primary);
-        }
-
-        .quick-action-btn span {
-            font-weight: 600;
-            text-align: center;
-            font-size: 0.95rem;
-        }
-
-        .quick-action-btn small {
-            color: var(--gray);
-            font-size: 0.75rem;
-        }
-
-        .form-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
-            margin-bottom: 30px;
-            display: none;
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-container.active {
-            display: block;
-        }
-
-        .form-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-gray);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-title i {
-            font-size: 1.5rem;
-        }
-
-        .badge {
-            background: var(--primary);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
+        .stat-info h3 {
             font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .stat-info .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3436;
+            line-height: 1.2;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
             font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f3f5;
+            padding-bottom: 12px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+        .section-title i {
+            color: #6f42c1;
         }
 
+        /* Form Elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark);
+            color: #495057;
             font-size: 0.95rem;
-        }
-
-        .form-label .required {
-            color: var(--danger);
-            margin-left: 3px;
         }
 
         .form-control {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            transition: var(--transition);
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.2s;
             background: #fcfcfc;
         }
 
         .form-control:focus {
+            border-color: #6f42c1;
             outline: none;
-            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(111, 66, 193, 0.1);
+        }
+
+        /* Patient Search */
+        .patient-search {
+            background: #f8f4ff;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .search-result {
             background: white;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        .form-control:read-only {
-            background-color: #f1f5f9;
-            cursor: not-allowed;
-        }
-
-        .form-hint {
-            font-size: 0.8rem;
-            color: var(--gray);
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        select.form-control {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 40px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .auto-date-info {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 2px solid #0ea5e9;
-            border-radius: 10px;
+            border-radius: 14px;
             padding: 15px;
-            margin-bottom: 25px;
+            margin-top: 12px;
+            border-left: 5px solid #6f42c1;
+            display: none;
+        }
+
+        .search-result.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Lab Selection */
+        .lab-selector {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .lab-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            padding: 15px;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .auto-date-info i {
-            color: #0ea5e9;
-            font-size: 1.3rem;
-        }
-
-        .auto-date-info h4 {
-            color: #0369a1;
-            margin-bottom: 3px;
-            font-size: 1rem;
-        }
-
-        .auto-date-info p {
-            color: #64748b;
-            font-size: 0.85rem;
-        }
-
-        .btn {
-            padding: 14px 25px;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
+            transition: all 0.2s;
         }
 
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        .lab-option.active {
+            border-color: #6f42c1;
+            background: #f8f4ff;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        .lab-option i {
+            font-size: 1.4rem;
+            color: #6f42c1;
+            margin-right: 15px;
         }
 
-        .btn-success {
-            background: var(--gradient-success);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        .lab-option-content {
+            flex: 1;
         }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        .lab-name {
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 4px;
         }
 
-        .btn-warning {
-            background: var(--gradient-warning);
-            color: white;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-        }
-
-        .btn-danger {
-            background: var(--gradient-danger);
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--light-gray);
-            color: var(--dark);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(79, 70, 229, 0.05);
-        }
-
-        .btn-small {
-            padding: 8px 16px;
+        .lab-contact {
             font-size: 0.85rem;
-            border-radius: 8px;
+            color: #6c757d;
         }
 
-        .btn-icon {
-            padding: 10px;
-            width: 40px;
-            height: 40px;
+        /* Work Type Grid */
+        .work-type-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
+        .work-type-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .table-container {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            margin-bottom: 30px;
+        .work-type-item.active {
+            background: #6f42c1;
+            border-color: #6f42c1;
+            color: white;
         }
 
-        .table-header {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 18px 25px;
+        .work-type-item i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            display: block;
+            color: #6f42c1;
+        }
+
+        .work-type-item.active i {
+            color: white;
+        }
+
+        .work-type-item span {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Tooth Shades */
+        .shade-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .shade-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .shade-item.active {
+            background: #6f42c1;
+            color: white;
+            border-color: #6f42c1;
+        }
+
+        .shade-item[data-shade="A1"] { background: #fff2e0; }
+        .shade-item[data-shade="A2"] { background: #ffe4c4; }
+        .shade-item[data-shade="A3"] { background: #ffd7a5; }
+        .shade-item[data-shade="A3.5"] { background: #ffc885; }
+        .shade-item[data-shade="B1"] { background: #fff5e6; }
+        .shade-item[data-shade="B2"] { background: #ffe8d4; }
+        .shade-item[data-shade="B3"] { background: #ffdbbc; }
+        .shade-item[data-shade="B4"] { background: #ffcea4; }
+        .shade-item[data-shade="C1"] { background: #f0e5d5; }
+        .shade-item[data-shade="C2"] { background: #e8d9c4; }
+        .shade-item[data-shade="C3"] { background: #e0cdb3; }
+        .shade-item[data-shade="D2"] { background: #f5e6d8; }
+        .shade-item[data-shade="D3"] { background: #edd9c8; }
+        .shade-item[data-shade="D4"] { background: #e5ccb8; }
+        .shade-item.active { 
+            background: #6f42c1 !important; 
+            color: white; 
+            border-color: #6f42c1;
+        }
+
+        /* Cap Type */
+        .cap-type-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .cap-type-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .cap-type-item.active {
+            background: #6f42c1;
+            color: white;
+            border-color: #6f42c1;
+        }
+
+        /* Calculation Section */
+        .calculation-box {
+            background: #f8f4ff;
+            border-radius: 18px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .calc-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--light-gray);
-            flex-wrap: wrap;
-            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2d9f3;
         }
 
-        .table-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .patients-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        .patients-table th {
-            background: #f8fafc;
-            padding: 16px 12px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--dark);
-            border-bottom: 2px solid var(--light-gray);
-            font-size: 0.9rem;
-        }
-
-        .patients-table td {
-            padding: 16px 12px;
-            border-bottom: 1px solid var(--light-gray);
-            vertical-align: middle;
-            font-size: 0.9rem;
-        }
-
-        .patients-table tr:last-child td {
+        .calc-row:last-child {
             border-bottom: none;
         }
 
-        .patients-table tr:hover {
-            background: #f8fafc;
-        }
-
-        .patients-table .action-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 20px;
+        .calc-label {
             font-weight: 600;
-            font-size: 0.8rem;
-            white-space: nowrap;
+            color: #495057;
         }
 
-        .status-badge i {
-            font-size: 0.75rem;
+        .calc-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d3436;
         }
 
-        .status-pending {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #92400e;
+        .due-amount {
+            color: #dc3545;
+            font-size: 1.4rem;
         }
 
-        .status-processing {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1e40af;
+        /* Payment Section */
+        .payment-section {
+            background: #d4edda;
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 15px;
+            display: none;
         }
 
-        .status-completed {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #065f46;
+        .payment-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
 
-        .status-delivered {
-            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
-            color: #6b21a8;
+        /* Lab List */
+        .lab-list {
+            margin-top: 20px;
         }
 
-        .filter-section {
+        .lab-card {
             background: white;
-            border-radius: var(--border-radius);
-            padding: 20px 25px;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 30px;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .lab-card:hover {
+            border-color: #6f42c1;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.1);
+        }
+
+        .lab-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            margin-bottom: 12px;
         }
 
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+        .lab-card-title {
+            font-weight: 700;
+            color: #2d3436;
+            font-size: 1.1rem;
         }
 
-        .filter-label {
+        .lab-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: var(--dark);
-            font-size: 0.9rem;
         }
 
-        .filter-select {
-            padding: 12px 16px;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background: white;
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 140px;
+        .lab-badge-pending { background: #fff3cd; color: #856404; }
+        .lab-badge-progress { background: #cce5ff; color: #004085; }
+        .lab-badge-completed { background: #d4edda; color: #155724; }
+        .lab-badge-delivered { background: #d1e7dd; color: #0f5132; }
+
+        .lab-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            padding: 12px 0;
+            border-top: 1px dashed #e9ecef;
+            border-bottom: 1px dashed #e9ecef;
         }
 
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .empty-state {
+        .detail-item {
             text-align: center;
-            padding: 50px 20px;
-            color: var(--gray);
         }
 
-        .empty-state i {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
+        .detail-label {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-bottom: 4px;
         }
 
-        .empty-state h4 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            color: var(--dark);
+        .detail-value {
+            font-weight: 700;
+            color: #2d3436;
         }
 
-        .empty-state p {
-            font-size: 0.9rem;
-        }
-
-        .mobile-menu-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 1001;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-            display: none;
+        .lab-footer {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
         }
 
-        .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
+        .btn-pay {
+            background: #28a745;
             color: white;
             border: none;
-            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            gap: 10px;
+            width: 100%;
             cursor: pointer;
-            z-index: 999;
-            transition: var(--transition);
+            transition: all 0.2s;
         }
 
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5);
+        .btn:active {
+            transform: scale(0.98);
         }
 
-        .toast-container {
+        .btn-primary {
+            background: #6f42c1;
+            color: white;
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Message Box */
+        .message-box {
             position: fixed;
             top: 20px;
+            left: 20px;
             right: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        .toast {
-            background: white;
-            border-radius: 10px;
-            padding: 16px 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            animation: slideInRight 0.3s ease;
-            border-left: 4px solid;
-        }
-
-        .toast-success { border-left-color: var(--success); }
-        .toast-error { border-left-color: var(--danger); }
-        .toast-warning { border-left-color: var(--warning); }
-        .toast-info { border-left-color: var(--secondary); }
-
-        .toast-icon {
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-
-        .toast-success .toast-icon { color: var(--success); }
-        .toast-error .toast-icon { color: var(--danger); }
-        .toast-warning .toast-icon { color: var(--warning); }
-        .toast-info .toast-icon { color: var(--secondary); }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-message {
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .toast-close {
-            background: none;
-            border: none;
-            color: var(--gray);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(100%); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .offline-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--danger);
+            padding: 16px;
+            border-radius: 16px;
             color: white;
-            padding: 8px 16px;
-            text-align: center;
             font-weight: 600;
-            z-index: 2001;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-            font-size: 0.9rem;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .offline-indicator.show {
-            transform: translateY(0);
+        .message-success { background: linear-gradient(145deg, #28a745, #1e7e34); }
+        .message-error { background: linear-gradient(145deg, #dc3545, #bd2130); }
+        .message-warning { background: linear-gradient(145deg, #ffc107, #d39e00); }
+        .message-info { background: linear-gradient(145deg, #17a2b8, #117a8b); }
+
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        @media (max-width: 1200px) {
-            .sidebar { width: 260px; }
-            .main-content { margin-left: 260px; }
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6f42c1;
         }
 
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 20px;
-            }
-            .mobile-menu-btn {
-                display: flex;
-            }
-            .dashboard-cards {
-                grid-template-columns: 1fr;
-            }
-            .stats-overview {
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .work-type-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        @media (max-width: 768px) {
-            .main-content { padding: 15px; }
-            .header-bar { flex-direction: column; align-items: stretch; }
-            .user-info { justify-content: space-between; }
-            .filter-section { flex-direction: column; align-items: stretch; }
-            .filter-group { flex-direction: column; align-items: stretch; }
-            .filter-select { width: 100%; }
-            .table-header { flex-direction: column; align-items: stretch; }
-            .table-actions { justify-content: center; }
-            .form-header { flex-direction: column; align-items: stretch; }
-            .stats-overview { grid-template-columns: 1fr; }
-            .quick-actions { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 480px) {
-            .page-title { font-size: 1.3rem; }
-            .dashboard-card { padding: 20px; }
-            .form-container { padding: 20px; }
-            .btn { padding: 12px 20px; }
-            .quick-actions { grid-template-columns: 1fr; }
-            .toast-container { left: 20px; right: 20px; max-width: none; }
-        }
-        
-        /* ল্যাব এড ফর্মের জন্য স্টাইল */
-        .lab-add-form {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-            border: 2px solid var(--light-gray);
-        }
-        
-        .lab-add-form h3 {
-            margin-bottom: 20px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            
+            .shade-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .cap-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-        <h3 style="color: white; margin-bottom: 10px;">লোড হচ্ছে...</h3>
-        <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">চৌধুরী ডেন্টাল ল্যাব ম্যানেজমেন্ট</p>
-    </div>
+    <div class="lab-dashboard">
+        <!-- Header -->
+        <div class="lab-header">
+            <h1>🦷 ল্যাব ঘর</h1>
+            <p>ডেন্টাল ল্যাব ম্যানেজমেন্ট সিস্টেম</p>
+        </div>
 
-    <!-- Offline Indicator -->
-    <div class="offline-indicator" id="offlineIndicator">
-        <i class="fas fa-wifi-slash"></i> আপনি অফলাইনে রয়েছেন
-    </div>
-
-    <!-- Main Application (Hidden until authenticated) -->
-    <div id="mainApp" style="display: none;">
-        <!-- Navigation Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="clinic-logo">
-                    <i class="fas fa-tooth"></i>
-                </div>
-                <h1 id="clinicName">চৌধুরী ডেন্টাল</h1>
-                <p>ল্যাব ম্যানেজমেন্ট সিস্টেম</p>
-                <div class="current-time" id="currentTime"></div>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item active" data-target="dashboard">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-home"></i>
-                        <span>ড্যাশবোর্ড</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-target="lab-entry">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-flask"></i>
-                        <span>নতুন ল্যাব এন্ট্রি</span>
-                        <span class="nav-badge" style="background: rgba(255,255,255,0.3);">রোগীর জন্য</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-target="lab-history">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-history"></i>
-                        <span>ল্যাব হিস্ট্রি</span>
-                        <span class="nav-badge" id="pendingBadge">0</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-target="lab-payment">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>ল্যাব পেমেন্ট</span>
-                        <span class="nav-badge" id="dueBadge">৳ 0</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-target="manage-labs">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-clinic-medical"></i>
-                        <span>ল্যাব যোগ করুন</span>
-                        <span class="nav-badge" style="background: rgba(255,255,255,0.3);">ল্যাব প্রতিষ্ঠান</span>
-                    </a>
-                </li>
-                <li class="nav-item" data-target="patient-search">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-search"></i>
-                        <span>রোগী সার্চ</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>লগ আউট</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <!-- Floating Action Button -->
-        <button class="fab" id="fab">
-            <i class="fas fa-plus"></i>
-        </button>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Header Bar -->
-            <div class="header-bar">
-                <div class="page-title">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
                     <i class="fas fa-flask"></i>
-                    <span id="pageTitle">ল্যাব ম্যানেজমেন্ট ড্যাশবোর্ড</span>
                 </div>
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span id="userEmail"></span>
+                <div class="stat-info">
+                    <h3>মোট ল্যাব</h3>
+                    <div class="stat-number" id="totalLabs">0</div>
                 </div>
             </div>
-
-            <!-- ============ DASHBOARD SECTION ============ -->
-            <div id="dashboard" class="section active">
-                <!-- Quick Stats -->
-                <div class="stats-overview" id="statsOverview"></div>
-
-                <!-- Quick Actions -->
-                <div class="quick-actions">
-                    <a href="#" class="quick-action-btn" data-target="lab-entry">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>নতুন ল্যাব এন্ট্রি</span>
-                        <small>রোগীর জন্য</small>
-                    </a>
-                    <a href="#" class="quick-action-btn" data-target="lab-payment">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>দ্রুত পেমেন্ট</span>
-                        <small>বকেয়া পরিশোধ</small>
-                    </a>
-                    <a href="#" class="quick-action-btn" data-target="manage-labs">
-                        <i class="fas fa-clinic-medical"></i>
-                        <span>ল্যাব যোগ করুন</span>
-                        <small>নতুন ল্যাব</small>
-                    </a>
-                    <a href="#" class="quick-action-btn" data-target="lab-history">
-                        <i class="fas fa-history"></i>
-                        <span>হিস্ট্রি দেখুন</span>
-                        <small>সব ল্যাব কাজ</small>
-                    </a>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tasks"></i>
                 </div>
-
-                <!-- Dashboard Cards -->
-                <div class="dashboard-cards">
-                    <div class="dashboard-card card-lab-entry" data-target="lab-entry">
-                        <div class="card-icon">
-                            <i class="fas fa-flask"></i>
-                        </div>
-                        <h3 class="card-title">নতুন ল্যাব এন্ট্রি</h3>
-                        <p class="card-desc">রোগীর জন্য নতুন ক্রাউন/ক্যাপ ল্যাবে পাঠান। ল্যাব নির্বাচন করুন এবং তথ্য দিন।</p>
-                        <div class="card-stats">
-                            <div class="stat-number" id="todayEntries">0</div>
-                            <div class="stat-label">আজকের এন্ট্রি</div>
-                        </div>
-                    </div>
-                    
-                    <div class="dashboard-card card-lab-history" data-target="manage-labs">
-                        <div class="card-icon" style="background: var(--gradient-secondary);">
-                            <i class="fas fa-clinic-medical"></i>
-                        </div>
-                        <h3 class="card-title">ল্যাব যোগ করুন</h3>
-                        <p class="card-desc">নতুন ডেন্টাল ল্যাব প্রতিষ্ঠান যোগ করুন। নাম, ফোন, ঠিকানা দিন।</p>
-                        <div class="card-stats">
-                            <div class="stat-number" id="labCountBadge2">0</div>
-                            <div class="stat-label">মোট ল্যাব</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Lab Jobs -->
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">
-                            <i class="fas fa-clock"></i>
-                            সাম্প্রতিক ল্যাব কাজ
-                        </h3>
-                        <div class="table-actions">
-                            <button class="btn btn-outline btn-small" id="refreshRecentJobs">
-                                <i class="fas fa-sync-alt"></i>
-                                রিফ্রেশ
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="patients-table">
-                            <thead>
-                                <tr>
-                                    <th>তারিখ</th>
-                                    <th>রোগীর নাম</th>
-                                    <th>ল্যাব</th>
-                                    <th>ক্রাউন টাইপ</th>
-                                    <th>স্ট্যাটাস</th>
-                                    <th>মোট দাম</th>
-                                    <th>ডিউ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentLabJobs"></tbody>
-                        </table>
-                    </div>
-                    <div id="emptyRecentJobs" class="empty-state" style="display: none;">
-                        <i class="fas fa-inbox"></i>
-                        <h4>কোনো সাম্প্রতিক ল্যাব কাজ নেই</h4>
-                        <p>"নতুন ল্যাব এন্ট্রি" তে ক্লিক করে রোগীর কাজ যোগ করুন</p>
-                    </div>
+                <div class="stat-info">
+                    <h3>চলমান কাজ</h3>
+                    <div class="stat-number" id="activeWorks">0</div>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>অপেক্ষমাণ</h3>
+                    <div class="stat-number" id="pendingWorks">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>ডেলিভারি</h3>
+                    <div class="stat-number" id="deliveredWorks">0</div>
+                </div>
+            </div>
+        </div>
 
-            <!-- ============ NEW LAB ENTRY SECTION ============ -->
-            <div id="lab-entry" class="form-container">
-                <div class="form-header">
-                    <h3 class="form-title">
-                        <i class="fas fa-flask"></i>
-                        নতুন ল্যাব এন্ট্রি
-                    </h3>
-                    <div class="badge" style="background: var(--primary);">
-                        <i class="fas fa-user"></i> রোগীর জন্য
-                    </div>
-                </div>
-                
-                <div class="auto-date-info">
-                    <i class="fas fa-info-circle"></i>
-                    <div>
-                        <h4>রোগীর ল্যাব কাজ পাঠান</h4>
-                        <p>নিচের ফর্ম পূরণ করে ল্যাবে কাজ পাঠান। তারিখ স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে।</p>
-                    </div>
-                </div>
-                
-                <form id="labForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="labPatientPhone" class="form-label">
-                                রোগীর মোবাইল নাম্বার <span class="required">*</span>
-                            </label>
-                            <input type="tel" id="labPatientPhone" class="form-control" 
-                                   placeholder="০১XXXXXXXXX" pattern="01[3-9]\d{8}" required>
-                            <div class="form-hint">
-                                <i class="fas fa-info-circle"></i> বাংলাদেশী মোবাইল নাম্বার (১১ ডিজিট)
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="labPatientName" class="form-label">
-                                রোগীর নাম <span class="required">*</span>
-                            </label>
-                            <div class="form-row">
-                                <input type="text" id="labPatientName" class="form-control" 
-                                       placeholder="রোগীর পুরো নাম" required>
-                                <button type="button" id="btnFetchPatient" class="btn btn-warning">
-                                    <i class="fas fa-sync"></i> তথ্য আনুন
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="labType" class="form-label">
-                                ল্যাব নির্বাচন করুন <span class="required">*</span>
-                            </label>
-                            <select id="labType" class="form-control" required>
-                                <option value="">ল্যাব নির্বাচন করুন</option>
-                            </select>
-                            <div class="form-hint" id="labSelectHint">
-                                <i class="fas fa-info-circle"></i>
-                                <span id="labSelectMessage"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="crownType" class="form-label">
-                                ক্রাউনের ধরন <span class="required">*</span>
-                            </label>
-                            <select id="crownType" class="form-control" required>
-                                <option value="">নির্বাচন করুন</option>
-                                <option value="পোর্সেলিন ক্রাউন">পোর্সেলিন ক্রাউন</option>
-                                <option value="জিরকোনিয়া মাল্টি লেয়ার">জিরকোনিয়া মাল্টি লেয়ার</option>
-                                <option value="মেটাল সিরামিক">মেটাল সিরামিক</option>
-                                <option value="ফুল জিরকোনিয়া">ফুল জিরকোনিয়া</option>
-                                <option value="ই-ম্যাক্স">ই-ম্যাক্স</option>
-                                <option value="সিরামিক ক্রাউন">সিরামিক ক্রাউন</option>
-                                <option value="জিরকোনিয়া ক্রাউন">জিরকোনিয়া ক্রাউন</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="crownQuantity" class="form-label">
-                                ক্রাউনের সংখ্যা <span class="required">*</span>
-                            </label>
-                            <input type="number" id="crownQuantity" class="form-control" 
-                                   placeholder="কয়টি ক্রাউন?" min="1" max="50" value="1" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="unitPrice" class="form-label">প্রতি ক্রাউনের দাম (৳) <span class="required">*</span></label>
-                            <input type="number" id="unitPrice" class="form-control" 
-                                   placeholder="প্রতি ক্রাউনের দাম" min="0" step="100" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="totalPrice" class="form-label">মোট দাম (৳)</label>
-                            <input type="number" id="totalPrice" class="form-control" 
-                                   placeholder="মোট দাম" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="deliveryDate" class="form-label">ডেলিভারি তারিখ</label>
-                            <input type="date" id="deliveryDate" class="form-control">
-                        </div>
-                    </div>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="labNotes" class="form-label">বিশেষ নোট</label>
-                            <textarea id="labNotes" class="form-control" 
-                                      placeholder="যেকোনো বিশেষ নির্দেশনা বা নোট লিখুন..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="labStatus" class="form-label">স্ট্যাটাস</label>
-                            <select id="labStatus" class="form-control">
-                                <option value="pending">বাকি</option>
-                                <option value="processing">প্রস্তুত হচ্ছে</option>
-                                <option value="completed">প্রস্তুত</option>
-                                <option value="delivered">ডেলিভার্ড</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions" style="margin-top: 30px;">
-                        <button type="submit" class="btn btn-primary" style="flex: 1;" id="submitLabJobBtn">
-                            <i class="fas fa-paper-plane"></i> ল্যাবে পাঠান
-                        </button>
-                    </div>
-                </form>
+        <!-- Add New Lab Section -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                নতুন ল্যাব যোগ করুন
             </div>
 
-            <!-- ============ MANAGE LABS SECTION ============ -->
-            <div id="manage-labs" class="form-container">
-                <div class="form-header">
-                    <h3 class="form-title">
-                        <i class="fas fa-clinic-medical"></i>
-                        ল্যাব যোগ করুন
-                    </h3>
-                    <div class="badge" style="background: var(--teal);">
-                        <i class="fas fa-building"></i> ল্যাব প্রতিষ্ঠান
-                    </div>
+            <div class="form-group">
+                <label class="form-label">📋 ল্যাবের নাম *</label>
+                <input type="text" id="labName" class="form-control" placeholder="যেমন: ঢাকা ডেন্টাল ল্যাব">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">📞 ল্যাবের নাম্বার</label>
+                <input type="tel" id="labPhone" class="form-control" placeholder="মোবাইল নাম্বার">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">📍 ঠিকানা</label>
+                <input type="text" id="labAddress" class="form-control" placeholder="ল্যাবের ঠিকানা">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">👤 যোগাযোগ ব্যক্তি</label>
+                <input type="text" id="labContactPerson" class="form-control" placeholder="যে ব্যক্তির সাথে যোগাযোগ">
+            </div>
+
+            <button class="btn btn-primary" id="saveLabBtn">
+                <i class="fas fa-save"></i>
+                ল্যাব সংরক্ষণ করুন
+            </button>
+        </div>
+
+        <!-- Lab List -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-list"></i>
+                সংরক্ষিত ল্যাব সমূহ
+            </div>
+            <div id="labListContainer" class="lab-list">
+                <!-- Dynamic Lab List -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>ল্যাব তথ্য লোড হচ্ছে...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Lab Work Entry -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-flask"></i>
+                নতুন ল্যাব কাজ এন্ট্রি
+            </div>
+
+            <!-- Patient Search -->
+            <div class="patient-search">
+                <div class="form-group">
+                    <label class="form-label">🔍 রোগীর মোবাইল নাম্বার *</label>
+                    <input type="tel" id="searchPatientPhone" class="form-control" placeholder="01XXXXXXXXX">
                 </div>
                 
-                <!-- ল্যাব এড করার ফর্ম - ফিক্সড -->
-                <div class="lab-add-form" style="background: #f0f9ff; border: 2px solid var(--primary);">
-                    <h3 style="color: var(--primary);">
-                        <i class="fas fa-plus-circle"></i> নতুন ল্যাব প্রতিষ্ঠান যোগ করুন
-                    </h3>
-                    <p style="color: var(--gray); margin-bottom: 20px; font-size: 0.95rem;">
-                        <i class="fas fa-info-circle"></i> নিচের ফর্ম পূরণ করে নতুন ল্যাব যোগ করুন। তারপর রোগীর জন্য ল্যাব এন্ট্রি করতে পারবেন।
-                    </p>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="newLabName" class="form-label">
-                                ল্যাবের নাম <span class="required">*</span>
-                            </label>
-                            <input type="text" id="newLabName" class="form-control" 
-                                   placeholder="যেমন: সিটি ডেন্টাল ল্যাব">
+                <!-- Patient Info Result -->
+                <div id="patientSearchResult" class="search-result">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 50px; height: 50px; background: #6f42c1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="fas fa-user"></i>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="newLabPhone" class="form-label">
-                                ল্যাবের ফোন <span class="required">*</span>
-                            </label>
-                            <input type="tel" id="newLabPhone" class="form-control" 
-                                   placeholder="০১XXXXXXXXX" pattern="01[3-9]\d{8}">
+                        <div>
+                            <div id="patientName" style="font-weight: 700; font-size: 1.1rem;"></div>
+                            <div id="patientPhone" style="color: #6f42c1;"></div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="newLabAddress" class="form-label">ল্যাবের ঠিকানা</label>
-                            <input type="text" id="newLabAddress" class="form-control" 
-                                   placeholder="যেমন: মিরপুর-১০, ঢাকা">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="newLabContactPerson" class="form-label">যোগাযোগের ব্যক্তি</label>
-                            <input type="text" id="newLabContactPerson" class="form-control" 
-                                   placeholder="যেমন: জনাব রহিম">
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button id="btnAddLab" class="btn btn-success" style="width: 100%;">
-                            <i class="fas fa-save"></i> ল্যাব যোগ করুন
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">
-                            <i class="fas fa-list"></i>
-                            আপনার ল্যাব তালিকা
-                        </h3>
-                        <div class="table-actions">
-                            <span style="color: var(--gray); font-size: 0.9rem;">
-                                মোট ল্যাব: <span id="totalLabsCount">০</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="patients-table">
-                            <thead>
-                                <tr>
-                                    <th>ক্রমিক</th>
-                                    <th>ল্যাবের নাম</th>
-                                    <th>ফোন</th>
-                                    <th>ঠিকানা</th>
-                                    <th>যোগাযোগ</th>
-                                    <th>মোট কাজ</th>
-                                    <th>বকেয়া</th>
-                                    <th>কর্ম</th>
-                                </tr>
-                            </thead>
-                            <tbody id="labsTable"></tbody>
-                        </table>
-                    </div>
-                    <div id="emptyLabs" class="empty-state">
-                        <i class="fas fa-clinic-medical"></i>
-                        <h4>কোনো ল্যাব যোগ করা হয়নি</h4>
-                        <p>উপরের ফর্ম পূরণ করে প্রথম ল্যাব যোগ করুন</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ============ LAB HISTORY SECTION ============ -->
-            <div id="lab-history" class="form-container">
-                <div class="form-header">
-                    <h3 class="form-title">
-                        <i class="fas fa-history"></i>
-                        ল্যাব হিস্ট্রি
-                    </h3>
+            <!-- Lab Selection -->
+            <div class="form-group">
+                <label class="form-label">🏥 ল্যাব সিলেক্ট করুন *</label>
+                <select id="labSelector" class="form-control">
+                    <option value="">-- ল্যাব নির্বাচন করুন --</option>
+                </select>
+            </div>
+
+            <!-- Work Type -->
+            <label class="form-label">🦷 কাজের ধরন *</label>
+            <div class="work-type-grid">
+                <div class="work-type-item active" data-work="crown">
+                    <i class="fas fa-crown"></i>
+                    <span>ক্রাউন</span>
                 </div>
-                
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <span class="filter-label">ফিল্টার:</span>
-                        <select id="monthSelect" class="filter-select">
-                            <option value="all">সব মাস</option>
-                            <option value="01">জানুয়ারি</option>
-                            <option value="02">ফেব্রুয়ারি</option>
-                            <option value="03">মার্চ</option>
-                            <option value="04">এপ্রিল</option>
-                            <option value="05">মে</option>
-                            <option value="06">জুন</option>
-                            <option value="07">জুলাই</option>
-                            <option value="08">আগস্ট</option>
-                            <option value="09">সেপ্টেম্বর</option>
-                            <option value="10">অক্টোবর</option>
-                            <option value="11">নভেম্বর</option>
-                            <option value="12">ডিসেম্বর</option>
-                        </select>
-                        <select id="yearSelect" class="filter-select">
-                            <option value="2024">২০২৪</option>
-                            <option value="2025">২০২৫</option>
-                            <option value="2026">২০২৬</option>
-                        </select>
-                        <select id="statusFilter" class="filter-select">
-                            <option value="all">সব স্ট্যাটাস</option>
-                            <option value="pending">বাকি</option>
-                            <option value="processing">প্রস্তুত হচ্ছে</option>
-                            <option value="completed">প্রস্তুত</option>
-                            <option value="delivered">ডেলিভার্ড</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <button id="btnRefreshHistory" class="btn btn-warning btn-small">
-                            <i class="fas fa-sync-alt"></i> রিফ্রেশ
-                        </button>
-                        <button id="btnExportHistory" class="btn btn-success btn-small">
-                            <i class="fas fa-download"></i> এক্সপোর্ট
-                        </button>
-                    </div>
+                <div class="work-type-item" data-work="bridge">
+                    <i class="fas fa-link"></i>
+                    <span>ব্রিজ</span>
                 </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">
-                            <i class="fas fa-list"></i>
-                            ল্যাব কাজের তালিকা
-                        </h3>
-                        <span>মোট: <span id="totalJobsCount">0</span></span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="patients-table">
-                            <thead>
-                                <tr>
-                                    <th>ক্রমিক</th>
-                                    <th>তারিখ</th>
-                                    <th>রোগীর নাম</th>
-                                    <th>ল্যাব</th>
-                                    <th>ক্রাউন</th>
-                                    <th>সংখ্যা</th>
-                                    <th>মোট</th>
-                                    <th>ডিউ</th>
-                                    <th>স্ট্যাটাস</th>
-                                    <th>কর্ম</th>
-                                </tr>
-                            </thead>
-                            <tbody id="labHistoryTable"></tbody>
-                        </table>
-                    </div>
-                    <div id="emptyHistory" class="empty-state" style="display: none;">
-                        <i class="fas fa-inbox"></i>
-                        <h4>কোনো ল্যাব কাজ নেই</h4>
-                        <p>"নতুন ল্যাব এন্ট্রি" থেকে রোগীর কাজ যোগ করুন</p>
-                    </div>
+                <div class="work-type-item" data-work="denture">
+                    <i class="fas fa-smile"></i>
+                    <span>ডেনচার</span>
+                </div>
+                <div class="work-type-item" data-work="rpd">
+                    <i class="fas fa-tools"></i>
+                    <span>আরপিডি</span>
+                </div>
+                <div class="work-type-item" data-work="ortho">
+                    <i class="fas fa-bolt"></i>
+                    <span>অর্থো</span>
+                </div>
+                <div class="work-type-item" data-work="implant">
+                    <i class="fas fa-microchip"></i>
+                    <span>ইমপ্লান্ট</span>
+                </div>
+                <div class="work-type-item" data-work="veneer">
+                    <i class="fas fa-layer-group"></i>
+                    <span>ভিনিয়ার</span>
+                </div>
+                <div class="work-type-item" data-work="other">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span>অন্যান্য</span>
+                </div>
+            </div>
+            <input type="hidden" id="workType" value="crown">
+
+            <!-- Crown Specific Options -->
+            <div id="crownOptions">
+                <label class="form-label">🎨 দাঁতের কালার/শেড</label>
+                <div class="shade-selector">
+                    <div class="shade-item" data-shade="A1">A1</div>
+                    <div class="shade-item" data-shade="A2">A2</div>
+                    <div class="shade-item" data-shade="A3">A3</div>
+                    <div class="shade-item" data-shade="A3.5">A3.5</div>
+                    <div class="shade-item" data-shade="B1">B1</div>
+                    <div class="shade-item" data-shade="B2">B2</div>
+                    <div class="shade-item" data-shade="B3">B3</div>
+                    <div class="shade-item" data-shade="B4">B4</div>
+                    <div class="shade-item" data-shade="C1">C1</div>
+                    <div class="shade-item" data-shade="C2">C2</div>
+                    <div class="shade-item" data-shade="C3">C3</div>
+                    <div class="shade-item" data-shade="D2">D2</div>
+                    <div class="shade-item" data-shade="D3">D3</div>
+                    <div class="shade-item" data-shade="D4">D4</div>
+                </div>
+                <input type="hidden" id="toothShade" value="A2">
+
+                <label class="form-label">🛡️ কাপের ধরন</label>
+                <div class="cap-type-grid">
+                    <div class="cap-type-item" data-cap="pfc">PFC</div>
+                    <div class="cap-type-item" data-cap="zirconia">জিরকোনিয়া</div>
+                    <div class="cap-type-item active" data-cap="zirconia-multi">জিরকোনিয়া মাল্টি</div>
+                    <div class="cap-type-item" data-cap="emax">ই-ম্যাক্স</div>
+                    <div class="cap-type-item" data-cap="cadcam">CAD/CAM</div>
+                    <div class="cap-type-item" data-cap="metal">মেটাল</div>
+                </div>
+                <input type="hidden" id="capType" value="zirconia-multi">
+            </div>
+
+            <!-- Work Details -->
+            <div class="form-group">
+                <label class="form-label">📝 কাজের বিবরণ *</label>
+                <textarea id="workDetails" class="form-control" rows="2" placeholder="যেমন: ১৬, ১৭ নং দাঁতের ক্রাউন"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">🦷 দাঁতের নাম্বার</label>
+                <input type="text" id="toothNumbers" class="form-control" placeholder="যেমন: 16, 17, 26, 27">
+            </div>
+
+            <div class="row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                    <label class="form-label">🔢 পরিমাণ</label>
+                    <input type="number" id="quantity" class="form-control" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">💰 ইউনিট মূল্য</label>
+                    <input type="number" id="unitPrice" class="form-control" value="0" min="0">
                 </div>
             </div>
 
-            <!-- ============ LAB PAYMENT SECTION ============ -->
-            <div id="lab-payment" class="form-container">
-                <div class="form-header">
-                    <h3 class="form-title">
-                        <i class="fas fa-money-bill-wave"></i>
-                        ল্যাব পেমেন্ট
-                    </h3>
+            <!-- Calculation -->
+            <div class="calculation-box">
+                <div class="calc-row">
+                    <span class="calc-label">মোট বিল</span>
+                    <span class="calc-value" id="totalBill">৳ 0</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">জমা</span>
+                    <span class="calc-value" id="paidAmount">৳ 0</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">বকেয়া</span>
+                    <span class="calc-value due-amount" id="dueAmount">৳ 0</span>
                 </div>
                 
-                <div class="stats-overview" id="paymentSummary">
-                    <div class="stat-card">
-                        <div class="stat-card-icon" style="background: var(--gradient-primary);">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <div class="stat-card-title">মোট বকেয়া</div>
-                            <div class="stat-card-value" id="totalDueAmount">৳ ০</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-icon" style="background: var(--gradient-success);">
-                            <i class="fas fa-hand-holding-usd"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <div class="stat-card-title">মোট পরিশোধিত</div>
-                            <div class="stat-card-value" id="totalPaidAmount">৳ ০</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-icon" style="background: var(--gradient-secondary);">
-                            <i class="fas fa-clinic-medical"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <div class="stat-card-title">বকেয়া ল্যাব</div>
-                            <div class="stat-card-value" id="labsWithDue">০</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="lab-add-form" style="margin-bottom: 30px; background: #f0fdf4;">
-                    <h4 style="margin-bottom: 20px; color: var(--success); display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-plus-circle"></i> নতুন পেমেন্ট যোগ করুন
-                    </h4>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="paymentLabId" class="form-label">
-                                ল্যাব নির্বাচন করুন <span class="required">*</span>
-                            </label>
-                            <select id="paymentLabId" class="form-control">
-                                <option value="">ল্যাব নির্বাচন করুন</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="paymentAmount" class="form-label">
-                                পেমেন্টের পরিমাণ (৳) <span class="required">*</span>
-                            </label>
-                            <input type="number" id="paymentAmount" class="form-control" 
-                                   placeholder="যেমন: ৫০০০" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="paymentDate" class="form-label">পেমেন্ট তারিখ</label>
-                            <input type="date" id="paymentDate" class="form-control">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="paymentMethod" class="form-label">পেমেন্ট মাধ্যম</label>
-                            <select id="paymentMethod" class="form-control">
-                                <option value="cash">নগদ</option>
-                                <option value="bank">ব্যাংক</option>
-                                <option value="mobile_banking">মোবাইল ব্যাংকিং</option>
-                            </select>
-                        </div>
-                    </div>
-                    
+                <!-- Payment Section -->
+                <div id="paymentSection" class="payment-section">
                     <div class="form-group">
-                        <label for="paymentNote" class="form-label">মন্তব্য</label>
-                        <textarea id="paymentNote" class="form-control" 
-                                  placeholder="পেমেন্ট সম্পর্কিত মন্তব্য..."></textarea>
+                        <label class="form-label">💰 জমা টাকা</label>
+                        <input type="number" id="paymentAmount" class="form-control" placeholder="টাকার পরিমাণ">
                     </div>
-                    
-                    <div class="form-actions">
-                        <button id="btnAddPayment" class="btn btn-success" style="width: 100%;">
-                            <i class="fas fa-money-bill"></i> পেমেন্ট সংরক্ষণ করুন
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">
-                            <i class="fas fa-history"></i>
-                            সাম্প্রতিক পেমেন্ট
-                        </h3>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="patients-table">
-                            <thead>
-                                <tr>
-                                    <th>তারিখ</th>
-                                    <th>ল্যাব</th>
-                                    <th>পরিমাণ</th>
-                                    <th>মাধ্যম</th>
-                                    <th>মন্তব্য</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentPaymentsTable"></tbody>
-                        </table>
-                    </div>
-                    <div id="emptyPayments" class="empty-state" style="display: none;">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <h4>কোনো পেমেন্ট রেকর্ড নেই</h4>
-                    </div>
+                    <button class="btn btn-success" id="payDueBtn">
+                        <i class="fas fa-check-circle"></i>
+                        জমা করুন
+                    </button>
                 </div>
             </div>
-            
-            <!-- ============ PATIENT SEARCH SECTION ============ -->
-            <div id="patient-search" class="form-container">
-                <div class="form-header">
-                    <h3 class="form-title">
-                        <i class="fas fa-search"></i>
-                        রোগী সার্চ
-                    </h3>
-                </div>
-                
-                <div class="filter-section" style="justify-content: center;">
-                    <div class="filter-group" style="width: 100%;">
-                        <input type="text" id="searchPatientInput" class="form-control" 
-                               placeholder="মোবাইল নাম্বার বা রোগীর নাম লিখুন..." style="min-width: 250px;">
-                        <button id="btnSearchPatient" class="btn btn-primary">
-                            <i class="fas fa-search"></i> খুঁজুন
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="patientSearchResults">
-                    <div class="empty-state">
-                        <i class="fas fa-user-md"></i>
-                        <h4>রোগী খুঁজুন</h4>
-                        <p>উপরের বক্সে মোবাইল নাম্বার বা নাম লিখে সার্চ বাটন চাপুন</p>
-                    </div>
+
+            <!-- Delivery Date -->
+            <div class="form-group">
+                <label class="form-label">📅 ডেলিভারি তারিখ</label>
+                <input type="date" id="deliveryDate" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">📌 বিশেষ নির্দেশনা</label>
+                <textarea id="instructions" class="form-control" rows="2" placeholder="ল্যাব টেকনিশিয়ানের জন্য নির্দেশনা..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" id="saveLabWorkBtn">
+                <i class="fas fa-save"></i>
+                ল্যাব কাজ সংরক্ষণ করুন
+            </button>
+        </div>
+
+        <!-- Lab Works List -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-history"></i>
+                ল্যাব কাজের তালিকা
+            </div>
+            <div id="labWorksContainer">
+                <!-- Dynamic Lab Works -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>ল্যাব কাজ লোড হচ্ছে...</p>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Message Container -->
+    <div id="messageContainer"></div>
 
-    <!-- Firebase Script - সম্পূর্ণ ঠিক করা হয়েছে -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getAuth, 
-            onAuthStateChanged,
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
             getFirestore, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            updateDoc, 
-            arrayUnion, 
             collection, 
-            getDocs,
-            query,
-            where,
-            orderBy,
+            addDoc, 
+            getDocs, 
+            getDoc,
+            doc, 
+            query, 
+            where, 
+            orderBy, 
+            limit, 
+            updateDoc,
+            arrayUnion,
             deleteDoc,
-            serverTimestamp,
-            addDoc,
-            onSnapshot,
-            limit
+            onSnapshot
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // ============ FIREBASE CONFIGURATION ============
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
             projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+            storageBucket: "plasma-raceway-465016-v0.appspot.com",
             messagingSenderId: "23620370976",
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // ============ GLOBAL VARIABLES ============
-        let allLabs = [];
-        let allLabJobs = [];
-        let allPayments = [];
-        let currentUser = null;
-        let currentClinicId = null;
+        // Global Variables
+        let currentPatient = null;
+        let selectedLabId = null;
+        let selectedWorkId = null;
 
-        // ============ DOM ELEMENTS ============
-        const loadingScreen = document.getElementById('loadingScreen');
-        const mainApp = document.getElementById('mainApp');
-        const offlineIndicator = document.getElementById('offlineIndicator');
-        const sidebar = document.getElementById('sidebar');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const fab = document.getElementById('fab');
-        const pageTitle = document.getElementById('pageTitle');
-        const currentTimeEl = document.getElementById('currentTime');
-        const sections = document.querySelectorAll('.section, .form-container');
-        const navItems = document.querySelectorAll('.nav-item');
-        const dashboardCards = document.querySelectorAll('.dashboard-card');
-        const quickActionBtns = document.querySelectorAll('.quick-action-btn');
-        const toastContainer = document.getElementById('toastContainer');
+        // Show Message
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message-box message-${type}`;
+            msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+            container.appendChild(msgDiv);
+            
+            setTimeout(() => {
+                msgDiv.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => msgDiv.remove(), 300);
+            }, 4000);
+        }
 
-        // ============ AUTHENTICATION CHECK ============
-        onAuthStateChanged(auth, async (user) => {
+        // Check Authentication
+        onAuthStateChanged(auth, (user) => {
             if (!user) {
-                console.log("No user found, redirecting to login...");
                 window.location.href = "log.html";
-                return;
             } else {
-                console.log("User logged in:", user.email);
-                currentUser = user;
-                currentClinicId = user.uid;
-                
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userAvatar').innerHTML = user.email ? 
-                    '<span>' + user.email[0].toUpperCase() + '</span>' : 
-                    '<i class="fas fa-user"></i>';
-                
-                try {
-                    const clinicRef = doc(db, "clinics", user.uid);
-                    const clinicSnap = await getDoc(clinicRef);
-                    
-                    if (!clinicSnap.exists()) {
-                        await setDoc(clinicRef, {
-                            clinicName: 'চৌধুরী ডেন্টাল',
-                            email: user.email,
-                            createdAt: serverTimestamp()
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error with clinic document:", error);
-                }
-                
-                // ডাটা লোড এবং রিয়েল-টাইম লিসেনার সেটআপ
-                await loadLabsData();
-                await loadLabJobsData();
-                await loadPaymentsData();
-                
-                setupRealtimeListeners();
-                initApp();
-                
-                setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    mainApp.style.display = 'block';
-                }, 500);
+                loadLabs();
+                loadLabWorks();
+                loadStats();
             }
         });
 
-        // ============ রিয়েল-টাইম লিসেনার ============
-        function setupRealtimeListeners() {
-            if (!currentClinicId) return;
-            
-            // ল্যাব জবস রিয়েল-টাইম লিসেনার
-            const jobsQuery = query(
-                collection(db, "LabJobs"),
-                where("clinicId", "==", currentClinicId),
-                orderBy("createdAt", "desc")
-            );
-            
-            onSnapshot(jobsQuery, (snapshot) => {
-                allLabJobs = [];
-                snapshot.forEach(doc => {
-                    const jobData = doc.data();
-                    jobData.id = doc.id;
-                    if (jobData.date && typeof jobData.date === 'string') {
-                        jobData.date = new Date(jobData.date + 'T00:00:00');
-                    }
-                    allLabJobs.push(jobData);
-                });
-                
-                // সব UI আপডেট
-                updateLabHistoryTable();
-                updateBadges();
-                updateRecentJobs();
-                updateDashboardStats();
-                updatePaymentSummary();
-                updatePaymentLabSelect();
-                console.log(`🔄 ${allLabJobs.length} টি ল্যাব জব আপডেট হয়েছে`);
-            }, (error) => {
-                console.error("Realtime listener error:", error);
-            });
-            
-            // ল্যাব রিয়েল-টাইম লিসেনার
-            const labsQuery = query(
-                collection(db, "Labs"),
-                where("clinicId", "==", currentClinicId)
-            );
-            
-            onSnapshot(labsQuery, (snapshot) => {
-                allLabs = [];
-                snapshot.forEach(doc => {
-                    const labData = doc.data();
-                    labData.id = doc.id;
-                    allLabs.push(labData);
-                });
-                
-                allLabs.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-                
-                updateLabSelect();
-                updatePaymentLabSelect();
-                updateLabsTable();
-                updateBadges();
-                updateDashboardStats();
-                console.log(`🔄 ${allLabs.length} টি ল্যাব আপডেট হয়েছে`);
-            });
-            
-            // পেমেন্ট রিয়েল-টাইম লিসেনার
-            const paymentsQuery = query(
-                collection(db, "LabPayments"),
-                where("clinicId", "==", currentClinicId),
-                orderBy("createdAt", "desc"),
-                limit(20)
-            );
-            
-            onSnapshot(paymentsQuery, (snapshot) => {
-                allPayments = [];
-                snapshot.forEach(doc => {
-                    const paymentData = doc.data();
-                    paymentData.id = doc.id;
-                    if (paymentData.date && typeof paymentData.date === 'string') {
-                        paymentData.date = new Date(paymentData.date + 'T00:00:00');
-                    }
-                    allPayments.push(paymentData);
-                });
-                
-                updateRecentPaymentsTable();
-                updatePaymentSummary();
-            });
-        }
+        // ============ LAB MANAGEMENT ============
+        
+        // Save Lab
+        document.getElementById('saveLabBtn').addEventListener('click', async () => {
+            const name = document.getElementById('labName').value.trim();
+            const phone = document.getElementById('labPhone').value.trim();
+            const address = document.getElementById('labAddress').value.trim();
+            const contact = document.getElementById('labContactPerson').value.trim();
 
-        // ============ ডাটা লোড ফাংশন ============
-        async function loadLabsData() {
-            if (!currentClinicId) return;
-            try {
-                const labsQuery = query(
-                    collection(db, "Labs"),
-                    where("clinicId", "==", currentClinicId)
-                );
-                const querySnapshot = await getDocs(labsQuery);
-                allLabs = [];
-                querySnapshot.forEach(doc => {
-                    const labData = doc.data();
-                    labData.id = doc.id;
-                    allLabs.push(labData);
-                });
-                allLabs.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            } catch (error) {
-                console.error("Error loading labs:", error);
-            }
-        }
-
-        async function loadLabJobsData() {
-            if (!currentClinicId) return;
-            try {
-                const jobsQuery = query(
-                    collection(db, "LabJobs"),
-                    where("clinicId", "==", currentClinicId),
-                    orderBy("createdAt", "desc")
-                );
-                const querySnapshot = await getDocs(jobsQuery);
-                allLabJobs = [];
-                querySnapshot.forEach(doc => {
-                    const jobData = doc.data();
-                    jobData.id = doc.id;
-                    if (jobData.date && typeof jobData.date === 'string') {
-                        jobData.date = new Date(jobData.date + 'T00:00:00');
-                    }
-                    allLabJobs.push(jobData);
-                });
-            } catch (error) {
-                console.error("Error loading lab jobs:", error);
-            }
-        }
-
-        async function loadPaymentsData() {
-            if (!currentClinicId) return;
-            try {
-                const paymentsQuery = query(
-                    collection(db, "LabPayments"),
-                    where("clinicId", "==", currentClinicId),
-                    orderBy("createdAt", "desc"),
-                    limit(20)
-                );
-                const querySnapshot = await getDocs(paymentsQuery);
-                allPayments = [];
-                querySnapshot.forEach(doc => {
-                    const paymentData = doc.data();
-                    paymentData.id = doc.id;
-                    if (paymentData.date && typeof paymentData.date === 'string') {
-                        paymentData.date = new Date(paymentData.date + 'T00:00:00');
-                    }
-                    allPayments.push(paymentData);
-                });
-            } catch (error) {
-                console.error("Error loading payments:", error);
-            }
-        }
-
-        // ============ ল্যাব এড ফাংশন (ঠিক করা হয়েছে) ============
-        window.addNewLab = async function() {
-            const name = document.getElementById('newLabName')?.value.trim();
-            const phone = document.getElementById('newLabPhone')?.value.trim();
-            const address = document.getElementById('newLabAddress')?.value.trim();
-            const contactPerson = document.getElementById('newLabContactPerson')?.value.trim();
-            
             if (!name) {
-                showToast("ল্যাবের নাম দিন!", "error");
-                document.getElementById('newLabName')?.focus();
+                showMessage('ল্যাবের নাম অবশ্যই দিতে হবে', 'error');
                 return;
             }
-            
-            if (!phone) {
-                showToast("ল্যাবের ফোন নাম্বার দিন!", "error");
-                document.getElementById('newLabPhone')?.focus();
-                return;
-            }
-            
-            const phoneRegex = /^01[3-9]\d{8}$/;
-            if (!phoneRegex.test(phone)) {
-                showToast("সঠিক মোবাইল নাম্বার দিন (১১ ডিজিট)", "error");
-                document.getElementById('newLabPhone')?.focus();
-                return;
-            }
-            
+
             try {
-                showToast("ল্যাব যোগ করা হচ্ছে...", "info");
-                
                 const labData = {
                     name: name,
-                    phone: phone,
+                    phone: phone || '',
                     address: address || '',
-                    contactPerson: contactPerson || '',
-                    clinicId: currentClinicId,
-                    jobs: [],
-                    totalDue: 0,
+                    contactPerson: contact || '',
+                    createdAt: new Date().toISOString(),
+                    totalWorks: 0,
+                    totalBill: 0,
                     totalPaid: 0,
-                    createdAt: serverTimestamp()
+                    totalDue: 0
                 };
+
+                await addDoc(collection(db, "labs"), labData);
                 
-                await addDoc(collection(db, "Labs"), labData);
+                showMessage('ল্যাব সফলভাবে সংরক্ষিত হয়েছে', 'success');
                 
-                showToast("✅ ল্যাব সফলভাবে যোগ করা হয়েছে!", "success");
+                // Clear form
+                document.getElementById('labName').value = '';
+                document.getElementById('labPhone').value = '';
+                document.getElementById('labAddress').value = '';
+                document.getElementById('labContactPerson').value = '';
                 
-                document.getElementById('newLabName').value = '';
-                document.getElementById('newLabPhone').value = '';
-                document.getElementById('newLabAddress').value = '';
-                document.getElementById('newLabContactPerson').value = '';
+                loadLabs();
                 
             } catch (error) {
-                console.error("Error adding lab:", error);
-                showToast("❌ ল্যাব যোগ করতে সমস্যা হয়েছে: " + error.message, "error");
+                console.error("Error saving lab:", error);
+                showMessage('ল্যাব সংরক্ষণে সমস্যা হয়েছে', 'error');
             }
-        };
+        });
 
-        // ============ ইনিশিয়ালাইজেশন ============
-        function initApp() {
-            setupEventListeners();
-            updateCurrentTime();
-            setInterval(updateCurrentTime, 1000);
-            setupOfflineDetection();
-            
-            const today = new Date().toISOString().split('T')[0];
-            if (document.getElementById('paymentDate')) 
-                document.getElementById('paymentDate').value = today;
-            if (document.getElementById('deliveryDate')) 
-                document.getElementById('deliveryDate').min = today;
-            
-            const hash = window.location.hash.replace('#', '');
-            navigateToSection(hash || 'dashboard');
-        }
-
-        // ============ ইভেন্ট লিসেনার ============
-        function setupEventListeners() {
-            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-            mobileMenuBtn?.addEventListener('click', toggleMobileMenu);
-            
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            dashboardCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            quickActionBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = this.getAttribute('data-target');
-                    if (target) navigateToSection(target);
-                });
-            });
-            
-            fab?.addEventListener('click', handleFabClick);
-            
-            document.getElementById('crownQuantity')?.addEventListener('input', calculateTotalPrice);
-            document.getElementById('unitPrice')?.addEventListener('input', calculateTotalPrice);
-            document.getElementById('btnFetchPatient')?.addEventListener('click', fetchPatientData);
-            document.getElementById('labForm')?.addEventListener('submit', handleLabFormSubmit);
-            
-            // ল্যাব এড বাটন - ফিক্সড
-            document.getElementById('btnAddLab')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.addNewLab();
-            });
-            
-            document.getElementById('btnAddPayment')?.addEventListener('click', addNewPayment);
-            document.getElementById('refreshRecentJobs')?.addEventListener('click', () => loadAllData());
-            document.getElementById('btnRefreshHistory')?.addEventListener('click', () => loadAllData());
-            document.getElementById('btnExportHistory')?.addEventListener('click', exportHistory);
-            
-            document.getElementById('monthSelect')?.addEventListener('change', updateLabHistoryTable);
-            document.getElementById('yearSelect')?.addEventListener('change', updateLabHistoryTable);
-            document.getElementById('statusFilter')?.addEventListener('change', updateLabHistoryTable);
-            document.getElementById('btnSearchPatient')?.addEventListener('click', searchPatient);
-            
-            window.addEventListener('resize', handleResize);
-        }
-
-        // ============ নেভিগেশন ============
-        function navigateToSection(sectionId) {
-            sections.forEach(section => section.classList.remove('active'));
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) targetSection.classList.add('active');
-            
-            const titles = {
-                'dashboard': 'ড্যাশবোর্ড',
-                'lab-entry': 'নতুন ল্যাব এন্ট্রি - রোগীর জন্য',
-                'lab-history': 'ল্যাব হিস্ট্রি',
-                'lab-payment': 'ল্যাব পেমেন্ট',
-                'manage-labs': 'ল্যাব যোগ করুন - প্রতিষ্ঠান',
-                'patient-search': 'রোগী সার্চ'
-            };
-            if (pageTitle) pageTitle.textContent = titles[sectionId] || 'ল্যাব ম্যানেজমেন্ট';
-            
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-target') === sectionId) {
-                    item.classList.add('active');
-                }
-            });
-            
-            sidebar?.classList.remove('active');
-            if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            window.location.hash = sectionId;
-            
-            if (sectionId === 'dashboard') {
-                updateDashboardStats();
-                updateRecentJobs();
-            } else if (sectionId === 'lab-entry') {
-                loadLabFormData();
-            }
-        }
-
-        // ============ ল্যাব সিলেক্ট আপডেট ============
-        function updateLabSelect() {
-            const labSelect = document.getElementById('labType');
-            const labSelectMessage = document.getElementById('labSelectMessage');
-            const submitBtn = document.getElementById('submitLabJobBtn');
-            
-            if (!labSelect) return;
-            
-            labSelect.innerHTML = '<option value="">ল্যাব নির্বাচন করুন</option>';
-            
-            if (allLabs.length === 0) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.disabled = true;
-                option.textContent = 'কোনো ল্যাব নেই, প্রথমে ল্যাব যোগ করুন';
-                labSelect.appendChild(option);
-                
-                if (labSelectMessage) {
-                    labSelectMessage.innerHTML = 'কোনো ল্যাব নেই! "ল্যাব যোগ করুন" সেকশন থেকে ল্যাব যোগ করুন';
-                }
-                if (submitBtn) submitBtn.disabled = true;
-            } else {
-                if (labSelectMessage) {
-                    labSelectMessage.innerHTML = `${allLabs.length} টি ল্যাব পাওয়া গেছে`;
-                }
-                if (submitBtn) submitBtn.disabled = false;
-                
-                allLabs.forEach(lab => {
-                    const option = document.createElement('option');
-                    option.value = lab.id;
-                    option.textContent = `${lab.name} - ${lab.phone || ''}`;
-                    labSelect.appendChild(option);
-                });
-            }
-        }
-
-        // ============ UI আপডেট ফাংশন ============
-        function updateLabsTable() {
-            const labsTable = document.getElementById('labsTable');
-            const emptyLabs = document.getElementById('emptyLabs');
-            const totalLabsCount = document.getElementById('totalLabsCount');
-            const labCountBadge2 = document.getElementById('labCountBadge2');
-            
-            if (!labsTable) return;
-            
-            if (allLabs.length === 0) {
-                labsTable.innerHTML = '';
-                if (emptyLabs) emptyLabs.style.display = 'block';
-                if (totalLabsCount) totalLabsCount.textContent = '০';
-                if (labCountBadge2) labCountBadge2.textContent = '0';
-                return;
-            }
-            
-            if (emptyLabs) emptyLabs.style.display = 'none';
-            if (totalLabsCount) totalLabsCount.textContent = allLabs.length;
-            if (labCountBadge2) labCountBadge2.textContent = allLabs.length;
-            
-            let html = '';
-            allLabs.forEach((lab, index) => {
-                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
-                const totalJobs = labJobs.length;
-                const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-                
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><strong>${lab.name || '-'}</strong></td>
-                        <td>${lab.phone || '-'}</td>
-                        <td>${lab.address || '-'}</td>
-                        <td>${lab.contactPerson || '-'}</td>
-                        <td>${totalJobs}</td>
-                        <td><strong style="color: ${totalDue > 0 ? '#ef4444' : '#10b981'};">৳ ${formatNumber(totalDue)}</strong></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-small btn-warning" onclick="window.editLab('${lab.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-small btn-danger" onclick="window.deleteLab('${lab.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            labsTable.innerHTML = html;
-        }
-
-        function updateLabHistoryTable() {
-            const labHistoryTable = document.getElementById('labHistoryTable');
-            const emptyHistory = document.getElementById('emptyHistory');
-            const totalJobsCount = document.getElementById('totalJobsCount');
-            
-            if (!labHistoryTable) return;
-            
-            const month = document.getElementById('monthSelect')?.value || 'all';
-            const year = document.getElementById('yearSelect')?.value || '2024';
-            const status = document.getElementById('statusFilter')?.value || 'all';
-            
-            let filteredJobs = [...allLabJobs];
-            
-            if (month !== 'all') {
-                filteredJobs = filteredJobs.filter(job => {
-                    if (!job.date) return false;
-                    const jobDate = job.date;
-                    return (jobDate.getMonth() + 1) === parseInt(month) && jobDate.getFullYear() === parseInt(year);
-                });
-            }
-            
-            if (status !== 'all') {
-                filteredJobs = filteredJobs.filter(job => job.status === status);
-            }
-            
-            if (filteredJobs.length === 0) {
-                labHistoryTable.innerHTML = '';
-                if (emptyHistory) emptyHistory.style.display = 'block';
-                if (totalJobsCount) totalJobsCount.textContent = '0';
-                return;
-            }
-            
-            if (emptyHistory) emptyHistory.style.display = 'none';
-            if (totalJobsCount) totalJobsCount.textContent = filteredJobs.length;
-            
-            let html = '';
-            filteredJobs.slice(0, 50).forEach((job, index) => {
-                const lab = allLabs.find(l => l.id === job.labId);
-                const labName = lab ? lab.name : (job.labName || 'অজানা ল্যাব');
-                const dateStr = job.date ? formatDate(job.date) : '-';
-                const statusBadge = getStatusBadge(job.status);
-                
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${dateStr}</td>
-                        <td>
-                            <strong>${job.patientName || '-'}</strong>
-                            <br><small style="color: var(--gray);">${job.patientPhone || '-'}</small>
-                        </td>
-                        <td>${labName}</td>
-                        <td>${job.crownType || '-'}</td>
-                        <td>${job.quantity || 1}</td>
-                        <td><strong>৳ ${formatNumber(job.totalPrice || 0)}</strong></td>
-                        <td><strong style="color: #ef4444;">৳ ${formatNumber(job.due || 0)}</strong></td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-small btn-success" onclick="window.updateLabJobStatus('${job.id}', 'delivered')" 
-                                        ${job.status === 'delivered' ? 'disabled' : ''}>
-                                    <i class="fas fa-check"></i>
-                                </button>
-                                <button class="btn-small btn-primary" onclick="window.addPaymentForJob('${job.id}')">
-                                    <i class="fas fa-money-bill"></i>
-                                </button>
-                                <button class="btn-small btn-warning" onclick="window.editLabJob('${job.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-small btn-danger" onclick="window.deleteLabJob('${job.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            labHistoryTable.innerHTML = html;
-        }
-
-        function updateRecentJobs() {
-            const recentLabJobs = document.getElementById('recentLabJobs');
-            const emptyRecentJobs = document.getElementById('emptyRecentJobs');
-            
-            if (!recentLabJobs) return;
-            
-            const recentJobs = allLabJobs.slice(0, 10);
-            
-            if (recentJobs.length === 0) {
-                recentLabJobs.innerHTML = '';
-                if (emptyRecentJobs) emptyRecentJobs.style.display = 'block';
-                return;
-            }
-            
-            if (emptyRecentJobs) emptyRecentJobs.style.display = 'none';
-            
-            let html = '';
-            recentJobs.forEach(job => {
-                const lab = allLabs.find(l => l.id === job.labId);
-                const labName = lab ? lab.name : (job.labName || 'অজানা ল্যাব');
-                const dateStr = job.date ? formatDate(job.date) : '-';
-                const statusBadge = getStatusBadge(job.status);
-                
-                html += `
-                    <tr>
-                        <td>${dateStr}</td>
-                        <td><strong>${job.patientName || '-'}</strong></td>
-                        <td>${labName}</td>
-                        <td>${job.crownType || '-'}</td>
-                        <td>${statusBadge}</td>
-                        <td><strong>৳ ${formatNumber(job.totalPrice || 0)}</strong></td>
-                        <td><strong style="color: #ef4444;">৳ ${formatNumber(job.due || 0)}</strong></td>
-                    </tr>
-                `;
-            });
-            recentLabJobs.innerHTML = html;
-        }
-
-        function updatePaymentLabSelect() {
-            const paymentLabSelect = document.getElementById('paymentLabId');
-            if (!paymentLabSelect) return;
-            
-            const labsWithDue = allLabs.filter(lab => {
-                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
-                const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-                return totalDue > 0;
-            });
-            
-            paymentLabSelect.innerHTML = '<option value="">ল্যাব নির্বাচন করুন</option>';
-            
-            if (labsWithDue.length === 0) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.disabled = true;
-                option.textContent = 'কোনো বকেয়া ল্যাব নেই';
-                paymentLabSelect.appendChild(option);
-                return;
-            }
-            
-            labsWithDue.forEach(lab => {
-                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
-                const totalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-                const option = document.createElement('option');
-                option.value = lab.id;
-                option.textContent = `${lab.name} - বকেয়া: ৳ ${formatNumber(totalDue)}`;
-                paymentLabSelect.appendChild(option);
-            });
-        }
-
-        function updateRecentPaymentsTable() {
-            const recentPaymentsTable = document.getElementById('recentPaymentsTable');
-            const emptyPayments = document.getElementById('emptyPayments');
-            
-            if (!recentPaymentsTable) return;
-            
-            const recentPayments = allPayments.slice(0, 10);
-            
-            if (recentPayments.length === 0) {
-                recentPaymentsTable.innerHTML = '';
-                if (emptyPayments) emptyPayments.style.display = 'block';
-                return;
-            }
-            
-            if (emptyPayments) emptyPayments.style.display = 'none';
-            
-            let html = '';
-            recentPayments.forEach(payment => {
-                const lab = allLabs.find(l => l.id === payment.labId);
-                const labName = lab ? lab.name : (payment.labName || 'অজানা ল্যাব');
-                const dateStr = payment.date ? formatDate(payment.date) : '-';
-                
-                const methodText = {
-                    'cash': 'নগদ',
-                    'bank': 'ব্যাংক',
-                    'mobile_banking': 'মোবাইল ব্যাংকিং'
-                }[payment.method] || payment.method;
-                
-                html += `
-                    <tr>
-                        <td>${dateStr}</td>
-                        <td><strong>${labName}</strong></td>
-                        <td><strong style="color: #10b981;">৳ ${formatNumber(payment.amount || 0)}</strong></td>
-                        <td>${methodText}</td>
-                        <td>${payment.note || '-'}</td>
-                    </tr>
-                `;
-            });
-            recentPaymentsTable.innerHTML = html;
-        }
-
-        function updatePaymentSummary() {
-            const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-            const totalPaid = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.paid || 0)), 0);
-            
-            const labsWithDue = allLabs.filter(lab => {
-                const labJobs = allLabJobs.filter(job => job.labId === lab.id);
-                const labDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-                return labDue > 0;
-            }).length;
-            
-            document.getElementById('totalDueAmount').textContent = `৳ ${formatNumber(totalDue)}`;
-            document.getElementById('totalPaidAmount').textContent = `৳ ${formatNumber(totalPaid)}`;
-            document.getElementById('labsWithDue').textContent = labsWithDue;
-        }
-
-        function updateDashboardStats() {
-            const statsOverview = document.getElementById('statsOverview');
-            if (!statsOverview) return;
-            
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            const todayEntries = allLabJobs.filter(job => {
-                if (!job.date) return false;
-                const jobDate = new Date(job.date);
-                jobDate.setHours(0, 0, 0, 0);
-                return jobDate.getTime() === today.getTime();
-            }).length;
-            
-            const pendingJobs = allLabJobs.filter(job => 
-                job.status === 'pending' || job.status === 'processing'
-            ).length;
-            
-            const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-            const totalRevenue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.totalPrice || 0)), 0);
-            
-            document.getElementById('todayEntries').textContent = todayEntries;
-            
-            statsOverview.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-card-icon" style="background: var(--gradient-primary);">
-                        <i class="fas fa-flask"></i>
-                    </div>
-                    <div class="stat-card-content">
-                        <div class="stat-card-title">মোট ল্যাব কাজ</div>
-                        <div class="stat-card-value">${allLabJobs.length}</div>
-                        <div class="stat-card-change change-positive">
-                            <i class="fas fa-arrow-up"></i> আজ: ${todayEntries}
-                        </div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon" style="background: var(--gradient-success);">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="stat-card-content">
-                        <div class="stat-card-title">মোট আয়</div>
-                        <div class="stat-card-value">৳ ${formatNumber(totalRevenue)}</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon" style="background: var(--gradient-secondary);">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-card-content">
-                        <div class="stat-card-title">পেন্ডিং কাজ</div>
-                        <div class="stat-card-value">${pendingJobs}</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon" style="background: var(--gradient-warning);">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <div class="stat-card-content">
-                        <div class="stat-card-title">মোট বকেয়া</div>
-                        <div class="stat-card-value">৳ ${formatNumber(totalDue)}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateBadges() {
-            const pendingJobs = allLabJobs.filter(job => 
-                job.status === 'pending' || job.status === 'processing'
-            ).length;
-            document.getElementById('pendingBadge').textContent = pendingJobs;
-            
-            const totalDue = allLabJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-            document.getElementById('dueBadge').textContent = `৳ ${formatNumber(totalDue)}`;
-        }
-
-        // ============ CRUD অপারেশন ============
-        async function addNewPayment() {
-            const labId = document.getElementById('paymentLabId').value;
-            const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
-            const paymentDate = document.getElementById('paymentDate').value;
-            const method = document.getElementById('paymentMethod').value;
-            const note = document.getElementById('paymentNote').value.trim();
-            
-            if (!labId) {
-                showToast("ল্যাব নির্বাচন করুন!", "error");
-                return;
-            }
-            
-            if (amount <= 0) {
-                showToast("পেমেন্টের পরিমাণ দিন!", "error");
-                return;
-            }
-            
-            const labJobs = allLabJobs.filter(job => job.labId === labId && job.due > 0);
-            const labTotalDue = labJobs.reduce((sum, job) => sum + (parseFloat(job.due || 0)), 0);
-            
-            if (amount > labTotalDue) {
-                showToast(`বকেয়ার পরিমাণ: ৳ ${formatNumber(labTotalDue)}`, "error");
-                return;
-            }
-            
+        // Load Labs
+        async function loadLabs() {
             try {
-                const lab = allLabs.find(l => l.id === labId);
+                const querySnapshot = await getDocs(collection(db, "labs"));
+                const labListContainer = document.getElementById('labListContainer');
+                const labSelector = document.getElementById('labSelector');
                 
-                const paymentData = {
-                    labId: labId,
-                    labName: lab?.name || '',
-                    amount: amount,
-                    date: paymentDate || new Date().toISOString().split('T')[0],
-                    method: method,
-                    note: note || '',
-                    clinicId: currentClinicId,
-                    createdAt: serverTimestamp()
-                };
+                if (querySnapshot.empty) {
+                    labListContainer.innerHTML = `
+                        <div style="text-align: center; padding: 30px; color: #6c757d;">
+                            <i class="fas fa-flask" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <h4>কোনো ল্যাব নেই</h4>
+                            <p>উপরে ফর্ম ব্যবহার করে ল্যাব যোগ করুন</p>
+                        </div>
+                    `;
+                    
+                    labSelector.innerHTML = '<option value="">-- কোনো ল্যাব নেই --</option>';
+                    return;
+                }
+
+                let labs = [];
+                let labOptions = '<option value="">-- ল্যাব নির্বাচন করুন --</option>';
                 
-                await addDoc(collection(db, "LabPayments"), paymentData);
-                
-                let remaining = amount;
-                const sortedJobs = [...labJobs].sort((a, b) => {
-                    const dateA = a.date || new Date(0);
-                    const dateB = b.date || new Date(0);
-                    return dateA - dateB;
+                querySnapshot.forEach(doc => {
+                    const lab = { id: doc.id, ...doc.data() };
+                    labs.push(lab);
+                    labOptions += `<option value="${doc.id}">${lab.name}</option>`;
                 });
+
+                // Update lab selector
+                labSelector.innerHTML = labOptions;
+
+                // Display lab list
+                let labHTML = '';
+                labs.forEach(lab => {
+                    labHTML += `
+                        <div class="lab-card">
+                            <div class="lab-card-header">
+                                <div class="lab-card-title">
+                                    <i class="fas fa-flask" style="color: #6f42c1;"></i>
+                                    ${lab.name}
+                                </div>
+                                <span class="lab-badge" style="background: #e2d9f3; color: #5a32a3;">
+                                    কাজ: ${lab.totalWorks || 0}
+                                </span>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                ${lab.phone ? `<div style="margin-bottom: 5px;"><i class="fas fa-phone" style="color: #6f42c1; width: 20px;"></i> ${lab.phone}</div>` : ''}
+                                ${lab.address ? `<div style="margin-bottom: 5px;"><i class="fas fa-map-marker-alt" style="color: #6f42c1; width: 20px;"></i> ${lab.address}</div>` : ''}
+                                ${lab.contactPerson ? `<div><i class="fas fa-user" style="color: #6f42c1; width: 20px;"></i> ${lab.contactPerson}</div>` : ''}
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                <div style="flex: 1; text-align: center; padding: 8px; background: #f8f9fa; border-radius: 10px;">
+                                    <span style="display: block; font-size: 0.7rem; color: #6c757d;">বিল</span>
+                                    <span style="font-weight: 700; color: #2d3436;">৳ ${lab.totalBill || 0}</span>
+                                </div>
+                                <div style="flex: 1; text-align: center; padding: 8px; background: #f8f9fa; border-radius: 10px;">
+                                    <span style="display: block; font-size: 0.7rem; color: #6c757d;">জমা</span>
+                                    <span style="font-weight: 700; color: #28a745;">৳ ${lab.totalPaid || 0}</span>
+                                </div>
+                                <div style="flex: 1; text-align: center; padding: 8px; background: #f8f9fa; border-radius: 10px;">
+                                    <span style="display: block; font-size: 0.7rem; color: #6c757d;">বকেয়া</span>
+                                    <span style="font-weight: 700; color: #dc3545;">৳ ${lab.totalDue || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                labListContainer.innerHTML = labHTML;
                 
-                for (const job of sortedJobs) {
-                    if (remaining <= 0) break;
+                // Update total labs stat
+                document.getElementById('totalLabs').textContent = labs.length;
+                
+            } catch (error) {
+                console.error("Error loading labs:", error);
+                document.getElementById('labListContainer').innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                        <p>ল্যাব লোড করতে সমস্যা হয়েছে</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ============ PATIENT SEARCH ============
+        
+        document.getElementById('searchPatientPhone').addEventListener('input', async function(e) {
+            const phone = e.target.value.trim();
+            
+            if (phone.length === 11) {
+                try {
+                    // Search in patientPhones collection
+                    const phoneRef = doc(db, "patientPhones", phone);
+                    const phoneSnap = await getDoc(phoneRef);
                     
-                    const jobDue = parseFloat(job.due || 0);
-                    if (jobDue <= 0) continue;
+                    if (phoneSnap.exists()) {
+                        const names = phoneSnap.data().names || [];
+                        if (names.length > 0) {
+                            const name = names[0];
+                            const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+                            const patientRef = doc(db, "patients", profileId);
+                            const patientSnap = await getDoc(patientRef);
+                            
+                            if (patientSnap.exists()) {
+                                currentPatient = patientSnap.data();
+                                
+                                document.getElementById('patientName').textContent = name;
+                                document.getElementById('patientPhone').textContent = phone;
+                                document.getElementById('patientSearchResult').classList.add('active');
+                                
+                                showMessage('রোগীর তথ্য পাওয়া গেছে', 'success');
+                            }
+                        }
+                    } else {
+                        // New patient - show option to create
+                        document.getElementById('patientName').textContent = 'নতুন রোগী';
+                        document.getElementById('patientPhone').textContent = phone;
+                        document.getElementById('patientSearchResult').classList.add('active');
+                        
+                        currentPatient = { name: 'নতুন রোগী', phone: phone };
+                    }
+                } catch (error) {
+                    console.error("Error searching patient:", error);
+                    showMessage('রোগীর তথ্য খুঁজতে সমস্যা হয়েছে', 'error');
+                }
+            } else {
+                document.getElementById('patientSearchResult').classList.remove('active');
+                currentPatient = null;
+            }
+        });
+
+        // ============ WORK TYPE SELECTION ============
+        
+        document.querySelectorAll('.work-type-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.work-type-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('workType').value = this.dataset.work;
+                
+                // Show/hide crown options
+                const crownOptions = document.getElementById('crownOptions');
+                const workType = this.dataset.work;
+                
+                if (workType === 'crown' || workType === 'bridge' || workType === 'veneer') {
+                    crownOptions.style.display = 'block';
+                } else {
+                    crownOptions.style.display = 'none';
+                }
+            });
+        });
+
+        // Shade Selection
+        document.querySelectorAll('.shade-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.shade-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('toothShade').value = this.dataset.shade;
+            });
+        });
+
+        // Cap Type Selection
+        document.querySelectorAll('.cap-type-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.cap-type-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('capType').value = this.dataset.cap;
+            });
+        });
+
+        // Calculate Bill
+        function calculateBill() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const total = quantity * unitPrice;
+            
+            document.getElementById('totalBill').textContent = `৳ ${total}`;
+            
+            // Update due calculation
+            const paid = parseFloat(document.getElementById('paidAmount').textContent.replace('৳ ', '')) || 0;
+            const due = total - paid;
+            document.getElementById('dueAmount').textContent = `৳ ${due > 0 ? due : 0}`;
+        }
+
+        document.getElementById('quantity').addEventListener('input', calculateBill);
+        document.getElementById('unitPrice').addEventListener('input', calculateBill);
+
+        // Show Payment Section
+        document.getElementById('dueAmount').addEventListener('click', function() {
+            document.getElementById('paymentSection').classList.toggle('active');
+        });
+
+        // Pay Due
+        document.getElementById('payDueBtn').addEventListener('click', async function() {
+            const paymentAmount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+            
+            if (paymentAmount <= 0) {
+                showMessage('জমা টাকা লিখুন', 'error');
+                return;
+            }
+
+            if (!selectedWorkId) {
+                showMessage('কাজ নির্বাচন করুন', 'error');
+                return;
+            }
+
+            try {
+                const workRef = doc(db, "labWorks", selectedWorkId);
+                const workSnap = await getDoc(workRef);
+                
+                if (workSnap.exists()) {
+                    const work = workSnap.data();
+                    const newPaid = (work.paid || 0) + paymentAmount;
+                    const newDue = (work.total || 0) - newPaid;
                     
-                    const paymentForJob = Math.min(jobDue, remaining);
-                    const newDue = jobDue - paymentForJob;
-                    const newPaid = parseFloat(job.paid || 0) + paymentForJob;
-                    
-                    await updateDoc(doc(db, "LabJobs", job.id), {
-                        due: newDue,
+                    await updateDoc(workRef, {
                         paid: newPaid,
-                        status: newDue === 0 ? 'delivered' : job.status
+                        due: newDue,
+                        lastPayment: {
+                            amount: paymentAmount,
+                            date: new Date().toISOString()
+                        }
                     });
                     
-                    remaining -= paymentForJob;
-                }
-                
-                showToast("✅ পেমেন্ট সফলভাবে সংরক্ষণ হয়েছে!", "success");
-                
-                document.getElementById('paymentAmount').value = '';
-                document.getElementById('paymentNote').value = '';
-                
-            } catch (error) {
-                console.error("Error adding payment:", error);
-                showToast("❌ পেমেন্ট সংরক্ষণে সমস্যা হয়েছে!", "error");
-            }
-        }
-
-        // ============ ইউটিলিটি ফাংশন ============
-        async function handleLogout() {
-            try {
-                await signOut(auth);
-                window.location.href = "log.html";
-            } catch (error) {
-                console.error("Logout error:", error);
-                showToast("লগ আউট করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
-        function toggleMobileMenu() {
-            if (sidebar) {
-                sidebar.classList.toggle('active');
-                mobileMenuBtn.innerHTML = sidebar.classList.contains('active') 
-                    ? '<i class="fas fa-times"></i>' 
-                    : '<i class="fas fa-bars"></i>';
-            }
-        }
-
-        function handleResize() {
-            if (window.innerWidth > 992 && sidebar) {
-                sidebar.classList.remove('active');
-                if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        }
-
-        function handleFabClick() {
-            const activeSection = document.querySelector('.section.active, .form-container.active');
-            if (!activeSection) return;
-            
-            const id = activeSection.id;
-            if (id === 'dashboard' || id === 'lab-history') {
-                navigateToSection('lab-entry');
-            } else if (id === 'manage-labs') {
-                document.getElementById('newLabName')?.focus();
-            } else if (id === 'lab-payment') {
-                document.getElementById('paymentLabId')?.focus();
-            }
-        }
-
-        async function loadAllData() {
-            await Promise.all([
-                loadLabsData(),
-                loadLabJobsData(),
-                loadPaymentsData()
-            ]);
-        }
-
-        function loadLabFormData() {
-            updateLabSelect();
-            const today = new Date().toISOString().split('T')[0];
-            const deliveryDate = document.getElementById('deliveryDate');
-            if (deliveryDate) deliveryDate.min = today;
-            calculateTotalPrice();
-        }
-
-        function calculateTotalPrice() {
-            const quantity = parseInt(document.getElementById('crownQuantity')?.value) || 0;
-            const unitPrice = parseFloat(document.getElementById('unitPrice')?.value) || 0;
-            
-            if (quantity > 50) {
-                document.getElementById('crownQuantity').value = 50;
-                showToast("সর্বোচ্চ ৫০টি ক্রাউন", "warning");
-            }
-            
-            const totalPrice = quantity * unitPrice;
-            const totalPriceInput = document.getElementById('totalPrice');
-            if (totalPriceInput) totalPriceInput.value = totalPrice;
-        }
-
-        async function fetchPatientData() {
-            const phone = document.getElementById('labPatientPhone').value.trim();
-            
-            if (!phone) {
-                showToast("মোবাইল নাম্বার দিন!", "error");
-                return;
-            }
-            
-            const phoneRegex = /^01[3-9]\d{8}$/;
-            if (!phoneRegex.test(phone)) {
-                showToast("সঠিক মোবাইল নাম্বার দিন (১১ ডিজিট)", "error");
-                return;
-            }
-            
-            try {
-                const patientsRef = collection(db, "Patients");
-                const q = query(patientsRef, 
-                    where("phone", "==", phone),
-                    where("clinicId", "==", currentClinicId)
-                );
-                
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    const patientData = querySnapshot.docs[0].data();
-                    document.getElementById('labPatientName').value = patientData.name || '';
-                    showToast("রোগীর তথ্য পাওয়া গেছে!", "success");
-                } else {
-                    const name = prompt("এই নাম্বারে রোগী নেই। নতুন রোগীর নাম দিন:", "");
-                    if (name) {
-                        document.getElementById('labPatientName').value = name;
-                        
-                        await addDoc(collection(db, "Patients"), {
-                            name: name,
-                            phone: phone,
-                            clinicId: currentClinicId,
-                            createdAt: serverTimestamp()
-                        });
-                        showToast("নতুন রোগী যোগ করা হয়েছে!", "success");
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching patient:", error);
-                const name = prompt("রোগীর নাম লিখুন:", "");
-                if (name) document.getElementById('labPatientName').value = name;
-            }
-        }
-
-        async function handleLabFormSubmit(e) {
-            e.preventDefault();
-            
-            const patientPhone = document.getElementById('labPatientPhone').value.trim();
-            const patientName = document.getElementById('labPatientName').value.trim();
-            const labId = document.getElementById('labType').value;
-            const crownType = document.getElementById('crownType').value;
-            const quantity = parseInt(document.getElementById('crownQuantity').value) || 0;
-            const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
-            const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
-            const deliveryDate = document.getElementById('deliveryDate').value;
-            const notes = document.getElementById('labNotes').value;
-            const status = document.getElementById('labStatus').value;
-            
-            if (!patientPhone || !/^01[3-9]\d{8}$/.test(patientPhone)) {
-                showToast("সঠিক মোবাইল নাম্বার দিন!", "error");
-                return;
-            }
-            
-            if (!patientName) {
-                showToast("রোগীর নাম দিন!", "error");
-                return;
-            }
-            
-            if (!labId) {
-                showToast("ল্যাব নির্বাচন করুন!", "error");
-                return;
-            }
-            
-            if (!crownType) {
-                showToast("ক্রাউনের ধরন নির্বাচন করুন!", "error");
-                return;
-            }
-            
-            if (quantity <= 0) {
-                showToast("ক্রাউনের সংখ্যা দিন!", "error");
-                return;
-            }
-            
-            if (unitPrice <= 0) {
-                showToast("প্রতি ক্রাউনের দাম দিন!", "error");
-                return;
-            }
-            
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> সংরক্ষণ হচ্ছে...';
-            submitBtn.disabled = true;
-            
-            try {
-                const lab = allLabs.find(l => l.id === labId);
-                
-                const jobData = {
-                    patientPhone: patientPhone,
-                    patientName: patientName,
-                    labId: labId,
-                    labName: lab?.name || '',
-                    crownType: crownType,
-                    quantity: quantity,
-                    unitPrice: unitPrice,
-                    totalPrice: totalPrice,
-                    due: totalPrice,
-                    paid: 0,
-                    date: new Date().toISOString().split('T')[0],
-                    deliveryDate: deliveryDate || null,
-                    notes: notes || '',
-                    status: status,
-                    clinicId: currentClinicId,
-                    createdAt: serverTimestamp()
-                };
-                
-                await addDoc(collection(db, "LabJobs"), jobData);
-                
-                showToast("✅ ল্যাব কাজ সংরক্ষণ হয়েছে!", "success");
-                
-                document.getElementById('labForm').reset();
-                document.getElementById('labPatientPhone').value = '';
-                document.getElementById('labPatientName').value = '';
-                document.getElementById('crownQuantity').value = '1';
-                document.getElementById('unitPrice').value = '';
-                document.getElementById('totalPrice').value = '0';
-                document.getElementById('labStatus').value = 'pending';
-                
-                setTimeout(() => {
-                    navigateToSection('lab-history');
-                }, 1500);
-                
-            } catch (error) {
-                console.error("Error saving lab job:", error);
-                showToast("❌ সংরক্ষণে সমস্যা হয়েছে: " + error.message, "error");
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
-        }
-
-        function exportHistory() {
-            if (allLabJobs.length === 0) {
-                showToast("এক্সপোর্ট করার মতো ডেটা নেই!", "warning");
-                return;
-            }
-            
-            let csvContent = "ক্রমিক,তারিখ,রোগীর নাম,মোবাইল,ল্যাব,ক্রাউন,সংখ্যা,মোট দাম,ডিউ,স্ট্যাটাস\n";
-            
-            allLabJobs.forEach((job, index) => {
-                const lab = allLabs.find(l => l.id === job.labId);
-                const labName = lab ? lab.name : (job.labName || 'অজানা');
-                const dateStr = job.date ? formatDate(job.date, 'csv') : '-';
-                
-                csvContent += `${index + 1},${dateStr},${job.patientName || '-'},${job.patientPhone || '-'},${labName},${job.crownType || '-'},${job.quantity || 1},${job.totalPrice || 0},${job.due || 0},${job.status || '-'}\n`;
-            });
-            
-            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `ল্যাব_হিস্ট্রি_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-            URL.revokeObjectURL(url);
-            
-            showToast("হিস্ট্রি এক্সপোর্ট করা হয়েছে!", "success");
-        }
-
-        async function searchPatient() {
-            const searchTerm = document.getElementById('searchPatientInput').value.trim();
-            const resultsDiv = document.getElementById('patientSearchResults');
-            
-            if (!searchTerm) {
-                showToast("সার্চ করার জন্য নাম বা মোবাইল নাম্বার দিন!", "error");
-                return;
-            }
-            
-            try {
-                let patients = [];
-                
-                const phoneQuery = query(
-                    collection(db, "Patients"),
-                    where("phone", ">=", searchTerm),
-                    where("phone", "<=", searchTerm + "\uf8ff"),
-                    where("clinicId", "==", currentClinicId)
-                );
-                
-                const phoneSnapshot = await getDocs(phoneQuery);
-                phoneSnapshot.forEach(doc => patients.push(doc.data()));
-                
-                if (patients.length === 0) {
-                    const nameQuery = query(
-                        collection(db, "Patients"),
-                        where("name", ">=", searchTerm),
-                        where("name", "<=", searchTerm + "\uf8ff"),
-                        where("clinicId", "==", currentClinicId)
-                    );
-                    
-                    const nameSnapshot = await getDocs(nameQuery);
-                    nameSnapshot.forEach(doc => patients.push(doc.data()));
-                }
-                
-                if (patients.length === 0) {
-                    resultsDiv.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-user-slash"></i>
-                            <h4>কোনো রোগী পাওয়া যায়নি</h4>
-                            <p>"${searchTerm}" এর সাথে মিলে এমন কোনো রোগী নেই</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let html = '<div class="table-container"><div class="table-header"><h3 class="table-title">সার্চ রেজাল্ট</h3></div><div class="table-responsive"><table class="patients-table"><thead><tr><th>নাম</th><th>মোবাইল</th><th>কর্ম</th></tr></thead><tbody>';
-                
-                patients.forEach(patient => {
-                    html += `
-                        <tr>
-                            <td><strong>${patient.name || '-'}</strong></td>
-                            <td>${patient.phone || '-'}</td>
-                            <td>
-                                <button class="btn-small btn-primary" onclick="document.getElementById('labPatientPhone').value='${patient.phone}'; document.getElementById('labPatientName').value='${patient.name}'; navigateToSection('lab-entry');">
-                                    ল্যাব এন্ট্রি
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                html += '</tbody></table></div></div>';
-                resultsDiv.innerHTML = html;
-                
-            } catch (error) {
-                console.error("Search error:", error);
-                showToast("সার্চ করতে সমস্যা হয়েছে!", "error");
-            }
-        }
-
-        // ============ গ্লোবাল ফাংশন ============
-        window.updateLabJobStatus = async function(jobId, newStatus) {
-            if (!confirm("স্ট্যাটাস আপডেট করবেন?")) return;
-            
-            try {
-                const jobRef = doc(db, "LabJobs", jobId);
-                const jobSnap = await getDoc(jobRef);
-                
-                if (!jobSnap.exists()) {
-                    showToast("কাজটি পাওয়া যায়নি!", "error");
-                    return;
-                }
-                
-                const jobData = jobSnap.data();
-                const updates = { status: newStatus };
-                
-                if (newStatus === 'delivered') {
-                    updates.due = 0;
-                    updates.paid = jobData.totalPrice || 0;
-                }
-                
-                await updateDoc(jobRef, updates);
-                showToast("স্ট্যাটাস আপডেট করা হয়েছে!", "success");
-                
-            } catch (error) {
-                console.error("Error updating job status:", error);
-                showToast("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে!", "error");
-            }
-        };
-
-        window.addPaymentForJob = function(jobId) {
-            const job = allLabJobs.find(j => j.id === jobId);
-            if (!job) {
-                showToast("কাজটি পাওয়া যায়নি!", "error");
-                return;
-            }
-            
-            navigateToSection('lab-payment');
-            
-            setTimeout(() => {
-                const paymentLabSelect = document.getElementById('paymentLabId');
-                if (paymentLabSelect) paymentLabSelect.value = job.labId || '';
-                const paymentAmount = document.getElementById('paymentAmount');
-                if (paymentAmount) paymentAmount.value = job.due || 0;
-                const paymentDate = document.getElementById('paymentDate');
-                if (paymentDate) paymentDate.value = new Date().toISOString().split('T')[0];
-                showToast("পেমেন্ট ফর্ম প্রস্তুত", "info");
-            }, 500);
-        };
-
-        window.deleteLabJob = async function(jobId) {
-            if (!confirm("এই ল্যাব কাজ ডিলিট করবেন?")) return;
-            
-            try {
-                const jobRef = doc(db, "LabJobs", jobId);
-                const jobSnap = await getDoc(jobRef);
-                
-                if (!jobSnap.exists()) {
-                    showToast("কাজটি পাওয়া যায়নি!", "error");
-                    return;
-                }
-                
-                const jobData = jobSnap.data();
-                await deleteDoc(jobRef);
-                
-                if (jobData.labId) {
-                    const labRef = doc(db, "Labs", jobData.labId);
+                    // Update lab's total
+                    const labRef = doc(db, "labs", work.labId);
                     const labSnap = await getDoc(labRef);
                     
                     if (labSnap.exists()) {
-                        const labData = labSnap.data();
-                        const newTotalDue = Math.max(0, (labData.totalDue || 0) - (jobData.due || 0));
-                        await updateDoc(labRef, { totalDue: newTotalDue });
+                        const lab = labSnap.data();
+                        await updateDoc(labRef, {
+                            totalPaid: (lab.totalPaid || 0) + paymentAmount,
+                            totalDue: (lab.totalDue || 0) - paymentAmount
+                        });
+                    }
+                    
+                    showMessage('পেমেন্ট সফল হয়েছে', 'success');
+                    document.getElementById('paymentSection').classList.remove('active');
+                    document.getElementById('paymentAmount').value = '';
+                    
+                    loadLabWorks();
+                    loadLabs();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error("Error processing payment:", error);
+                showMessage('পেমেন্ট প্রসেস করতে সমস্যা হয়েছে', 'error');
+            }
+        });
+
+        // ============ SAVE LAB WORK ============
+        
+        document.getElementById('saveLabWorkBtn').addEventListener('click', async function() {
+            // Validation
+            if (!currentPatient) {
+                showMessage('প্রথমে রোগী সার্চ করুন', 'error');
+                return;
+            }
+
+            const labId = document.getElementById('labSelector').value;
+            if (!labId) {
+                showMessage('ল্যাব নির্বাচন করুন', 'error');
+                return;
+            }
+
+            const workDetails = document.getElementById('workDetails').value.trim();
+            if (!workDetails) {
+                showMessage('কাজের বিবরণ লিখুন', 'error');
+                return;
+            }
+
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const total = quantity * unitPrice;
+
+            try {
+                // Get lab info
+                const labRef = doc(db, "labs", labId);
+                const labSnap = await getDoc(labRef);
+                const labData = labSnap.data();
+
+                // Create lab work entry
+                const workData = {
+                    labId: labId,
+                    labName: labData.name,
+                    patientPhone: currentPatient.phone,
+                    patientName: currentPatient.name || document.getElementById('patientName').textContent,
+                    workType: document.getElementById('workType').value,
+                    workDetails: workDetails,
+                    toothShade: document.getElementById('toothShade').value,
+                    capType: document.getElementById('capType').value,
+                    toothNumbers: document.getElementById('toothNumbers').value,
+                    quantity: quantity,
+                    unitPrice: unitPrice,
+                    total: total,
+                    paid: 0,
+                    due: total,
+                    status: 'pending',
+                    deliveryDate: document.getElementById('deliveryDate').value,
+                    instructions: document.getElementById('instructions').value,
+                    createdAt: new Date().toISOString(),
+                    createdBy: auth.currentUser?.email || 'unknown'
+                };
+
+                // Save to Firestore
+                await addDoc(collection(db, "labWorks"), workData);
+
+                // Update lab stats
+                await updateDoc(labRef, {
+                    totalWorks: (labData.totalWorks || 0) + 1,
+                    totalBill: (labData.totalBill || 0) + total,
+                    totalDue: (labData.totalDue || 0) + total
+                });
+
+                // Save to patient profile if exists
+                if (currentPatient.name !== 'নতুন রোগী') {
+                    const profileId = `${currentPatient.phone}_${currentPatient.name.replace(/\s+/g, '_')}`;
+                    const patientRef = doc(db, "patients", profileId);
+                    const patientSnap = await getDoc(patientRef);
+                    
+                    if (patientSnap.exists()) {
+                        await updateDoc(patientRef, {
+                            labWorks: arrayUnion(workData)
+                        });
                     }
                 }
+
+                showMessage('ল্যাব কাজ সফলভাবে সংরক্ষিত হয়েছে', 'success');
+
+                // Clear form
+                document.getElementById('workDetails').value = '';
+                document.getElementById('toothNumbers').value = '';
+                document.getElementById('quantity').value = '1';
+                document.getElementById('unitPrice').value = '0';
+                document.getElementById('instructions').value = '';
+                document.getElementById('deliveryDate').value = '';
                 
-                showToast("ল্যাব কাজ ডিলিট করা হয়েছে!", "success");
-                
+                calculateBill();
+                loadLabWorks();
+                loadLabs();
+                loadStats();
+
+                // Show success message about crown if work type is crown
+                if (workData.workType === 'crown') {
+                    setTimeout(() => {
+                        showMessage(`ক্রাউনের জন্য ল্যাব: ${labData.name} - কালার: ${workData.toothShade}, কাপ: ${workData.capType}`, 'info');
+                    }, 500);
+                }
+
             } catch (error) {
-                console.error("Error deleting lab job:", error);
-                showToast("ডিলিট করতে সমস্যা হয়েছে!", "error");
+                console.error("Error saving lab work:", error);
+                showMessage('ল্যাব কাজ সংরক্ষণে সমস্যা হয়েছে', 'error');
             }
-        };
+        });
 
-        window.editLabJob = function(jobId) {
-            const job = allLabJobs.find(j => j.id === jobId);
-            if (!job) {
-                showToast("কাজটি পাওয়া যায়নি!", "error");
-                return;
-            }
-            
-            navigateToSection('lab-entry');
-            
-            setTimeout(() => {
-                document.getElementById('labPatientPhone').value = job.patientPhone || '';
-                document.getElementById('labPatientName').value = job.patientName || '';
-                document.getElementById('labType').value = job.labId || '';
-                document.getElementById('crownType').value = job.crownType || '';
-                document.getElementById('crownQuantity').value = job.quantity || 1;
-                document.getElementById('unitPrice').value = job.unitPrice || 0;
-                calculateTotalPrice();
-                if (job.deliveryDate) document.getElementById('deliveryDate').value = job.deliveryDate;
-                document.getElementById('labNotes').value = job.notes || '';
-                document.getElementById('labStatus').value = job.status || 'pending';
-                showToast("কাজটি এডিট করুন", "info");
-            }, 500);
-        };
-
-        window.deleteLab = async function(labId) {
-            if (!confirm("এই ল্যাব ডিলিট করবেন? এটি রিভার্সিবল নয়!")) return;
-            
-            const labJobs = allLabJobs.filter(job => job.labId === labId);
-            
-            if (labJobs.length > 0) {
-                if (!confirm(`এই ল্যাবে ${labJobs.length} টি কাজ আছে। তবুও ডিলিট করবেন?`)) {
+        // ============ LOAD LAB WORKS ============
+        
+        async function loadLabWorks() {
+            try {
+                const q = query(collection(db, "labWorks"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                const container = document.getElementById('labWorksContainer');
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #6c757d;">
+                            <i class="fas fa-flask" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <h4>কোনো ল্যাব কাজ নেই</h4>
+                            <p>নতুন ল্যাব কাজ যোগ করুন</p>
+                        </div>
+                    `;
                     return;
                 }
-            }
-            
-            try {
-                await deleteDoc(doc(db, "Labs", labId));
-                showToast("ল্যাব ডিলিট করা হয়েছে!", "success");
-            } catch (error) {
-                console.error("Error deleting lab:", error);
-                showToast("ডিলিট করতে সমস্যা হয়েছে!", "error");
-            }
-        };
 
-        window.editLab = function(labId) {
-            const lab = allLabs.find(l => l.id === labId);
-            if (!lab) {
-                showToast("ল্যাব পাওয়া যায়নি!", "error");
-                return;
-            }
-            
-            navigateToSection('manage-labs');
-            
-            setTimeout(() => {
-                document.getElementById('newLabName').value = lab.name || '';
-                document.getElementById('newLabPhone').value = lab.phone || '';
-                document.getElementById('newLabAddress').value = lab.address || '';
-                document.getElementById('newLabContactPerson').value = lab.contactPerson || '';
-                showToast("ল্যাব তথ্য এডিট করুন", "info");
-                document.getElementById('newLabName').focus();
-            }, 500);
-        };
-
-        // ============ ইউটিলিটি ফাংশন ============
-        function setupOfflineDetection() {
-            window.addEventListener('online', () => {
-                offlineIndicator?.classList.remove('show');
-                showToast('অনলাইনে ফিরেছেন', 'success');
-                loadAllData();
-            });
-            
-            window.addEventListener('offline', () => {
-                offlineIndicator?.classList.add('show');
-                showToast('অফলাইনে আছেন', 'warning');
-            });
-            
-            if (!navigator.onLine) offlineIndicator?.classList.add('show');
-        }
-
-        function updateCurrentTime() {
-            if (currentTimeEl) {
-                const now = new Date();
-                currentTimeEl.textContent = now.toLocaleDateString('bn-BD', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                let worksHTML = '';
+                let pending = 0, active = 0, delivered = 0;
+                
+                querySnapshot.forEach(doc => {
+                    const work = { id: doc.id, ...doc.data() };
+                    
+                    // Count stats
+                    if (work.status === 'pending') pending++;
+                    if (work.status === 'in-progress') active++;
+                    if (work.status === 'delivered') delivered++;
+                    
+                    // Status badge
+                    let statusClass = 'lab-badge-pending';
+                    let statusText = 'অপেক্ষমাণ';
+                    
+                    if (work.status === 'in-progress') {
+                        statusClass = 'lab-badge-progress';
+                        statusText = 'প্রক্রিয়াধীন';
+                    } else if (work.status === 'completed') {
+                        statusClass = 'lab-badge-completed';
+                        statusText = 'সম্পন্ন';
+                    } else if (work.status === 'delivered') {
+                        statusClass = 'lab-badge-delivered';
+                        statusText = 'ডেলিভারি';
+                    }
+                    
+                    worksHTML += `
+                        <div class="lab-card" onclick="selectWork('${work.id}')">
+                            <div class="lab-card-header">
+                                <div class="lab-card-title">
+                                    <i class="fas fa-tooth"></i>
+                                    ${work.patientName}
+                                </div>
+                                <span class="lab-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: #6f42c1; font-weight: 600;">${work.labName}</span>
+                                <span style="color: #6c757d;">${work.workType}</span>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+                                <div style="margin-bottom: 8px;">📝 ${work.workDetails}</div>
+                                ${work.toothNumbers ? `<div>🦷 দাঁত: ${work.toothNumbers}</div>` : ''}
+                                ${work.toothShade ? `<div>🎨 শেড: ${work.toothShade}</div>` : ''}
+                                ${work.capType ? `<div>🛡️ কাপ: ${work.capType}</div>` : ''}
+                            </div>
+                            
+                            <div class="lab-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">পরিমাণ</div>
+                                    <div class="detail-value">${work.quantity}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">বিল</div>
+                                    <div class="detail-value">৳ ${work.total || 0}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">বকেয়া</div>
+                                    <div class="detail-value" style="color: ${work.due > 0 ? '#dc3545' : '#28a745'}">
+                                        ৳ ${work.due || 0}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lab-footer">
+                                <span style="font-size: 0.8rem; color: #6c757d;">
+                                    <i class="far fa-calendar-alt"></i>
+                                    ${new Date(work.createdAt).toLocaleDateString('bn-BD')}
+                                </span>
+                                
+                                ${work.due > 0 ? `
+                                    <button class="btn-pay" onclick="event.stopPropagation(); payDue('${work.id}', ${work.due})">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        জমা দিন
+                                    </button>
+                                ` : `
+                                    <span style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem;">
+                                        <i class="fas fa-check-circle"></i>
+                                        পরিশোধিত
+                                    </span>
+                                `}
+                            </div>
+                        </div>
+                    `;
                 });
+                
+                container.innerHTML = worksHTML;
+                
+                // Update stats
+                document.getElementById('pendingWorks').textContent = pending;
+                document.getElementById('activeWorks').textContent = active;
+                document.getElementById('deliveredWorks').textContent = delivered;
+                
+            } catch (error) {
+                console.error("Error loading lab works:", error);
+                document.getElementById('labWorksContainer').innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                        <p>ল্যাব কাজ লোড করতে সমস্যা হয়েছে</p>
+                    </div>
+                `;
             }
         }
 
-        function formatDate(date, format = 'display') {
-            if (!date) return '-';
-            const d = date instanceof Date ? date : new Date(date);
-            if (format === 'csv') return d.toISOString().split('T')[0];
-            const day = d.getDate().toString().padStart(2, '0');
-            const month = (d.getMonth() + 1).toString().padStart(2, '0');
-            const year = d.getFullYear();
-            return `${day}/${month}/${year}`;
+        // Make functions global
+        window.selectWork = function(workId) {
+            selectedWorkId = workId;
+            document.getElementById('paymentSection').classList.add('active');
+        };
+
+        window.payDue = function(workId, due) {
+            selectedWorkId = workId;
+            document.getElementById('paymentSection').classList.add('active');
+            document.getElementById('paymentAmount').value = due;
+        };
+
+        // Load Stats
+        async function loadStats() {
+            try {
+                const labsSnap = await getDocs(collection(db, "labs"));
+                const worksSnap = await getDocs(collection(db, "labWorks"));
+                
+                let totalLabs = 0;
+                let pending = 0;
+                let active = 0;
+                let delivered = 0;
+                
+                labsSnap.forEach(() => totalLabs++);
+                
+                worksSnap.forEach(doc => {
+                    const work = doc.data();
+                    if (work.status === 'pending') pending++;
+                    if (work.status === 'in-progress') active++;
+                    if (work.status === 'delivered') delivered++;
+                });
+                
+                document.getElementById('totalLabs').textContent = totalLabs;
+                document.getElementById('pendingWorks').textContent = pending;
+                document.getElementById('activeWorks').textContent = active;
+                document.getElementById('deliveredWorks').textContent = delivered;
+                
+            } catch (error) {
+                console.error("Error loading stats:", error);
+            }
         }
 
-        function formatNumber(num) {
-            if (num === undefined || num === null) return '০';
-            const value = parseFloat(num);
-            if (isNaN(value)) return '০';
-            return value.toLocaleString('bn-BD', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            });
-        }
-
-        function getStatusBadge(status) {
-            const badges = {
-                'pending': '<span class="status-badge status-pending"><i class="fas fa-clock"></i> বাকি</span>',
-                'processing': '<span class="status-badge status-processing"><i class="fas fa-cog fa-spin"></i> প্রস্তুত হচ্ছে</span>',
-                'completed': '<span class="status-badge status-completed"><i class="fas fa-check"></i> প্রস্তুত</span>',
-                'delivered': '<span class="status-badge status-delivered"><i class="fas fa-truck"></i> ডেলিভার্ড</span>'
-            };
-            return badges[status] || `<span class="status-badge">${status || '-'}</span>`;
-        }
-
-        function showToast(message, type = 'info') {
-            if (!toastContainer) return;
-            
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            
-            const icons = {
-                success: 'check-circle',
-                error: 'exclamation-circle',
-                warning: 'exclamation-triangle',
-                info: 'info-circle'
-            };
-            
-            toast.innerHTML = `
-                <div class="toast-icon">
-                    <i class="fas fa-${icons[type] || 'info-circle'}"></i>
-                </div>
-                <div class="toast-content">
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="toast-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            toastContainer.appendChild(toast);
-            
-            toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
-            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 5000);
-        }
-
-        // উইন্ডোতে ফাংশন এক্সপোর্ট
-        window.navigateToSection = navigateToSection;
+        // Initialize
+        document.getElementById('toothShade').value = 'A2';
+        document.getElementById('capType').value = 'zirconia-multi';
+        
+        // Set default delivery date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 3);
+        document.getElementById('deliveryDate').value = tomorrow.toISOString().split('T')[0];
+        
+        calculateBill();
     </script>
 </body>
 </html>
