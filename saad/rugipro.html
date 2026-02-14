@@ -820,14 +820,18 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
             getFirestore, 
-            collection, 
-            doc, 
-            getDoc, 
-            getDocs,
-            updateDoc, 
-            query,
-            where,
-            arrayUnion
+    initializeFirestore,
+    persistentLocalCache,
+    persistentMultipleTabManager,
+    CACHE_SIZE_UNLIMITED,
+    collection, 
+    doc, 
+    getDoc, 
+    getDocs,
+    updateDoc, 
+    query,
+    where,
+    arrayUnion
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Firebase Config
@@ -840,10 +844,16 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
+// 🔥 ক্যাশ চালু করুন - এই পুরো ব্লকটি যোগ করুন
+const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+        cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+        tabManager: persistentMultipleTabManager()
+    })
+});
         // Get patient ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const profileId = urlParams.get('profileId');
