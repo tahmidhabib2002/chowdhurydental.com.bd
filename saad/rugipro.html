@@ -7,7 +7,9 @@
     <!-- Fonts and Icons - প্রফেশনাল বাংলা ফন্ট -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="config.js"></script>
     <style>
+        /* আপনার আগের সব CSS ঠিক থাকবে */
         * {
             margin: 0;
             padding: 0;
@@ -41,7 +43,7 @@
             min-height: 100vh;
             padding: 16px;
             padding-top: calc(16px + var(--safe-top));
-            padding-bottom: calc(16px + var(--safe-bottom));
+            padding-bottom: calc(80px + var(--safe-bottom));
         }
 
         /* Header */
@@ -227,6 +229,29 @@
             font-size: 0.8rem;
             font-weight: 600;
             color: var(--dark);
+        }
+
+        /* Message Action Button */
+        .message-action-btn {
+            background: linear-gradient(145deg, #4a6fa5, #3a5a8c);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .message-action-btn:active {
+            transform: scale(0.98);
         }
 
         /* Search Section */
@@ -532,6 +557,93 @@
             gap: 12px;
         }
 
+        /* Message Options */
+        .message-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .message-option {
+            background: var(--primary-light);
+            border: 2px solid transparent;
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .message-option.selected {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 5px 15px rgba(10, 92, 75, 0.1);
+        }
+
+        .message-option-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .message-option-text {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .message-option-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 18px;
+            font-size: 1rem;
+            margin: 20px 0;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .message-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Message Preview */
+        .message-preview {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--dark);
+            white-space: pre-line;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message-preview-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
         /* Discount Row */
         .discount-row {
             background: var(--warning-light);
@@ -581,6 +693,11 @@
             color: white;
         }
 
+        .btn-info {
+            background: linear-gradient(145deg, #4a6fa5, #3a5a8c);
+            color: white;
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -611,6 +728,7 @@
         .message-success { background: linear-gradient(145deg, var(--success), var(--success-dark)); }
         .message-error { background: linear-gradient(145deg, var(--danger), #8b1a1a); }
         .message-info { background: linear-gradient(145deg, var(--primary), var(--primary-dark)); }
+        .message-warning { background: linear-gradient(145deg, var(--warning), #9e7627); }
 
         /* Responsive */
         @media (max-width: 480px) {
@@ -707,6 +825,13 @@
         </button>
     </div>
 
+    <!-- Message Button -->
+    <button class="message-action-btn" id="openMessageModalBtn">
+        <i class="fas fa-comment-dots"></i>
+        <span>মেসেজ পাঠান</span>
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
     <!-- Search Section -->
     <div class="search-section">
         <div class="search-title"><i class="fas fa-search"></i> রোগী খুঁজুন</div>
@@ -797,6 +922,53 @@
         </div>
     </div>
 
+    <!-- Message Modal -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content">
+            <h2 class="modal-title"><i class="fas fa-comment-dots"></i> মেসেজ পাঠান</h2>
+            
+            <div class="message-options" id="messageOptions">
+                <div class="message-option" data-message="ক্যাপ">
+                    <div class="message-option-icon"><i class="fas fa-crown"></i></div>
+                    <div>
+                        <div class="message-option-text">ক্রাউন/ক্যাপ তৈরি হয়েছে</div>
+                        <div class="message-option-desc">রোগীর ক্যাপ তৈরি হয়েছে, লাগানোর জন্য আসতে হবে</div>
+                    </div>
+                </div>
+                <div class="message-option" data-message="শেষ">
+                    <div class="message-option-icon"><i class="fas fa-check-circle"></i></div>
+                    <div>
+                        <div class="message-option-text">চিকিৎসা সম্পন্ন ও বিল পরিশোধ</div>
+                        <div class="message-option-desc">সকল চিকিৎসা শেষ এবং বিল পরিশোধ সম্পন্ন</div>
+                    </div>
+                </div>
+                <div class="message-option" data-message="ডিউ">
+                    <div class="message-option-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div>
+                        <div class="message-option-text">বকেয়া টাকার তথ্য</div>
+                        <div class="message-option-desc">চিকিৎসার বকেয়া টাকার বিবরণ</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-preview" id="messagePreview">
+                <div class="message-preview-title"><i class="fas fa-eye"></i> মেসেজ প্রিভিউ:</div>
+                <div id="previewText">একটি অপশন নির্বাচন করুন</div>
+            </div>
+
+            <textarea id="customMessage" class="message-input" placeholder="আপনার অতিরিক্ত মেসেজ লিখুন... (ঐচ্ছিক)"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-info" id="sendMessageBtn" style="flex: 2;">
+                    <i class="fas fa-paper-plane"></i> পাঠান
+                </button>
+                <button class="btn btn-danger" style="flex: 1;" onclick="closeModal('messageModal')">
+                    বাতিল
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Patient Selection Modal -->
     <div class="modal" id="patientSelectionModal">
         <div class="modal-content">
@@ -815,23 +987,19 @@
         <a href="#" class="nav-item" id="searchNav"><i class="fas fa-search nav-icon"></i><span>খুঁজুন</span></a>
     </nav>
 
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
-            getFirestore, 
-    initializeFirestore,
-    persistentLocalCache,
-    persistentMultipleTabManager,
-    CACHE_SIZE_UNLIMITED,
-    collection, 
-    doc, 
-    getDoc, 
-    getDocs,
-    updateDoc, 
-    query,
-    where,
-    arrayUnion
+            getFirestore,
+            collection, 
+            doc, 
+            getDoc, 
+            getDocs,
+            updateDoc, 
+            query,
+            where
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Firebase Config
@@ -844,16 +1012,21 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-      const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-// 🔥 ক্যাশ চালু করুন - এই পুরো ব্লকটি যোগ করুন
-const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
-        cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-        tabManager: persistentMultipleTabManager()
-    })
-});
+        // ============================================
+        // IMPORTANT: আপনার API তথ্য এখানে সেট করুন
+        // ============================================
+        const API_CONFIG = {
+            baseUrl: "https://bulksmsdhaka.net/api/sendtext",
+            apikey: "xxxxxx",  // আপনার API key দিন
+            callerID: "1234"     // আপনার caller ID দিন
+        };
+        // ============================================
+
         // Get patient ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const profileId = urlParams.get('profileId');
@@ -864,19 +1037,20 @@ const db = initializeFirestore(app, {
         let currentPatientIndex = 0;
         let allTreatments = [];
         let currentFilter = 'all';
+        let selectedMessageType = '';
 
         // Message function
-        function showMessage(msg, type) {
+        function showMessage(msg, type = 'info') {
             const container = document.getElementById('messageContainer');
             const msgDiv = document.createElement('div');
             msgDiv.className = `message-box message-${type}`;
-            msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+            msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
             container.appendChild(msgDiv);
             setTimeout(() => msgDiv.remove(), 3500);
         }
 
-        // Close modal
-        window.closeModal = (modalId) => {
+        // Close modal - Make it global
+        window.closeModal = function(modalId) {
             document.getElementById(modalId).classList.remove('active');
         };
 
@@ -884,10 +1058,126 @@ const db = initializeFirestore(app, {
         function formatDate(dateString) {
             try {
                 const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
                 return date.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
             } catch {
                 return dateString;
             }
+        }
+
+        // Generate message based on type - FIXED for empty data
+        function generateMessage(type, patientData, treatments) {
+            const patientName = patientData?.name || 'ভালোবাসার রোগী';
+            
+            // Safely calculate totals
+            let totalBill = 0, totalPaid = 0, totalDue = 0;
+            let treatmentNames = [];
+            
+            if (treatments && treatments.length > 0) {
+                treatments.forEach(t => {
+                    totalBill += t.bill || 0;
+                    totalPaid += t.paid || 0;
+                    totalDue += t.due || 0;
+                    
+                    // Get treatment names
+                    if (t.problems && t.problems.length) {
+                        t.problems.forEach(p => {
+                            if (p.problem || p.name) treatmentNames.push(p.problem || p.name);
+                        });
+                    } else if (t.name || t.problem) {
+                        treatmentNames.push(t.name || t.problem);
+                    }
+                });
+            }
+            
+            // Remove duplicates and limit
+            treatmentNames = [...new Set(treatmentNames)].filter(n => n).slice(0, 3);
+            const treatmentText = treatmentNames.length > 0 ? treatmentNames.join(', ') : 'চলমান চিকিৎসা';
+
+            let message = '';
+
+            switch(type) {
+                case 'ক্যাপ':
+                    message = `প্রিয় ${patientName},
+
+আপনার ক্রাউন/ক্যাপটির কাজ সম্পন্ন হয়েছে। অনুগ্রহ করে সুবিধামত সময়ে আমাদের চেম্বারে এসে সেটি লাগিয়ে নিয়ে যান।
+
+${treatmentNames.length > 0 ? 'চিকিৎসার বিবরণ:\n' + treatmentText + '\n\n' : ''}
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`;
+                    break;
+
+                case 'শেষ':
+                    message = `প্রিয় ${patientName},
+
+আপনার সকল চিকিৎসা সফলভাবে সম্পন্ন হয়েছে। আমাদের ওপর আস্থা রাখার জন্য ধন্যবাদ।
+
+${treatmentNames.length > 0 ? 'চিকিৎসা বিবরণ:\n' + treatmentText + '\n\n' : ''}${totalBill > 0 ? `মোট বিল: ৳${totalBill}
+পরিশোধিত: ৳${totalPaid}
+` : ''}
+ভবিষ্যতে সুস্থ থাকুন এই কামনা করি।
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`;
+                    break;
+
+                case 'ডিউ':
+                    // Get due treatments details
+                    let dueDetails = '';
+                    if (treatments && treatments.length > 0) {
+                        const dueTreatments = treatments.filter(t => t.due > 0);
+                        if (dueTreatments.length > 0) {
+                            dueTreatments.forEach((t, index) => {
+                                const tName = t.problems?.map(p => p.problem || p.name).join(', ') || t.name || t.problem || 'চিকিৎসা';
+                                dueDetails += `• ${tName}: বকেয়া ৳${t.due}\n`;
+                            });
+                        } else {
+                            dueDetails = '• চলমান চিকিৎসা: বকেয়া আছে\n';
+                        }
+                    } else {
+                        dueDetails = '• চিকিৎসা চলমান আছে\n';
+                    }
+
+                    message = `প্রিয় ${patientName},
+
+আপনার চিকিৎসার বিল বিবরণ:
+
+${dueDetails}
+${totalDue > 0 ? `সর্বমোট বকেয়া: ৳${totalDue}` : ''}
+${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
+
+অনুগ্রহ করে বাকি টাকা পরিশোধ করে চিকিৎসা সম্পন্ন করুন।
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`;
+                    break;
+
+                default:
+                    message = 'মেসেজ টাইপ নির্বাচন করুন';
+            }
+
+            return message;
+        }
+
+        // Update message preview - FIXED
+        function updateMessagePreview() {
+            const previewElement = document.getElementById('previewText');
+            if (!previewElement) return;
+            
+            if (!selectedMessageType) {
+                previewElement.innerText = 'একটি অপশন নির্বাচন করুন';
+                return;
+            }
+            
+            // Use currentPatient and allTreatments (even if empty)
+            const patientData = currentPatient?.data || { name: 'টেস্ট রোগী' };
+            const treatments = allTreatments || [];
+            
+            const message = generateMessage(selectedMessageType, patientData, treatments);
+            previewElement.innerText = message;
         }
 
         // Load patients by phone
@@ -916,6 +1206,7 @@ const db = initializeFirestore(app, {
                 updatePatientSwitcher();
                 
             } catch (error) {
+                console.error("Load patients error:", error);
                 showMessage("রোগী লোড করতে সমস্যা!", "error");
             }
         }
@@ -936,17 +1227,30 @@ const db = initializeFirestore(app, {
             document.getElementById('patientAge').textContent = `বয়স: ${data.age || '—'} বছর`;
             
             let totalBill = 0, totalPaid = 0, totalDue = 0;
+            
+            // Process treatments
             allTreatments = (data.treatments || []).map(t => {
-                const bill = parseFloat(t.netBill || t.total || 0);
+                // Handle different property names
+                const bill = parseFloat(t.netBill || t.total || t.bill || 0);
                 const paid = parseFloat(t.totalPaid || t.paid || 0);
-                const due = parseFloat(t.totalDue || t.due || bill - paid);
+                const due = parseFloat(t.totalDue || t.due || (bill - paid));
+                
+                // Check if has crown
+                const hasCrown = t.problems?.some(p => p.crownType) || t.crownType ? true : false;
                 
                 totalBill += bill;
                 totalPaid += paid;
                 totalDue += due;
                 
-                return { ...t, bill, paid, due, isPaid: due <= 0 };
-            }).reverse();
+                return { 
+                    ...t, 
+                    bill, 
+                    paid, 
+                    due, 
+                    isPaid: due <= 0,
+                    hasCrown: hasCrown
+                };
+            }).reverse(); // Show newest first
             
             document.getElementById('totalBill').textContent = `৳${totalBill}`;
             document.getElementById('totalPaid').textContent = `৳${totalPaid}`;
@@ -957,14 +1261,19 @@ const db = initializeFirestore(app, {
             updateTreatmentHistory();
             loadMonthlyStats();
             populateTreatmentSelect();
+            
+            // Update message preview if modal is open and type selected
+            if (selectedMessageType && document.getElementById('messageModal').classList.contains('active')) {
+                updateMessagePreview();
+            }
         }
 
         // Update treatment history
         function updateTreatmentHistory() {
             let filtered = allTreatments;
             
-            if (currentFilter === 'due') filtered = allTreatments.filter(t => !t.isPaid);
-            else if (currentFilter === 'paid') filtered = allTreatments.filter(t => t.isPaid);
+            if (currentFilter === 'due') filtered = allTreatments.filter(t => t.due > 0);
+            else if (currentFilter === 'paid') filtered = allTreatments.filter(t => t.due <= 0);
             else if (currentFilter === 'crown') filtered = allTreatments.filter(t => t.hasCrown);
             
             const container = document.getElementById('treatmentHistory');
@@ -976,7 +1285,7 @@ const db = initializeFirestore(app, {
             
             let html = '';
             filtered.forEach(t => {
-                const cardClass = t.isPaid ? 'paid' : (t.hasCrown ? 'crown' : 'due');
+                const cardClass = t.due <= 0 ? 'paid' : (t.hasCrown ? 'crown' : 'due');
                 
                 html += `
                     <div class="treatment-card ${cardClass}">
@@ -986,7 +1295,14 @@ const db = initializeFirestore(app, {
                         </div>
                         
                         <div class="problem-list">
-                            ${(t.problems || [t]).map(p => `
+                            ${(t.problems && t.problems.length ? t.problems : [{
+                                problem: t.name || t.problem || 'চিকিৎসা',
+                                cost: t.cost || t.bill || 0,
+                                discount: t.discount || 0,
+                                crownType: t.crownType,
+                                crownShade: t.crownShade,
+                                crownQty: t.crownQty || 1
+                            }]).map(p => `
                                 <div class="problem-item">
                                     <div class="problem-name">${p.problem || p.name || 'চিকিৎসা'}</div>
                                     <div class="problem-detail">
@@ -1030,25 +1346,32 @@ const db = initializeFirestore(app, {
             try {
                 const snapshot = await getDocs(collection(db, "patients"));
                 const months = {};
-                const monthNames = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+                const monthNames = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
+                                   'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
                 
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     (data.treatments || []).forEach(t => {
                         if (t.date) {
                             const date = new Date(t.date);
-                            const month = date.getMonth();
-                            const year = date.getFullYear();
-                            const key = `${year}-${month}`;
-                            
-                            if (!months[key]) {
-                                months[key] = { name: `${monthNames[month]} ${year}`, patients: 0, bill: 0, paid: 0, count: 0 };
+                            if (!isNaN(date.getTime())) {
+                                const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+                                
+                                if (!months[monthKey]) {
+                                    months[monthKey] = { 
+                                        name: `${monthNames[date.getMonth()]} ${date.getFullYear()}`, 
+                                        patients: 0, 
+                                        bill: 0, 
+                                        paid: 0, 
+                                        count: 0 
+                                    };
+                                }
+                                
+                                months[monthKey].patients++;
+                                months[monthKey].bill += parseFloat(t.netBill || t.total || t.bill || 0);
+                                months[monthKey].paid += parseFloat(t.totalPaid || t.paid || 0);
+                                months[monthKey].count++;
                             }
-                            
-                            months[key].patients++;
-                            months[key].bill += parseFloat(t.netBill || t.total || 0);
-                            months[key].paid += parseFloat(t.totalPaid || t.paid || 0);
-                            months[key].count++;
                         }
                     });
                 });
@@ -1082,7 +1405,7 @@ const db = initializeFirestore(app, {
                 if (t.due > 0) {
                     const option = document.createElement('option');
                     option.value = index;
-                    option.textContent = `${t.date} - বকেয়া: ৳${t.due}`;
+                    option.textContent = `${t.date || 'তারিখ নেই'} - বকেয়া: ৳${t.due}`;
                     select.appendChild(option);
                 }
             });
@@ -1135,7 +1458,79 @@ const db = initializeFirestore(app, {
                 resultDiv.style.display = 'block';
                 
             } catch (error) {
+                console.error("Search error:", error);
                 showMessage('সার্চ করতে সমস্যা!', 'error');
+            }
+        }
+
+        // Send Message via API - FIXED with new API format
+        async function sendMessage() {
+            if (!currentPatient) {
+                showMessage('রোগী নির্বাচন করা হয়নি', 'error');
+                return;
+            }
+
+            if (!selectedMessageType) {
+                showMessage('অনুগ্রহ করে একটি মেসেজ টাইপ নির্বাচন করুন', 'warning');
+                return;
+            }
+
+            const customText = document.getElementById('customMessage').value.trim();
+            
+            // Generate base message
+            let messageText = generateMessage(selectedMessageType, currentPatient.data, allTreatments);
+
+            // Add custom text if provided (at the beginning)
+            if (customText) {
+                messageText = customText + '\n\n' + messageText;
+            }
+
+            const patientPhone = currentPatient.data.phone;
+            
+            if (!patientPhone || patientPhone === '—' || patientPhone === 'মোবাইল: —') {
+                showMessage('রোগীর মোবাইল নম্বর নেই!', 'error');
+                return;
+            }
+
+            // Clean phone number (remove non-digits)
+            const cleanPhone = patientPhone.replace(/\D/g, '');
+            if (cleanPhone.length < 11) {
+                showMessage('সঠিক মোবাইল নম্বর নয়!', 'error');
+                return;
+            }
+            
+            showMessage(`📱 মেসেজ পাঠানো হচ্ছে...`, 'info');
+            
+            try {
+                // Build API URL for BulkSMSDhaka
+                const apiUrl = new URL(API_CONFIG.baseUrl);
+                apiUrl.searchParams.append('apikey', API_CONFIG.apikey);
+                apiUrl.searchParams.append('callerID', API_CONFIG.callerID);
+                apiUrl.searchParams.append('number', cleanPhone);
+                apiUrl.searchParams.append('message', messageText);
+                
+                console.log('Sending SMS to:', cleanPhone); // For debugging
+                
+                // API Call
+                const response = await fetch(apiUrl.toString());
+                const result = await response.text();
+
+                if (response.ok) {
+                    showMessage(`✅ মেসেজ সফলভাবে পাঠানো হয়েছে`, 'success');
+                    
+                    // Clear and close
+                    document.getElementById('customMessage').value = '';
+                    document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
+                    selectedMessageType = '';
+                    document.getElementById('previewText').innerText = 'একটি অপশন নির্বাচন করুন';
+                    closeModal('messageModal');
+                } else {
+                    throw new Error(result || 'API error');
+                }
+                
+            } catch (error) {
+                console.error("Send message error:", error);
+                showMessage('❌ মেসেজ পাঠাতে সমস্যা!', 'error');
             }
         }
 
@@ -1143,10 +1538,10 @@ const db = initializeFirestore(app, {
         async function applyDiscount(e) {
             e.preventDefault();
             
-            const treatmentIndex = document.getElementById('treatmentSelect').value;
+            const treatmentIndex = parseInt(document.getElementById('treatmentSelect').value);
             const discount = parseFloat(document.getElementById('discountAmount').value);
             
-            if (!treatmentIndex || !discount || discount <= 0) {
+            if (isNaN(treatmentIndex) || !discount || discount <= 0) {
                 showMessage('সব তথ্য দিন', 'error');
                 return;
             }
@@ -1163,10 +1558,18 @@ const db = initializeFirestore(app, {
                 const treatments = patientSnap.data().treatments || [];
                 
                 // Find and update the treatment
-                const updatedTreatments = treatments.map(t => {
-                    if (t.date === treatment.date && t.id === treatment.id) {
-                        const newDue = t.due - discount;
-                        return { ...t, due: newDue, discount: (t.discount || 0) + discount };
+                const updatedTreatments = treatments.map((t, idx) => {
+                    // Match by comparing with original treatment
+                    if (idx === treatmentIndex) {
+                        const newDue = Math.max(0, (t.due || 0) - discount);
+                        const newPaid = (t.paid || 0) + discount;
+                        
+                        return { 
+                            ...t, 
+                            due: newDue,
+                            paid: newPaid,
+                            discount: (t.discount || 0) + discount
+                        };
                     }
                     return t;
                 });
@@ -1175,9 +1578,11 @@ const db = initializeFirestore(app, {
                 
                 showMessage('ডিসকাউন্ট প্রয়োগ করা হয়েছে', 'success');
                 closeModal('discountModal');
+                document.getElementById('discountAmount').value = '';
                 await loadPatientsByPhone(currentPatient.data.phone, currentPatient.id);
                 
             } catch (error) {
+                console.error("Discount error:", error);
                 showMessage('ডিসকাউন্ট দিতে সমস্যা!', 'error');
             }
         }
@@ -1200,6 +1605,7 @@ const db = initializeFirestore(app, {
                     showMessage("রোগী পাওয়া যায়নি!", "error");
                 }
             } catch (error) {
+                console.error("Init error:", error);
                 showMessage("লোড করতে সমস্যা!", "error");
             }
         }
@@ -1231,6 +1637,83 @@ const db = initializeFirestore(app, {
                     showMessage('কোনো বকেয়া নেই', 'warning');
                 }
             });
+
+            // Message Modal - FIXED
+            document.getElementById('openMessageModalBtn').addEventListener('click', () => {
+                const modal = document.getElementById('messageModal');
+                modal.classList.add('active');
+                
+                // Reset selection
+                selectedMessageType = '';
+                document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
+                document.getElementById('customMessage').value = '';
+                
+                // Show test message immediately
+                const testMessage = `প্রিয় [রোগীর নাম],
+
+এটি একটি টেস্ট মেসেজ। আপনি যখন কোনো অপশন সিলেক্ট করবেন, তখন এখানে প্রকৃত মেসেজ দেখাবে।
+
+উপরে তিনটি অপশন থেকে যেকোনো একটি নির্বাচন করুন:
+
+১. ক্রাউন/ক্যাপ তৈরি হয়েছে
+২. চিকিৎসা সম্পন্ন ও বিল পরিশোধ
+৩. বকেয়া টাকার তথ্য
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার`;
+                
+                document.getElementById('previewText').innerText = testMessage;
+            });
+
+            // Message Options Selection - FIXED
+            document.querySelectorAll('.message-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedMessageType = this.dataset.message;
+                    
+                    // Force preview update
+                    const previewElement = document.getElementById('previewText');
+                    if (!currentPatient) {
+                        // Test mode - show sample message
+                        const sampleMessages = {
+                            'ক্যাপ': `প্রিয় [রোগীর নাম],
+
+আপনার ক্রাউন/ক্যাপটির কাজ সম্পন্ন হয়েছে। অনুগ্রহ করে সুবিধামত সময়ে আমাদের চেম্বারে এসে সেটি লাগিয়ে নিয়ে যান।
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`,
+                            'শেষ': `প্রিয় [রোগীর নাম],
+
+আপনার সকল চিকিৎসা সফলভাবে সম্পন্ন হয়েছে। আমাদের ওপর আস্থা রাখার জন্য ধন্যবাদ।
+
+ভবিষ্যতে সুস্থ থাকুন এই কামনা করি।
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`,
+                            'ডিউ': `প্রিয় [রোগীর নাম],
+
+আপনার চিকিৎসার বিল বিবরণ:
+
+• চলমান চিকিৎসা: বকেয়া আছে
+
+অনুগ্রহ করে বাকি টাকা পরিশোধ করে চিকিৎসা সম্পন্ন করুন।
+
+ধন্যবাদ
+চৌধুরী ডেন্টাল কেয়ার
+📞 ০১৭১২-৩৪৫৬৭৮`
+                        };
+                        previewElement.innerText = sampleMessages[selectedMessageType] || 'মেসেজ প্রস্তুত হচ্ছে...';
+                    } else {
+                        updateMessagePreview();
+                    }
+                });
+            });
+
+            // Send Message
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             
             document.getElementById('editPatientBtn').addEventListener('click', () => {
                 window.location.href = `amarghor.html?edit=${profileId}`;
@@ -1270,9 +1753,10 @@ const db = initializeFirestore(app, {
             });
             
             // Filter tabs
-            document.querySelectorAll('.filter-tab').forEach(tab => {
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    filterTabs.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
                     updateTreatmentHistory();
@@ -1315,14 +1799,13 @@ const db = initializeFirestore(app, {
                     const treatments = patientSnap.data().treatments || [];
                     
                     const now = new Date();
-                    const paymentTime = now.toLocaleString('bn-BD', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
-                    
-                    const paymentLog = {
-                        time: paymentTime,
-                        amount: amount,
-                        notes: notes || '—',
-                        date: now.toISOString()
-                    };
+                    const paymentTime = now.toLocaleString('bn-BD', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
                     
                     let remaining = amount;
                     const updatedTreatments = treatments.map(t => {
@@ -1331,7 +1814,17 @@ const db = initializeFirestore(app, {
                         const due = parseFloat(t.due || 0);
                         if (due > 0) {
                             const pay = Math.min(remaining, due);
-                            t.paymentHistory = [...(t.paymentHistory || []), { ...paymentLog, amount: pay }];
+                            
+                            // Create payment log for this treatment
+                            const paymentLog = {
+                                time: paymentTime,
+                                amount: pay,
+                                notes: notes || '—',
+                                date: now.toISOString()
+                            };
+                            
+                            // Update treatment
+                            t.paymentHistory = [...(t.paymentHistory || []), paymentLog];
                             t.paid = (parseFloat(t.paid || 0) + pay);
                             t.due = due - pay;
                             remaining -= pay;
@@ -1343,9 +1836,12 @@ const db = initializeFirestore(app, {
                     
                     showMessage('পেমেন্ট সফল হয়েছে', 'success');
                     closeModal('paymentModal');
+                    document.getElementById('paymentAmount').value = '';
+                    document.getElementById('paymentNotes').value = '';
                     await loadPatientsByPhone(currentPatient.data.phone, currentPatient.id);
                     
                 } catch (error) {
+                    console.error("Payment error:", error);
                     showMessage('পেমেন্ট নিতে সমস্যা!', 'error');
                 }
             });
