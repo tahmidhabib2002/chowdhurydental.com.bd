@@ -791,8 +791,8 @@
                     <div class="problem-header">
                         <span class="problem-badge">চিকিৎসা #১</span>
                         <button type="button" class="remove-problem" style="display: none;">
-    <i class="fas fa-times"></i>
-</button>
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     
                     <div class="form-group">
@@ -914,6 +914,10 @@
                     <span class="total-amount due-amount" id="totalDue">৳ 0</span>
                 </div>
             </div>
+
+            <!-- Hidden Fields for Edit/FromProfile -->
+            <input type="hidden" id="editPatientId" value="">
+            <input type="hidden" id="fromProfileId" value="">
 
             <!-- Submit Button -->
             <button type="submit" class="submit-btn" id="submitBtn">
@@ -1047,24 +1051,13 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // 🔥 ক্যাশ চালু করুন
+        // ক্যাশ চালু করুন
         const db = initializeFirestore(app, {
             localCache: persistentLocalCache({
                 cacheSizeBytes: CACHE_SIZE_UNLIMITED,
                 tabManager: persistentMultipleTabManager()
             })
         });
-
-        // Auth Check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "log.html";
-            } else {
-                loadDashboardStats();
-                loadRecentPatients();
-            }
-        });
-       
 
         // Loading
         const loadingOverlay = document.getElementById('loadingOverlay');
@@ -1085,6 +1078,19 @@
             document.getElementById(modalId).classList.remove('active');
         };
 
+        // Auth Check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "log.html";
+            } else {
+                loadDashboardStats();
+                loadRecentPatients();
+                
+                // URL প্যারামিটার চেক করুন
+                checkUrlParams();
+            }
+        });
+
         // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             if (confirm('লগ আউট করবেন?')) {
@@ -1092,6 +1098,63 @@
                 window.location.href = "log.html";
             }
         });
+
+        // URL প্যারামিটার চেক করার ফাংশন
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // এডিট মোড চেক করুন
+            const editId = urlParams.get('edit');
+            const fromProfile = urlParams.get('fromProfile');
+            const name = urlParams.get('name');
+            const phone = urlParams.get('phone');
+            const address = urlParams.get('address');
+            const age = urlParams.get('age');
+            
+            // ফর্মের ভ্যালু সেট করুন (যদি থাকে)
+            if (name) document.getElementById('patientName').value = decodeURIComponent(name);
+            if (phone) document.getElementById('patientPhone').value = phone;
+            if (address) document.getElementById('patientAddress').value = decodeURIComponent(address);
+            if (age) document.getElementById('patientAge').value = age;
+            
+            // এডিট মোড হলে
+            if (editId) {
+                document.querySelector('.section-title span').innerText = 'রোগীর তথ্য সম্পাদনা করুন';
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> তথ্য আপডেট করুন';
+                
+                // হিডেন ফিল্ডে আইডি সংরক্ষণ করুন
+                document.getElementById('editPatientId').value = editId;
+                
+                // নিউ সেকশন দেখান
+                document.getElementById('newPatientSection').style.display = 'block';
+                document.getElementById('recentSection').style.display = 'none';
+                
+                // নেভিগেশন আপডেট করুন
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelector('[data-section="new"]').classList.add('active');
+                
+                showMessage('রোগীর তথ্য সম্পাদনা করুন', 'info');
+            }
+            
+            // প্রোফাইল থেকে নতুন চিকিৎসা যোগ করতে আসলে
+            if (fromProfile && fromProfile !== 'edit') {
+                document.querySelector('.section-title span').innerText = 'নতুন চিকিৎসা যোগ করুন';
+                
+                // হিডেন ফিল্ডে প্রোফাইল আইডি সংরক্ষণ করুন
+                document.getElementById('fromProfileId').value = fromProfile;
+                
+                // নিউ সেকশন দেখান
+                document.getElementById('newPatientSection').style.display = 'block';
+                document.getElementById('recentSection').style.display = 'none';
+                
+                // নেভিগেশন আপডেট করুন
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelector('[data-section="new"]').classList.add('active');
+                
+                showMessage('এই রোগীর জন্য নতুন চিকিৎসা যোগ করুন', 'info');
+            }
+        }
 
         // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -1105,6 +1168,7 @@
                 if (section === 'home') {
                     document.getElementById('newPatientSection').style.display = 'none';
                     document.getElementById('recentSection').style.display = 'block';
+                    resetForm();
                 } else if (section === 'new') {
                     document.getElementById('newPatientSection').style.display = 'block';
                     document.getElementById('recentSection').style.display = 'none';
@@ -1412,6 +1476,10 @@
             document.getElementById('patientAge').value = '';
             document.getElementById('patientAddress').value = '';
             
+            // হিডেন ফিল্ড ক্লিয়ার করুন
+            document.getElementById('editPatientId').value = '';
+            document.getElementById('fromProfileId').value = '';
+            
             const container = document.getElementById('problemsContainer');
             while (container.children.length > 1) {
                 container.lastElementChild.remove();
@@ -1434,6 +1502,9 @@
             
             problemCount = 1;
             calculateTotals();
+            
+            // সাবমিট বাটনের টেক্সট রিসেট করুন
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> রোগীর তথ্য সংরক্ষণ করুন';
         }
 
         // Form Submit
@@ -1468,7 +1539,7 @@
                     
                     const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
                     const crownQty = type === 'ডেন্টাল ক্রাউন' ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
-                    const crownPrice = type === 'ডেন্টাল ক্রাউন' ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
+                    const crownPrice = type === 'ডেন্টাল ক্রাউน' ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
                     const crownCost = crownQty * crownPrice;
                     
                     problems.push({
@@ -1521,6 +1592,36 @@
             showLoading();
             
             try {
+                // চেক করুন এডিট মোড নাকি নতুন
+                const editId = document.getElementById('editPatientId')?.value;
+                const fromProfileId = document.getElementById('fromProfileId')?.value;
+                
+                if (editId) {
+                    // এডিট মোড - এই রোগীর তথ্য আপডেট করুন
+                    const patientRef = doc(db, "patients", editId);
+                    const patientSnap = await getDoc(patientRef);
+                    
+                    if (patientSnap.exists()) {
+                        // বেসিক তথ্য আপডেট করুন
+                        await updateDoc(patientRef, {
+                            name: name,
+                            phone: phone,
+                            age: document.getElementById('patientAge').value,
+                            address: document.getElementById('patientAddress').value,
+                            lastUpdated: now.toISOString()
+                        });
+                        
+                        hideLoading();
+                        submitBtn.classList.remove('loading');
+                        showMessage('✅ রোগীর তথ্য আপডেট হয়েছে!', 'success');
+                        
+                        // প্রোফাইল পেইজে ফিরে যান
+                        window.location.href = `rugipro.html?profileId=${editId}`;
+                        return;
+                    }
+                }
+                
+                // নরমাল - নতুন রোগী বা নতুন চিকিৎসা
                 const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
                 const patientRef = doc(db, "patients", profileId);
                 const phoneRef = doc(db, "patientPhones", phone);
@@ -1539,12 +1640,26 @@
                 
                 const patientSnap = await getDoc(patientRef);
                 if (patientSnap.exists()) {
+                    // পুরাতন রোগী - নতুন চিকিৎসা যোগ করুন
                     await updateDoc(patientRef, {
                         treatments: arrayUnion(treatment),
                         lastUpdated: now.toISOString(),
                         lastTreatment: treatment
                     });
+                    
+                    hideLoading();
+                    submitBtn.classList.remove('loading');
+                    showMessage('✅ নতুন চিকিৎসা যোগ করা হয়েছে!', 'success');
+                    
+                    // প্রোফাইল পেইজে ফিরে যান যদি fromProfile থাকে
+                    if (fromProfileId) {
+                        window.location.href = `rugipro.html?profileId=${fromProfileId}`;
+                    } else {
+                        window.location.href = `rugipro.html?profileId=${profileId}`;
+                    }
+                    
                 } else {
+                    // নতুন রোগী
                     await setDoc(patientRef, {
                         name, phone,
                         age: document.getElementById('patientAge').value,
@@ -1554,17 +1669,13 @@
                         lastUpdated: now.toISOString(),
                         lastTreatment: treatment
                     });
+                    
+                    hideLoading();
+                    submitBtn.classList.remove('loading');
+                    showMessage('✅ নতুন রোগী সংরক্ষিত হয়েছে!', 'success');
+                    
+                    window.location.href = `rugipro.html?profileId=${profileId}`;
                 }
-                
-                hideLoading();
-                submitBtn.classList.remove('loading');
-                showMessage('✅ রোগীর তথ্য সংরক্ষিত হয়েছে!', 'success');
-                
-                resetForm();
-                loadRecentPatients();
-                loadDashboardStats();
-                
-                document.querySelector('[data-section="home"]').click();
                 
             } catch (err) {
                 console.error(err);
