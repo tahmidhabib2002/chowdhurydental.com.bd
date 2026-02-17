@@ -1015,725 +1015,213 @@
         </a>
     </nav>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore,
-            initializeFirestore,
-            persistentLocalCache,
-            persistentMultipleTabManager,
-            CACHE_SIZE_UNLIMITED,
-            collection, 
-            doc, 
-            setDoc, 
-            getDoc, 
-            getDocs,
-            updateDoc, 
-            arrayUnion,
-            query,
-            orderBy,
-            limit,
-            where
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+        getFirestore,
+        initializeFirestore,
+        persistentLocalCache,
+        persistentMultipleTabManager,
+        CACHE_SIZE_UNLIMITED,
+        collection, 
+        doc, 
+        setDoc, 
+        getDoc, 
+        getDocs,
+        updateDoc, 
+        arrayUnion,
+        query,
+        orderBy,
+        limit,
+        where
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
-            authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
-            projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.appspot.com",
-            messagingSenderId: "23620370976",
-            appId: "1:23620370976:web:3bb119ceb9e15608a33245"
-        };
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.appspot.com",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-        // ক্যাশ চালু করুন
-        const db = initializeFirestore(app, {
-            localCache: persistentLocalCache({
-                cacheSizeBytes: CACHE_SIZE_UNLIMITED,
-                tabManager: persistentMultipleTabManager()
-            })
-        });
+    // ক্যাশ চালু করুন
+    const db = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+            cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+            tabManager: persistentMultipleTabManager()
+        })
+    });
 
-        // Loading
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        function showLoading() { loadingOverlay.classList.add('active'); }
-        function hideLoading() { loadingOverlay.classList.remove('active'); }
+    // Loading
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    function showLoading() { loadingOverlay.classList.add('active'); }
+    function hideLoading() { loadingOverlay.classList.remove('active'); }
 
-        // Message
-        function showMessage(msg, type) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message-box message-${type}`;
-            msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
-            document.body.appendChild(msgDiv);
-            setTimeout(() => msgDiv.remove(), 3500);
+    // Message
+    function showMessage(msg, type) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message-box message-${type}`;
+        msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+        document.body.appendChild(msgDiv);
+        setTimeout(() => msgDiv.remove(), 3500);
+    }
+
+    // Close Modal - গ্লোবাল ফাংশন
+    window.closeModal = (modalId) => {
+        document.getElementById(modalId).classList.remove('active');
+    };
+
+    // Copy Number - গ্লোবাল ফাংশন
+    window.copyNumber = async (phone) => {
+        try {
+            await navigator.clipboard.writeText(phone);
+            showMessage('📋 নাম্বার কপি হয়েছে', 'success');
+        } catch (err) {
+            showMessage('কপি করতে সমস্যা হয়েছে', 'error');
         }
+    };
 
-        // Close Modal
-        window.closeModal = (modalId) => {
-            document.getElementById(modalId).classList.remove('active');
-        };
+    // Auth check
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "log.html";
+        } else {
+            initApp();
+        }
+    });
 
-      
-        // Auth check
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "log.html";
-            } else {
-                init();
-            }
-        });
+    // Main initialization function
+    async function initApp() {
+        try {
+            showLoading();
+            await Promise.all([
+                loadDashboardStats(),
+                loadRecentPatients(),
+                checkUrlParams()
+            ]);
+            hideLoading();
+        } catch (err) {
+            console.error('Init error:', err);
+            hideLoading();
+            showMessage('ডেটা লোড করতে সমস্যা হয়েছে', 'error');
+        }
+    }
 
-
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (confirm('লগ আউট করবেন?')) {
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        if (confirm('লগ আউট করবেন?')) {
+            try {
                 await signOut(auth);
                 window.location.href = "log.html";
-            }
-        });
-
-        // URL প্যারামিটার চেক করার ফাংশন
-        function checkUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // এডিট মোড চেক করুন
-            const editId = urlParams.get('edit');
-            const fromProfile = urlParams.get('fromProfile');
-            const name = urlParams.get('name');
-            const phone = urlParams.get('phone');
-            const address = urlParams.get('address');
-            const age = urlParams.get('age');
-            
-            // ফর্মের ভ্যালু সেট করুন (যদি থাকে)
-            if (name) document.getElementById('patientName').value = decodeURIComponent(name);
-            if (phone) document.getElementById('patientPhone').value = phone;
-            if (address) document.getElementById('patientAddress').value = decodeURIComponent(address);
-            if (age) document.getElementById('patientAge').value = age;
-            
-            // এডিট মোড হলে
-            if (editId) {
-                document.querySelector('.section-title span').innerText = 'রোগীর তথ্য সম্পাদনা করুন';
-                const submitBtn = document.getElementById('submitBtn');
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> তথ্য আপডেট করুন';
-                
-                // হিডেন ফিল্ডে আইডি সংরক্ষণ করুন
-                document.getElementById('editPatientId').value = editId;
-                
-                // নিউ সেকশন দেখান
-                document.getElementById('newPatientSection').style.display = 'block';
-                document.getElementById('recentSection').style.display = 'none';
-                
-                // নেভিগেশন আপডেট করুন
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.querySelector('[data-section="new"]').classList.add('active');
-                
-                showMessage('রোগীর তথ্য সম্পাদনা করুন', 'info');
-            }
-            
-            // প্রোফাইল থেকে নতুন চিকিৎসা যোগ করতে আসলে
-            if (fromProfile && fromProfile !== 'edit') {
-                document.querySelector('.section-title span').innerText = 'নতুন চিকিৎসা যোগ করুন';
-                
-                // হিডেন ফিল্ডে প্রোফাইল আইডি সংরক্ষণ করুন
-                document.getElementById('fromProfileId').value = fromProfile;
-                
-                // নিউ সেকশন দেখান
-                document.getElementById('newPatientSection').style.display = 'block';
-                document.getElementById('recentSection').style.display = 'none';
-                
-                // নেভিগেশন আপডেট করুন
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.querySelector('[data-section="new"]').classList.add('active');
-                
-                showMessage('এই রোগীর জন্য নতুন চিকিৎসা যোগ করুন', 'info');
-            }
-        }
-
-        // Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = item.dataset.section;
-                
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-
-                if (section === 'home') {
-                    document.getElementById('newPatientSection').style.display = 'none';
-                    document.getElementById('recentSection').style.display = 'block';
-                    resetForm();
-                } else if (section === 'new') {
-                    document.getElementById('newPatientSection').style.display = 'block';
-                    document.getElementById('recentSection').style.display = 'none';
-                    resetForm();
-                } else if (section === 'list') {
-                    openPatientListModal();
-                } else if (section === 'history') {
-                    openHistoryModal();
-                } else if (section === 'numbers') {
-                    openNumbersModal();
-                }
-            });
-        });
-
-        // Action Buttons
-        document.getElementById('newPatientBtn').addEventListener('click', () => {
-            document.querySelector('[data-section="new"]').click();
-        });
-
-        document.getElementById('patientListBtn').addEventListener('click', openPatientListModal);
-        document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
-        document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
-
-        // Open Patient List Modal
-        async function openPatientListModal() {
-            const modal = document.getElementById('patientListModal');
-            const container = document.getElementById('patientListContainer');
-            modal.classList.add('active');
-            
-            try {
-                const snapshot = await getDocs(collection(db, "patientPhones"));
-                let html = '';
-                
-                for (const docSnap of snapshot.docs) {
-                    const data = docSnap.data();
-                    const phone = docSnap.id;
-                    
-                    for (const name of data.names || []) {
-                        const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
-                        const patientRef = doc(db, "patients", profileId);
-                        const patientSnap = await getDoc(patientRef);
-                        
-                        if (patientSnap.exists()) {
-                            const patient = patientSnap.data();
-                            const lastTreat = patient.treatments?.[patient.treatments.length - 1];
-                            
-                            html += `
-                                <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
-                                    <div style="font-weight:700; margin-bottom:5px;">${name}</div>
-                                    <div style="color:var(--primary); margin-bottom:3px;">${phone}</div>
-                                    <div style="font-size:0.8rem; color:var(--gray);">
-                                        সর্বশেষ: ${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳ ${lastTreat?.totalDue || 0}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    }
-                }
-                
-                container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
-                
-                document.getElementById('searchPatient').oninput = (e) => {
-                    const search = e.target.value.toLowerCase();
-                    document.querySelectorAll('#patientListContainer .patient-option').forEach(opt => {
-                        const text = opt.innerText.toLowerCase();
-                        opt.style.display = text.includes(search) ? 'block' : 'none';
-                    });
-                };
-                
             } catch (err) {
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
+                showMessage('লগ আউট করতে সমস্যা হয়েছে', 'error');
             }
         }
+    });
 
-        // Open History Modal
-        async function openHistoryModal() {
-            const modal = document.getElementById('historyModal');
-            const container = document.getElementById('historyList');
-            modal.classList.add('active');
+    // URL প্যারামিটার চেক করার ফাংশন
+    function checkUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const editId = urlParams.get('edit');
+        const fromProfile = urlParams.get('fromProfile');
+        const name = urlParams.get('name');
+        const phone = urlParams.get('phone');
+        const address = urlParams.get('address');
+        const age = urlParams.get('age');
+        
+        if (name) document.getElementById('patientName').value = decodeURIComponent(name);
+        if (phone) document.getElementById('patientPhone').value = phone;
+        if (address) document.getElementById('patientAddress').value = decodeURIComponent(address);
+        if (age) document.getElementById('patientAge').value = age;
+        
+        if (editId) {
+            document.querySelector('.section-title span').innerText = 'রোগীর তথ্য সম্পাদনা করুন';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> তথ্য আপডেট করুন';
+            document.getElementById('editPatientId').value = editId;
             
-            try {
-                const snapshot = await getDocs(collection(db, "patientPhones"));
-                let html = '';
-                
-                for (const docSnap of snapshot.docs) {
-                    const phone = docSnap.id;
-                    const data = docSnap.data();
-                    
-                    for (const name of data.names || []) {
-                        const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
-                        const patientRef = doc(db, "patients", profileId);
-                        const patientSnap = await getDoc(patientRef);
-                        
-                        if (patientSnap.exists()) {
-                            const patient = patientSnap.data();
-                            const treatments = patient.treatments || [];
-                            
-                            treatments.forEach((t) => {
-                                html += `
-                                    <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
-                                        <div style="font-weight:700;">${name}</div>
-                                        <div style="color:var(--primary); font-size:0.85rem;">${phone}</div>
-                                        <div style="margin:8px 0; padding:8px; background:#f0f0f0; border-radius:10px;">
-                                            <div>📋 ${t.problems?.[0]?.problem || 'চিকিৎসা'}</div>
-                                            <div>💰 বিল: ৳${t.netBill || 0} | বকেয়া: ৳${t.totalDue || 0}</div>
-                                            <div style="font-size:0.75rem;">📅 ${t.date || ''}</div>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                        }
-                    }
-                }
-                
-                container.innerHTML = html || '<div class="empty-state">কোনো ইতিহাস নেই</div>';
-                
-                document.getElementById('searchHistory').oninput = (e) => {
-                    const search = e.target.value.toLowerCase();
-                    document.querySelectorAll('#historyList .patient-option').forEach(opt => {
-                        const text = opt.innerText.toLowerCase();
-                        opt.style.display = text.includes(search) ? 'block' : 'none';
-                    });
-                };
-                
-            } catch (err) {
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
-            }
+            document.getElementById('newPatientSection').style.display = 'block';
+            document.getElementById('recentSection').style.display = 'none';
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('[data-section="new"]').classList.add('active');
+            
+            showMessage('রোগীর তথ্য সম্পাদনা করুন', 'warning');
         }
-
-        // Open Numbers Modal
-        async function openNumbersModal() {
-            const modal = document.getElementById('numbersModal');
-            const container = document.getElementById('numbersList');
-            modal.classList.add('active');
+        
+        if (fromProfile && fromProfile !== 'edit') {
+            document.querySelector('.section-title span').innerText = 'নতুন চিকিৎসা যোগ করুন';
+            document.getElementById('fromProfileId').value = fromProfile;
             
-            try {
-                const snapshot = await getDocs(collection(db, "patientPhones"));
-                const numbers = [];
-                
-                snapshot.forEach(doc => numbers.push(doc.id));
-                numbers.sort();
-                
-                container.innerHTML = numbers.map((phone, i) => `
-                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; align-items:center;">
-                        <span style="width:30px; color:var(--gray);">${i+1}.</span>
-                        <span style="flex:1; direction:ltr;">${phone}</span>
-                        <button class="add-problem-btn" style="padding:8px 15px; width:auto;" onclick="copyNumber('${phone}')">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                `).join('') || '<div class="empty-state">কোনো নাম্বার নেই</div>';
-                
-                document.getElementById('copyAllNumbers').onclick = async () => {
-                    const allNumbers = numbers.join(', ');
-                    await navigator.clipboard.writeText(allNumbers);
-                    showMessage(`${numbers.length}টি নাম্বার কপি হয়েছে`, 'success');
-                };
-                
-            } catch (err) {
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
-            }
+            document.getElementById('newPatientSection').style.display = 'block';
+            document.getElementById('recentSection').style.display = 'none';
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector('[data-section="new"]').classList.add('active');
+            
+            showMessage('এই রোগীর জন্য নতুন চিকিৎসা যোগ করুন', 'info');
         }
+    }
 
-        window.copyNumber = async (phone) => {
-            await navigator.clipboard.writeText(phone);
-            showMessage('নাম্বার কপি হয়েছে', 'success');
-        };
-
-        // ফাংশন: প্রোবলেম ব্যাজ আপডেট করুন
-        function updateProblemBadges() {
-            document.querySelectorAll('.problem-item').forEach((item, index) => {
-                const badge = item.querySelector('.problem-badge');
-                if (badge) {
-                    badge.textContent = `চিকিৎসা #${index + 1}`;
-                }
-            });
-        }
-
-        // ফাংশন: শেড আইটেমে ক্লিক ইভেন্ট অ্যাটাচ করুন
-        function attachShadeListeners(container) {
-            container.querySelectorAll('.shade-item').forEach(shade => {
-                shade.addEventListener('click', function() {
-                    const shadeGrid = this.closest('.shade-grid');
-                    const crownSection = this.closest('.crown-options');
-                    shadeGrid.querySelectorAll('.shade-item').forEach(s => s.classList.remove('active'));
-                    this.classList.add('active');
-                    crownSection.querySelector('.crown-shade').value = this.dataset.shade;
-                });
-            });
-        }
-
-        // ফাংশন: ক্যালকুলেশন ইভেন্ট অ্যাটাচ করুন
-        function attachCalculationListeners(container) {
-            container.querySelectorAll('.problem-type, .problem-cost, .problem-discount, .problem-paid, .crown-qty, .crown-price').forEach(el => {
-                el.removeEventListener('input', calculateTotals);
-                el.addEventListener('input', calculateTotals);
-            });
-        }
-
-        // ফাংশন: ক্রাউন টগল অ্যাটাচ করুন
-        function attachCrownToggle(container) {
-            container.querySelectorAll('.problem-type').forEach(select => {
-                select.removeEventListener('change', handleCrownToggle);
-                select.addEventListener('change', handleCrownToggle);
-            });
-        }
-
-        // ক্রাউন টগল হ্যান্ডলার
-        function handleCrownToggle(e) {
-            const problemItem = e.target.closest('.problem-item');
-            const crownDiv = problemItem.querySelector('.crown-options');
-            crownDiv.classList.toggle('active', e.target.value === 'ডেন্টাল ক্রাউন');
-        }
-
-        // Multiple Problems Management
-        let problemCount = 1;
-
-        document.getElementById('addProblemBtn').addEventListener('click', () => {
-            const template = document.getElementById('problemTemplate');
-            const clone = template.cloneNode(true);
-            problemCount++;
-            
-            clone.id = '';
-            clone.querySelector('.problem-badge').textContent = `চিকিৎসা #${problemCount}`;
-            
-            // Clear values
-            clone.querySelectorAll('input, select, textarea').forEach(el => {
-                if (el.type !== 'hidden') el.value = '';
-            });
-            clone.querySelector('.crown-qty').value = '1';
-            clone.querySelector('.crown-price').value = '0';
-            clone.querySelector('.problem-cost').value = '0';
-            clone.querySelector('.problem-discount').value = '0';
-            clone.querySelector('.problem-paid').value = '0';
-            
-            // Crown options hide
-            clone.querySelector('.crown-options').classList.remove('active');
-            
-            // Remove বাটন দেখান
-            const removeBtn = clone.querySelector('.remove-problem');
-            removeBtn.style.display = 'flex';
-            removeBtn.disabled = false;
-            
-            // ইভেন্ট লিসেনার অ্যাটাচ করুন
-            attachShadeListeners(clone);
-            attachCalculationListeners(clone);
-            attachCrownToggle(clone);
-            
-            // Remove বাটনের ইভেন্ট
-            removeBtn.addEventListener('click', function() {
-                clone.remove();
-                calculateTotals();
-                updateProblemBadges();
-                problemCount = document.querySelectorAll('.problem-item').length;
-            });
-            
-            document.getElementById('problemsContainer').appendChild(clone);
-            calculateTotals();
-        });
-
-        // প্রথম প্রোবলেমের জন্য ইভেন্ট অ্যাটাচ করুন
-        attachShadeListeners(document);
-        attachCalculationListeners(document);
-        attachCrownToggle(document);
-
-        // প্রথম প্রোবলেমের remove বাটন লুকান
-        document.querySelector('.problem-item .remove-problem').style.display = 'none';
-
-        // Calculate Totals
-        function calculateTotals() {
-            const problems = document.querySelectorAll('.problem-item');
-            let totalBill = 0, totalDiscount = 0, totalPaid = 0;
-            
-            problems.forEach(p => {
-                const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
-                const discount = parseFloat(p.querySelector('.problem-discount')?.value) || 0;
-                const paid = parseFloat(p.querySelector('.problem-paid')?.value) || 0;
-                
-                const isCrown = p.querySelector('.problem-type')?.value === 'ডেন্টাল ক্রাউন';
-                const crownQty = isCrown ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
-                const crownPrice = isCrown ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
-                
-                const crownCost = crownQty * crownPrice;
-                const problemTotal = cost + crownCost;
-                
-                totalBill += problemTotal;
-                totalDiscount += discount;
-                totalPaid += paid;
-            });
-            
-            const netBill = totalBill - totalDiscount;
-            const due = netBill - totalPaid;
-            
-            document.getElementById('totalBillAmount').innerHTML = `৳ ${totalBill}`;
-            document.getElementById('totalDiscount').innerHTML = `৳ ${totalDiscount}`;
-            document.getElementById('netBill').innerHTML = `৳ ${netBill}`;
-            document.getElementById('totalPaid').innerHTML = `৳ ${totalPaid}`;
-            document.getElementById('totalDue').innerHTML = `৳ ${due < 0 ? 0 : due}`;
-        }
-
-        // Reset Form
-        function resetForm() {
-            document.getElementById('patientName').value = '';
-            document.getElementById('patientPhone').value = '';
-            document.getElementById('patientAge').value = '';
-            document.getElementById('patientAddress').value = '';
-            
-            // হিডেন ফিল্ড ক্লিয়ার করুন
-            document.getElementById('editPatientId').value = '';
-            document.getElementById('fromProfileId').value = '';
-            
-            const container = document.getElementById('problemsContainer');
-            while (container.children.length > 1) {
-                container.lastElementChild.remove();
-            }
-            
-            const first = container.firstElementChild;
-            first.querySelectorAll('input, select, textarea').forEach(el => {
-                if (el.type !== 'hidden') el.value = '';
-            });
-            first.querySelector('.crown-qty').value = '1';
-            first.querySelector('.crown-price').value = '0';
-            first.querySelector('.problem-cost').value = '0';
-            first.querySelector('.problem-discount').value = '0';
-            first.querySelector('.problem-paid').value = '0';
-            first.querySelector('.crown-options').classList.remove('active');
-            
-            const removeBtn = first.querySelector('.remove-problem');
-            removeBtn.style.display = 'none';
-            removeBtn.disabled = true;
-            
-            problemCount = 1;
-            calculateTotals();
-            
-            // সাবমিট বাটনের টেক্সট রিসেট করুন
-            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> রোগীর তথ্য সংরক্ষণ করুন';
-        }
-
-        // Form Submit
-        document.getElementById('patientForm').addEventListener('submit', async (e) => {
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
             e.preventDefault();
+            const section = item.dataset.section;
             
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.classList.add('loading');
-            
-            const name = document.getElementById('patientName').value.trim();
-            const phone = document.getElementById('patientPhone').value.trim();
-            
-            if (!name || !phone) {
-                showMessage('নাম ও মোবাইল নাম্বার আবশ্যক', 'error');
-                submitBtn.classList.remove('loading');
-                return;
-            }
-            
-            if (!/^01[3-9]\d{8}$/.test(phone)) {
-                showMessage('সঠিক মোবাইল নাম্বার দিন', 'error');
-                submitBtn.classList.remove('loading');
-                return;
-            }
-            
-            const problems = [];
-            let hasValidProblem = false;
-            
-            document.querySelectorAll('.problem-item').forEach(p => {
-                const type = p.querySelector('.problem-type')?.value;
-                if (type) {
-                    hasValidProblem = true;
-                    
-                    const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
-                    const crownQty = type === 'ডেন্টাল ক্রাউন' ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
-                    const crownPrice = type === 'ডেন্টাল ক্রাউน' ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
-                    const crownCost = crownQty * crownPrice;
-                    
-                    problems.push({
-                        id: Date.now() + Math.random(),
-                        problem: type,
-                        description: p.querySelector('.problem-desc')?.value || '',
-                        cost: cost,
-                        crownType: p.querySelector('.crown-type')?.value || '',
-                        crownShade: p.querySelector('.crown-shade')?.value || '',
-                        crownQty: crownQty,
-                        crownPrice: crownPrice,
-                        crownCost: crownCost,
-                        totalCost: cost + crownCost,
-                        discount: parseFloat(p.querySelector('.problem-discount')?.value) || 0,
-                        paid: parseFloat(p.querySelector('.problem-paid')?.value) || 0
-                    });
-                }
-            });
-            
-            if (!hasValidProblem) {
-                showMessage('কমপক্ষে একটি সমস্যা নির্বাচন করুন', 'error');
-                submitBtn.classList.remove('loading');
-                return;
-            }
-            
-            let totalBill = 0, totalDiscount = 0, totalPaid = 0;
-            problems.forEach(p => {
-                totalBill += p.totalCost;
-                totalDiscount += p.discount;
-                totalPaid += p.paid;
-            });
-            const netBill = totalBill - totalDiscount;
-            const due = netBill - totalPaid;
-            
-            const now = new Date();
-            const dateTime = now.toLocaleString('bn-BD', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
-            
-            const treatment = {
-                id: Date.now(),
-                date: dateTime,
-                timestamp: now.toISOString(),
-                problems: problems,
-                totalBill: totalBill,
-                totalDiscount: totalDiscount,
-                netBill: netBill,
-                totalPaid: totalPaid,
-                totalDue: due
-            };
-            
-            showLoading();
-            
-            try {
-                // চেক করুন এডিট মোড নাকি নতুন
-                const editId = document.getElementById('editPatientId')?.value;
-                const fromProfileId = document.getElementById('fromProfileId')?.value;
-                
-                if (editId) {
-                    // এডিট মোড - এই রোগীর তথ্য আপডেট করুন
-                    const patientRef = doc(db, "patients", editId);
-                    const patientSnap = await getDoc(patientRef);
-                    
-                    if (patientSnap.exists()) {
-                        // বেসিক তথ্য আপডেট করুন
-                        await updateDoc(patientRef, {
-                            name: name,
-                            phone: phone,
-                            age: document.getElementById('patientAge').value,
-                            address: document.getElementById('patientAddress').value,
-                            lastUpdated: now.toISOString()
-                        });
-                        
-                        hideLoading();
-                        submitBtn.classList.remove('loading');
-                        showMessage('✅ রোগীর তথ্য আপডেট হয়েছে!', 'success');
-                        
-                        // প্রোফাইল পেইজে ফিরে যান
-                        window.location.href = `rugipro.html?profileId=${editId}`;
-                        return;
-                    }
-                }
-                
-                // নরমাল - নতুন রোগী বা নতুন চিকিৎসা
-                const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
-                const patientRef = doc(db, "patients", profileId);
-                const phoneRef = doc(db, "patientPhones", phone);
-                
-                const phoneSnap = await getDoc(phoneRef);
-                if (phoneSnap.exists()) {
-                    const names = phoneSnap.data().names || [];
-                    if (!names.includes(name)) {
-                        await updateDoc(phoneRef, { names: arrayUnion(name), lastUpdated: now.toISOString() });
-                    } else {
-                        await updateDoc(phoneRef, { lastUpdated: now.toISOString() });
-                    }
-                } else {
-                    await setDoc(phoneRef, { phone, names: [name], createdAt: now.toISOString(), lastUpdated: now.toISOString() });
-                }
-                
-                const patientSnap = await getDoc(patientRef);
-                if (patientSnap.exists()) {
-                    // পুরাতন রোগী - নতুন চিকিৎসা যোগ করুন
-                    await updateDoc(patientRef, {
-                        treatments: arrayUnion(treatment),
-                        lastUpdated: now.toISOString(),
-                        lastTreatment: treatment
-                    });
-                    
-                    hideLoading();
-                    submitBtn.classList.remove('loading');
-                    showMessage('✅ নতুন চিকিৎসা যোগ করা হয়েছে!', 'success');
-                    
-                    // প্রোফাইল পেইজে ফিরে যান যদি fromProfile থাকে
-                    if (fromProfileId) {
-                        window.location.href = `rugipro.html?profileId=${fromProfileId}`;
-                    } else {
-                        window.location.href = `rugipro.html?profileId=${profileId}`;
-                    }
-                    
-                } else {
-                    // নতুন রোগী
-                    await setDoc(patientRef, {
-                        name, phone,
-                        age: document.getElementById('patientAge').value,
-                        address: document.getElementById('patientAddress').value,
-                        treatments: [treatment],
-                        createdAt: now.toISOString(),
-                        lastUpdated: now.toISOString(),
-                        lastTreatment: treatment
-                    });
-                    
-                    hideLoading();
-                    submitBtn.classList.remove('loading');
-                    showMessage('✅ নতুন রোগী সংরক্ষিত হয়েছে!', 'success');
-                    
-                    window.location.href = `rugipro.html?profileId=${profileId}`;
-                }
-                
-            } catch (err) {
-                console.error(err);
-                hideLoading();
-                submitBtn.classList.remove('loading');
-                showMessage('সংরক্ষণে সমস্যা হয়েছে!', 'error');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+
+            if (section === 'home') {
+                document.getElementById('newPatientSection').style.display = 'none';
+                document.getElementById('recentSection').style.display = 'block';
+                resetForm();
+            } else if (section === 'new') {
+                document.getElementById('newPatientSection').style.display = 'block';
+                document.getElementById('recentSection').style.display = 'none';
+                resetForm();
+            } else if (section === 'list') {
+                openPatientListModal();
+            } else if (section === 'history') {
+                openHistoryModal();
+            } else if (section === 'numbers') {
+                openNumbersModal();
             }
         });
+    });
 
-        // Load Dashboard Stats
-        async function loadDashboardStats() {
-            try {
-                const snapshot = await getDocs(collection(db, "patients"));
-                let totalPatients = 0;
-                let totalBill = 0;
-                
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.treatments) {
-                        data.treatments.forEach(t => {
-                            totalBill += t.netBill || 0;
-                        });
-                    }
-                    totalPatients++;
-                });
-                
-                document.getElementById('totalPatients').textContent = totalPatients;
-                document.getElementById('totalBill').innerHTML = `৳ ${totalBill}`;
-                
-            } catch (err) {
-                console.error(err);
-            }
-        }
+    // Action Buttons
+    document.getElementById('newPatientBtn').addEventListener('click', () => {
+        document.querySelector('[data-section="new"]').click();
+    });
 
-        // Load Recent Patients
-        async function loadRecentPatients() {
-            const container = document.getElementById('recentPatientsList');
+    document.getElementById('patientListBtn').addEventListener('click', openPatientListModal);
+    document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
+    document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
+
+    // Open Patient List Modal
+    async function openPatientListModal() {
+        const modal = document.getElementById('patientListModal');
+        const container = document.getElementById('patientListContainer');
+        modal.classList.add('active');
+        showLoading();
+        
+        try {
+            const snapshot = await getDocs(collection(db, "patientPhones"));
+            let html = '';
             
-            try {
-                const q = query(collection(db, "patientPhones"), orderBy("lastUpdated", "desc"), limit(5));
-                const snapshot = await getDocs(q);
+            for (const docSnap of snapshot.docs) {
+                const data = docSnap.data();
+                const phone = docSnap.id;
                 
-                if (snapshot.empty) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-user-slash"></i><p>কোনো রোগী নেই</p></div>';
-                    document.getElementById('fabMenu').style.display = 'none';
-                    return;
-                }
-                
-                let html = '';
-                let firstPatient = null;
-                
-                for (const docSnap of snapshot.docs) {
-                    const data = docSnap.data();
-                    const phone = docSnap.id;
-                    const name = data.names?.[0] || 'অজানা';
-                    
-                    if (!firstPatient) {
-                        firstPatient = { name, phone };
-                    }
-                    
+                for (const name of data.names || []) {
                     const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
                     const patientRef = doc(db, "patients", profileId);
                     const patientSnap = await getDoc(patientRef);
@@ -1743,41 +1231,582 @@
                         const lastTreat = patient.treatments?.[patient.treatments.length - 1];
                         
                         html += `
-                            <div class="recent-item" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
-                                <div class="recent-avatar"><i class="fas fa-user"></i></div>
-                                <div class="recent-info">
-                                    <div class="recent-name">${name}</div>
-                                    <div class="recent-phone">${phone}</div>
-                                    <div class="recent-date">${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳${lastTreat?.totalDue || 0}</div>
+                            <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
+                                <div style="font-weight:700; margin-bottom:5px;">${name}</div>
+                                <div style="color:var(--primary); margin-bottom:3px;">${phone}</div>
+                                <div style="font-size:0.8rem; color:var(--gray);">
+                                    সর্বশেষ: ${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳ ${lastTreat?.totalDue || 0}
                                 </div>
                             </div>
                         `;
                     }
                 }
+            }
+            
+            container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
+            
+            document.getElementById('searchPatient').oninput = (e) => {
+                const search = e.target.value.toLowerCase();
+                document.querySelectorAll('#patientListContainer .patient-option').forEach(opt => {
+                    const text = opt.innerText.toLowerCase();
+                    opt.style.display = text.includes(search) ? 'block' : 'none';
+                });
+            };
+            
+        } catch (err) {
+            console.error('Error loading patients:', err);
+            container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Open History Modal
+    async function openHistoryModal() {
+        const modal = document.getElementById('historyModal');
+        const container = document.getElementById('historyList');
+        modal.classList.add('active');
+        showLoading();
+        
+        try {
+            const snapshot = await getDocs(collection(db, "patientPhones"));
+            let html = '';
+            
+            for (const docSnap of snapshot.docs) {
+                const phone = docSnap.id;
+                const data = docSnap.data();
                 
-                container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
-                
-                // FAB Menu আপডেট করুন
-                if (firstPatient) {
-                    const fabMenu = document.getElementById('fabMenu');
-                    fabMenu.style.display = 'flex';
-                    document.getElementById('fabLabel').textContent = firstPatient.name;
+                for (const name of data.names || []) {
+                    const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+                    const patientRef = doc(db, "patients", profileId);
+                    const patientSnap = await getDoc(patientRef);
                     
-                    // FAB বাটনে ক্লিক ইভেন্ট
-                    const profileId = `${firstPatient.phone}_${firstPatient.name.replace(/\s+/g, '_')}`;
-                    document.getElementById('fabProfileBtn').onclick = () => {
-                        window.location.href = `rugipro.html?profileId=${profileId}`;
-                    };
+                    if (patientSnap.exists()) {
+                        const patient = patientSnap.data();
+                        const treatments = patient.treatments || [];
+                        
+                        treatments.forEach((t) => {
+                            html += `
+                                <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
+                                    <div style="font-weight:700;">${name}</div>
+                                    <div style="color:var(--primary); font-size:0.85rem;">${phone}</div>
+                                    <div style="margin:8px 0; padding:8px; background:#f0f0f0; border-radius:10px;">
+                                        <div>📋 ${t.problems?.[0]?.problem || 'চিকিৎসা'}</div>
+                                        <div>💰 বিল: ৳${t.netBill || 0} | বকেয়া: ৳${t.totalDue || 0}</div>
+                                        <div style="font-size:0.75rem;">📅 ${t.date || ''}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+                }
+            }
+            
+            container.innerHTML = html || '<div class="empty-state">কোনো ইতিহাস নেই</div>';
+            
+            document.getElementById('searchHistory').oninput = (e) => {
+                const search = e.target.value.toLowerCase();
+                document.querySelectorAll('#historyList .patient-option').forEach(opt => {
+                    const text = opt.innerText.toLowerCase();
+                    opt.style.display = text.includes(search) ? 'block' : 'none';
+                });
+            };
+            
+        } catch (err) {
+            console.error('Error loading history:', err);
+            container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Open Numbers Modal
+    async function openNumbersModal() {
+        const modal = document.getElementById('numbersModal');
+        const container = document.getElementById('numbersList');
+        modal.classList.add('active');
+        showLoading();
+        
+        try {
+            const snapshot = await getDocs(collection(db, "patientPhones"));
+            const numbers = [];
+            
+            snapshot.forEach(doc => numbers.push(doc.id));
+            numbers.sort();
+            
+            container.innerHTML = numbers.map((phone, i) => `
+                <div style="padding:15px; border-bottom:1px solid #eee; display:flex; align-items:center;">
+                    <span style="width:30px; color:var(--gray);">${i+1}.</span>
+                    <span style="flex:1; direction:ltr;">${phone}</span>
+                    <button class="add-problem-btn" style="padding:8px 15px; width:auto;" onclick="copyNumber('${phone}')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            `).join('') || '<div class="empty-state">কোনো নাম্বার নেই</div>';
+            
+            document.getElementById('copyAllNumbers').onclick = async () => {
+                try {
+                    const allNumbers = numbers.join(', ');
+                    await navigator.clipboard.writeText(allNumbers);
+                    showMessage(`${numbers.length}টি নাম্বার কপি হয়েছে`, 'success');
+                } catch (err) {
+                    showMessage('কপি করতে সমস্যা হয়েছে', 'error');
+                }
+            };
+            
+        } catch (err) {
+            console.error('Error loading numbers:', err);
+            container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // ফাংশন: প্রোবলেম ব্যাজ আপডেট করুন
+    function updateProblemBadges() {
+        document.querySelectorAll('.problem-item').forEach((item, index) => {
+            const badge = item.querySelector('.problem-badge');
+            if (badge) {
+                badge.textContent = `চিকিৎসা #${index + 1}`;
+            }
+        });
+    }
+
+    // ফাংশন: শেড আইটেমে ক্লিক ইভেন্ট অ্যাটাচ করুন
+    function attachShadeListeners(container) {
+        container.querySelectorAll('.shade-item').forEach(shade => {
+            shade.addEventListener('click', function() {
+                const shadeGrid = this.closest('.shade-grid');
+                const crownSection = this.closest('.crown-options');
+                shadeGrid.querySelectorAll('.shade-item').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                crownSection.querySelector('.crown-shade').value = this.dataset.shade;
+            });
+        });
+    }
+
+    // ফাংশন: ক্যালকুলেশন ইভেন্ট অ্যাটাচ করুন
+    function attachCalculationListeners(container) {
+        container.querySelectorAll('.problem-type, .problem-cost, .problem-discount, .problem-paid, .crown-qty, .crown-price').forEach(el => {
+            el.removeEventListener('input', calculateTotals);
+            el.addEventListener('input', calculateTotals);
+        });
+    }
+
+    // ফাংশন: ক্রাউন টগল অ্যাটাচ করুন
+    function attachCrownToggle(container) {
+        container.querySelectorAll('.problem-type').forEach(select => {
+            select.removeEventListener('change', handleCrownToggle);
+            select.addEventListener('change', handleCrownToggle);
+        });
+    }
+
+    // ক্রাউন টগল হ্যান্ডলার
+    function handleCrownToggle(e) {
+        const problemItem = e.target.closest('.problem-item');
+        const crownDiv = problemItem.querySelector('.crown-options');
+        crownDiv.classList.toggle('active', e.target.value === 'ডেন্টাল ক্রাউন');
+    }
+
+    // Multiple Problems Management
+    let problemCount = 1;
+
+    document.getElementById('addProblemBtn').addEventListener('click', () => {
+        const template = document.getElementById('problemTemplate');
+        const clone = template.cloneNode(true);
+        problemCount++;
+        
+        clone.id = '';
+        clone.querySelector('.problem-badge').textContent = `চিকিৎসা #${problemCount}`;
+        
+        // Clear values
+        clone.querySelectorAll('input, select, textarea').forEach(el => {
+            if (el.type !== 'hidden') el.value = '';
+        });
+        clone.querySelector('.crown-qty').value = '1';
+        clone.querySelector('.crown-price').value = '0';
+        clone.querySelector('.problem-cost').value = '0';
+        clone.querySelector('.problem-discount').value = '0';
+        clone.querySelector('.problem-paid').value = '0';
+        
+        // Crown options hide
+        clone.querySelector('.crown-options').classList.remove('active');
+        
+        // Remove বাটন দেখান
+        const removeBtn = clone.querySelector('.remove-problem');
+        removeBtn.style.display = 'flex';
+        removeBtn.disabled = false;
+        
+        // ইভেন্ট লিসেনার অ্যাটাচ করুন
+        attachShadeListeners(clone);
+        attachCalculationListeners(clone);
+        attachCrownToggle(clone);
+        
+        // Remove বাটনের ইভেন্ট
+        removeBtn.addEventListener('click', function() {
+            clone.remove();
+            calculateTotals();
+            updateProblemBadges();
+            problemCount = document.querySelectorAll('.problem-item').length;
+        });
+        
+        document.getElementById('problemsContainer').appendChild(clone);
+        calculateTotals();
+    });
+
+    // প্রথম প্রোবলেমের জন্য ইভেন্ট অ্যাটাচ করুন
+    attachShadeListeners(document);
+    attachCalculationListeners(document);
+    attachCrownToggle(document);
+
+    // প্রথম প্রোবলেমের remove বাটন লুকান
+    const firstRemoveBtn = document.querySelector('.problem-item .remove-problem');
+    if (firstRemoveBtn) {
+        firstRemoveBtn.style.display = 'none';
+    }
+
+    // Calculate Totals
+    function calculateTotals() {
+        const problems = document.querySelectorAll('.problem-item');
+        let totalBill = 0, totalDiscount = 0, totalPaid = 0;
+        
+        problems.forEach(p => {
+            const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
+            const discount = parseFloat(p.querySelector('.problem-discount')?.value) || 0;
+            const paid = parseFloat(p.querySelector('.problem-paid')?.value) || 0;
+            
+            const isCrown = p.querySelector('.problem-type')?.value === 'ডেন্টাল ক্রাউন';
+            const crownQty = isCrown ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
+            const crownPrice = isCrown ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
+            
+            const crownCost = crownQty * crownPrice;
+            const problemTotal = cost + crownCost;
+            
+            totalBill += problemTotal;
+            totalDiscount += discount;
+            totalPaid += paid;
+        });
+        
+        const netBill = totalBill - totalDiscount;
+        const due = Math.max(0, netBill - totalPaid);
+        
+        document.getElementById('totalBillAmount').innerHTML = `৳ ${totalBill}`;
+        document.getElementById('totalDiscount').innerHTML = `৳ ${totalDiscount}`;
+        document.getElementById('netBill').innerHTML = `৳ ${netBill}`;
+        document.getElementById('totalPaid').innerHTML = `৳ ${totalPaid}`;
+        document.getElementById('totalDue').innerHTML = `৳ ${due}`;
+    }
+
+    // Reset Form
+    function resetForm() {
+        document.getElementById('patientName').value = '';
+        document.getElementById('patientPhone').value = '';
+        document.getElementById('patientAge').value = '';
+        document.getElementById('patientAddress').value = '';
+        
+        document.getElementById('editPatientId').value = '';
+        document.getElementById('fromProfileId').value = '';
+        
+        const container = document.getElementById('problemsContainer');
+        while (container.children.length > 1) {
+            container.lastElementChild.remove();
+        }
+        
+        const first = container.firstElementChild;
+        first.querySelectorAll('input, select, textarea').forEach(el => {
+            if (el.type !== 'hidden') el.value = '';
+        });
+        first.querySelector('.crown-qty').value = '1';
+        first.querySelector('.crown-price').value = '0';
+        first.querySelector('.problem-cost').value = '0';
+        first.querySelector('.problem-discount').value = '0';
+        first.querySelector('.problem-paid').value = '0';
+        first.querySelector('.crown-options').classList.remove('active');
+        
+        const removeBtn = first.querySelector('.remove-problem');
+        if (removeBtn) {
+            removeBtn.style.display = 'none';
+            removeBtn.disabled = true;
+        }
+        
+        problemCount = 1;
+        calculateTotals();
+        
+        document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> রোগীর তথ্য সংরক্ষণ করুন';
+    }
+
+    // Form Submit
+    document.getElementById('patientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.classList.add('loading');
+        
+        const name = document.getElementById('patientName').value.trim();
+        const phone = document.getElementById('patientPhone').value.trim();
+        
+        if (!name || !phone) {
+            showMessage('নাম ও মোবাইল নাম্বার আবশ্যক', 'error');
+            submitBtn.classList.remove('loading');
+            return;
+        }
+        
+        if (!/^01[3-9]\d{8}$/.test(phone)) {
+            showMessage('সঠিক মোবাইল নাম্বার দিন (যেমন: 017XXXXXXXX)', 'error');
+            submitBtn.classList.remove('loading');
+            return;
+        }
+        
+        const problems = [];
+        let hasValidProblem = false;
+        
+        document.querySelectorAll('.problem-item').forEach(p => {
+            const type = p.querySelector('.problem-type')?.value;
+            if (type) {
+                hasValidProblem = true;
+                
+                const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
+                const crownQty = type === 'ডেন্টাল ক্রাউন' ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
+                const crownPrice = type === 'ডেন্টাল ক্রাউন' ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
+                const crownCost = crownQty * crownPrice;
+                
+                problems.push({
+                    id: Date.now() + Math.random(),
+                    problem: type,
+                    description: p.querySelector('.problem-desc')?.value || '',
+                    cost: cost,
+                    crownType: p.querySelector('.crown-type')?.value || '',
+                    crownShade: p.querySelector('.crown-shade')?.value || '',
+                    crownQty: crownQty,
+                    crownPrice: crownPrice,
+                    crownCost: crownCost,
+                    totalCost: cost + crownCost,
+                    discount: parseFloat(p.querySelector('.problem-discount')?.value) || 0,
+                    paid: parseFloat(p.querySelector('.problem-paid')?.value) || 0
+                });
+            }
+        });
+        
+        if (!hasValidProblem) {
+            showMessage('কমপক্ষে একটি সমস্যা নির্বাচন করুন', 'error');
+            submitBtn.classList.remove('loading');
+            return;
+        }
+        
+        let totalBill = 0, totalDiscount = 0, totalPaid = 0;
+        problems.forEach(p => {
+            totalBill += p.totalCost;
+            totalDiscount += p.discount;
+            totalPaid += p.paid;
+        });
+        const netBill = totalBill - totalDiscount;
+        const due = Math.max(0, netBill - totalPaid);
+        
+        const now = new Date();
+        const dateTime = now.toLocaleString('bn-BD', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' });
+        
+        const treatment = {
+            id: Date.now(),
+            date: dateTime,
+            timestamp: now.toISOString(),
+            problems: problems,
+            totalBill: totalBill,
+            totalDiscount: totalDiscount,
+            netBill: netBill,
+            totalPaid: totalPaid,
+            totalDue: due
+        };
+        
+        showLoading();
+        
+        try {
+            const editId = document.getElementById('editPatientId')?.value;
+            const fromProfileId = document.getElementById('fromProfileId')?.value;
+            
+            if (editId) {
+                const patientRef = doc(db, "patients", editId);
+                const patientSnap = await getDoc(patientRef);
+                
+                if (patientSnap.exists()) {
+                    await updateDoc(patientRef, {
+                        name: name,
+                        phone: phone,
+                        age: document.getElementById('patientAge').value,
+                        address: document.getElementById('patientAddress').value,
+                        lastUpdated: now.toISOString()
+                    });
+                    
+                    hideLoading();
+                    submitBtn.classList.remove('loading');
+                    showMessage('✅ রোগীর তথ্য আপডেট হয়েছে!', 'success');
+                    
+                    window.location.href = `rugipro.html?profileId=${editId}`;
+                    return;
+                }
+            }
+            
+            const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+            const patientRef = doc(db, "patients", profileId);
+            const phoneRef = doc(db, "patientPhones", phone);
+            
+            const phoneSnap = await getDoc(phoneRef);
+            if (phoneSnap.exists()) {
+                const names = phoneSnap.data().names || [];
+                if (!names.includes(name)) {
+                    await updateDoc(phoneRef, { names: arrayUnion(name), lastUpdated: now.toISOString() });
+                } else {
+                    await updateDoc(phoneRef, { lastUpdated: now.toISOString() });
+                }
+            } else {
+                await setDoc(phoneRef, { phone, names: [name], createdAt: now.toISOString(), lastUpdated: now.toISOString() });
+            }
+            
+            const patientSnap = await getDoc(patientRef);
+            if (patientSnap.exists()) {
+                await updateDoc(patientRef, {
+                    treatments: arrayUnion(treatment),
+                    lastUpdated: now.toISOString(),
+                    lastTreatment: treatment
+                });
+                
+                hideLoading();
+                submitBtn.classList.remove('loading');
+                showMessage('✅ নতুন চিকিৎসা যোগ করা হয়েছে!', 'success');
+                
+                if (fromProfileId) {
+                    window.location.href = `rugipro.html?profileId=${fromProfileId}`;
+                } else {
+                    window.location.href = `rugipro.html?profileId=${profileId}`;
                 }
                 
-            } catch (err) {
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
-                document.getElementById('fabMenu').style.display = 'none';
+            } else {
+                await setDoc(patientRef, {
+                    name, phone,
+                    age: document.getElementById('patientAge').value,
+                    address: document.getElementById('patientAddress').value,
+                    treatments: [treatment],
+                    createdAt: now.toISOString(),
+                    lastUpdated: now.toISOString(),
+                    lastTreatment: treatment
+                });
+                
+                hideLoading();
+                submitBtn.classList.remove('loading');
+                showMessage('✅ নতুন রোগী সংরক্ষিত হয়েছে!', 'success');
+                
+                window.location.href = `rugipro.html?profileId=${profileId}`;
             }
+            
+        } catch (err) {
+            console.error('Submit error:', err);
+            hideLoading();
+            submitBtn.classList.remove('loading');
+            showMessage('সংরক্ষণে সমস্যা হয়েছে!', 'error');
         }
+    });
 
-        // Initial calculations
-        calculateTotals();
-    </script>
+    // Load Dashboard Stats
+    async function loadDashboardStats() {
+        try {
+            const snapshot = await getDocs(collection(db, "patients"));
+            let totalPatients = 0;
+            let totalBill = 0;
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.treatments) {
+                    data.treatments.forEach(t => {
+                        totalBill += t.netBill || 0;
+                    });
+                }
+                totalPatients++;
+            });
+            
+            document.getElementById('totalPatients').textContent = totalPatients;
+            document.getElementById('totalBill').innerHTML = `৳ ${totalBill}`;
+            
+        } catch (err) {
+            console.error('Stats error:', err);
+        }
+    }
+
+    // Load Recent Patients
+    async function loadRecentPatients() {
+        const container = document.getElementById('recentPatientsList');
+        
+        try {
+            const q = query(collection(db, "patientPhones"), orderBy("lastUpdated", "desc"), limit(5));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-user-slash"></i><p>কোনো রোগী নেই</p></div>';
+                document.getElementById('fabMenu').style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            let firstPatient = null;
+            
+            for (const docSnap of snapshot.docs) {
+                const data = docSnap.data();
+                const phone = docSnap.id;
+                const name = data.names?.[0] || 'অজানা';
+                
+                if (!firstPatient) {
+                    firstPatient = { name, phone };
+                }
+                
+                const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+                const patientRef = doc(db, "patients", profileId);
+                const patientSnap = await getDoc(patientRef);
+                
+                if (patientSnap.exists()) {
+                    const patient = patientSnap.data();
+                    const lastTreat = patient.treatments?.[patient.treatments.length - 1];
+                    
+                    html += `
+                        <div class="recent-item" onclick="window.location.href='rugipro.html?profileId=${profileId}'">
+                            <div class="recent-avatar"><i class="fas fa-user"></i></div>
+                            <div class="recent-info">
+                                <div class="recent-name">${name}</div>
+                                <div class="recent-phone">${phone}</div>
+                                <div class="recent-date">${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳${lastTreat?.totalDue || 0}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
+            
+            // FAB Menu আপডেট করুন
+            const fabMenu = document.getElementById('fabMenu');
+            if (firstPatient) {
+                fabMenu.style.display = 'flex';
+                document.getElementById('fabLabel').textContent = firstPatient.name;
+                
+                const profileId = `${firstPatient.phone}_${firstPatient.name.replace(/\s+/g, '_')}`;
+                document.getElementById('fabProfileBtn').onclick = () => {
+                    window.location.href = `rugipro.html?profileId=${profileId}`;
+                };
+            } else {
+                fabMenu.style.display = 'none';
+            }
+            
+        } catch (err) {
+            console.error('Recent patients error:', err);
+            container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা হয়েছে</div>';
+            document.getElementById('fabMenu').style.display = 'none';
+        }
+    }
+
+    // Initial calculations
+    calculateTotals();
+
+    // Make functions available globally for inline onclick handlers
+    window.openPatientListModal = openPatientListModal;
+    window.openHistoryModal = openHistoryModal;
+    window.openNumbersModal = openNumbersModal;
+</script>
 </body>
 </html>
