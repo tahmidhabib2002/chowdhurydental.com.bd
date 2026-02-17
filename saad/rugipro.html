@@ -9,42 +9,38 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
-            authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
-            projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.appspot.com",
-            messagingSenderId: "23620370976",
-            appId: "1:23620370976:web:3bb119ceb9e15608a33245"
-        };
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.appspot.com",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
 
-        // Auth check
-        (function() {
-            document.documentElement.style.visibility = 'hidden';
-            document.documentElement.style.opacity = '0';
-            
-            const hasAuth = Object.keys(localStorage).some(key => 
-                key.startsWith('firebase:authUser:') && localStorage.getItem(key)
-            );
-            
-            if (!hasAuth) {
-                window.location.replace("log.html");
-                return;
+    // Firebase Initialization
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Auth check
+    firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.replace("log.html");
+        } else {
+            if (typeof hideLoading === 'function') {
+                hideLoading();
             }
-            
-            // Auth check - এটা রাখার পর
-console.log("Profile ID from URL:", profileId);
-console.log("Auth check passed");
+        }
+    });
 
-            // SMS API Configuration
-            window.API_CONFIG = {
-                baseUrl: "https://bulksmsdhaka.net/api/sendtext",
-                apikey: "e7b0da5a67ded72bd064e59bc2c382fc9b946900",
-                callerID: "1234"
-            };
-        })();
-    </script>
+    // SMS API Configuration
+    window.API_CONFIG = {
+        baseUrl: "https://bulksmsdhaka.net/api/sendtext",
+        apikey: "e7b0da5a67ded72bd064e59bc2c382fc9b946900",
+        callerID: "1234"
+    };
+</script>
     
     <style>
         /* আপনার আগের CSS ঠিক থাকবে - অপরিবর্তিত */
@@ -1724,3 +1720,4 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
     </script>
 </body>
 </html>
+
