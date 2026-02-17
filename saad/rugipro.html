@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>রোগী প্রোফাইল - চৌধুরী ডেন্টাল কেয়ার</title>
-    <!-- Fonts and Icons - প্রফেশনাল বাংলা ফন্ট -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="config.js"></script>
     <style>
-        /* আপনার আগের সব CSS ঠিক থাকবে */
         * {
             margin: 0;
             padding: 0;
@@ -791,7 +788,7 @@
             <div class="info-item"><i class="fas fa-calendar-alt"></i> <span id="patientAge">বয়স: লোড হচ্ছে...</span></div>
         </div>
         
-        <div class="patient-switcher" id="patientSwitcher">
+        <div class="patient-switcher" id="patientSwitcher" style="display: none;">
             <div class="patient-count"><i class="fas fa-users"></i> <span id="patientCount">১/১</span></div>
             <button class="switch-btn" id="switchPatientBtn"><i class="fas fa-exchange-alt"></i> পরিবর্তন</button>
         </div>
@@ -879,16 +876,20 @@
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-hand-holding-usd"></i> টাকা জমা দিন</h2>
             <form id="paymentForm">
-                <div class="form-group">
-                    <label>টাকার পরিমাণ (৳)</label>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">টাকার পরিমাণ (৳)</label>
                     <input type="number" id="paymentAmount" class="search-input" placeholder="যেমন: ৫০০" min="1" required>
                 </div>
-                <div class="form-group">
-                    <label>নোট / মন্তব্য</label>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">নোট / মন্তব্য</label>
                     <textarea id="paymentNotes" class="search-input" rows="3" placeholder="ঐচ্ছিক..."></textarea>
                 </div>
+                <div class="discount-row" id="paymentDueCheck" style="display: none;">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <span style="font-size: 0.9rem;" id="paymentDueMessage"></span>
+                </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn btn-success" style="flex: 2;">জমা দিন</button>
+                    <button type="submit" class="btn btn-success" style="flex: 2;" id="paymentSubmitBtn">জমা দিন</button>
                     <button type="button" class="btn btn-danger" style="flex: 1;" onclick="closeModal('paymentModal')">বাতিল</button>
                 </div>
             </form>
@@ -900,14 +901,14 @@
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-percentage"></i> ডিসকাউন্ট দিন</h2>
             <form id="discountForm">
-                <div class="form-group">
-                    <label>চিকিৎসা নির্বাচন করুন</label>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">চিকিৎসা নির্বাচন করুন</label>
                     <select id="treatmentSelect" class="search-input" required>
                         <option value="">নির্বাচন করুন</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>ডিসকাউন্টের পরিমাণ (৳)</label>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">ডিসকাউন্টের পরিমাণ (৳)</label>
                     <input type="number" id="discountAmount" class="search-input" placeholder="যেমন: ২০০" min="1" required>
                 </div>
                 <div class="discount-row">
@@ -983,11 +984,11 @@
     <nav class="bottom-nav">
         <a href="amarghor.html" class="nav-item"><i class="fas fa-home nav-icon"></i><span>হোম</span></a>
         <a href="#" class="nav-item active"><i class="fas fa-user nav-icon"></i><span>প্রোফাইল</span></a>
-        <a href="amarghor.html?new=true" class="nav-item"><i class="fas fa-plus-circle nav-icon"></i><span>নতুন</span></a>
+        <a href="amarghor.html?new=true" class="nav-item" id="newPatientNav"><i class="fas fa-plus-circle nav-icon"></i><span>নতুন</span></a>
         <a href="#" class="nav-item" id="searchNav"><i class="fas fa-search nav-icon"></i><span>খুঁজুন</span></a>
     </nav>
 
-
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -999,7 +1000,8 @@
             getDocs,
             updateDoc, 
             query,
-            where
+            where,
+            writeBatch
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // Firebase Config
@@ -1018,7 +1020,7 @@
         const db = getFirestore(app);
 
         // ============================================
-        // IMPORTANT: আপনার API তথ্য এখানে সেট করুন
+        // আপনার API তথ্য এখানে সেট করুন
         // ============================================
         const API_CONFIG = {
             baseUrl: "https://bulksmsdhaka.net/api/sendtext",
@@ -1065,7 +1067,7 @@
             }
         }
 
-        // Generate message based on type - FIXED for empty data
+        // Generate message based on type
         function generateMessage(type, patientData, treatments) {
             const patientName = patientData?.name || 'ভালোবাসার রোগী';
             
@@ -1162,7 +1164,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             return message;
         }
 
-        // Update message preview - FIXED
+        // Update message preview
         function updateMessagePreview() {
             const previewElement = document.getElementById('previewText');
             if (!previewElement) return;
@@ -1172,7 +1174,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 return;
             }
             
-            // Use currentPatient and allTreatments (even if empty)
+            // Use currentPatient and allTreatments
             const patientData = currentPatient?.data || { name: 'টেস্ট রোগী' };
             const treatments = allTreatments || [];
             
@@ -1261,10 +1263,29 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             updateTreatmentHistory();
             loadMonthlyStats();
             populateTreatmentSelect();
+            checkPaymentEligibility(totalDue);
             
             // Update message preview if modal is open and type selected
             if (selectedMessageType && document.getElementById('messageModal').classList.contains('active')) {
                 updateMessagePreview();
+            }
+        }
+
+        // Check if payment can be made (due must exist)
+        function checkPaymentEligibility(totalDue) {
+            const paymentBtn = document.getElementById('paymentSubmitBtn');
+            const dueCheck = document.getElementById('paymentDueCheck');
+            const dueMessage = document.getElementById('paymentDueMessage');
+            
+            if (totalDue <= 0) {
+                if (paymentBtn) paymentBtn.disabled = true;
+                if (dueCheck) {
+                    dueCheck.style.display = 'flex';
+                    dueMessage.innerText = 'কোনো বকেয়া নেই! টাকা জমা দেওয়া যাবে না।';
+                }
+            } else {
+                if (paymentBtn) paymentBtn.disabled = false;
+                if (dueCheck) dueCheck.style.display = 'none';
             }
         }
 
@@ -1463,7 +1484,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // Send Message via API - FIXED with new API format
+        // Send Message via API
         async function sendMessage() {
             if (!currentPatient) {
                 showMessage('রোগী নির্বাচন করা হয়নি', 'error');
@@ -1509,7 +1530,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 apiUrl.searchParams.append('number', cleanPhone);
                 apiUrl.searchParams.append('message', messageText);
                 
-                console.log('Sending SMS to:', cleanPhone); // For debugging
+                console.log('Sending SMS to:', cleanPhone);
                 
                 // API Call
                 const response = await fetch(apiUrl.toString());
@@ -1555,26 +1576,33 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             try {
                 const patientRef = doc(db, "patients", currentPatient.id);
                 const patientSnap = await getDoc(patientRef);
-                const treatments = patientSnap.data().treatments || [];
+                const patientData = patientSnap.data();
+                const treatments = patientData.treatments || [];
                 
-                // Find and update the treatment
-                const updatedTreatments = treatments.map((t, idx) => {
-                    // Match by comparing with original treatment
-                    if (idx === treatmentIndex) {
-                        const newDue = Math.max(0, (t.due || 0) - discount);
-                        const newPaid = (t.paid || 0) + discount;
-                        
-                        return { 
-                            ...t, 
-                            due: newDue,
-                            paid: newPaid,
-                            discount: (t.discount || 0) + discount
-                        };
-                    }
-                    return t;
+                // Find the treatment to update - find by comparing properties
+                const originalTreatment = treatments.find(t => {
+                    return t.date === treatment.date && 
+                           t.bill === treatment.bill && 
+                           t.due === treatment.due;
                 });
                 
-                await updateDoc(patientRef, { treatments: updatedTreatments });
+                if (!originalTreatment) {
+                    showMessage('চিকিৎসা খুঁজে পাওয়া যায়নি', 'error');
+                    return;
+                }
+                
+                // Update treatment
+                originalTreatment.due = Math.max(0, (originalTreatment.due || 0) - discount);
+                originalTreatment.paid = (originalTreatment.paid || 0) + discount;
+                
+                // Add discount to problems if exists
+                if (originalTreatment.problems && originalTreatment.problems.length > 0) {
+                    // Distribute discount proportionally to first problem
+                    const firstProblem = originalTreatment.problems[0];
+                    firstProblem.discount = (firstProblem.discount || 0) + discount;
+                }
+                
+                await updateDoc(patientRef, { treatments: treatments });
                 
                 showMessage('ডিসকাউন্ট প্রয়োগ করা হয়েছে', 'success');
                 closeModal('discountModal');
@@ -1625,9 +1653,20 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             document.getElementById('backBtn').addEventListener('click', () => window.history.back());
             document.getElementById('homeBtn').addEventListener('click', () => window.location.href = 'amarghor.html');
             
+            // New patient link - opens with empty form
+            document.getElementById('newPatientNav').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'amarghor.html?new=true';
+            });
+            
             // Modals
             document.getElementById('addPaymentBtn').addEventListener('click', () => {
-                document.getElementById('paymentModal').classList.add('active');
+                const totalDue = parseFloat(document.getElementById('totalDue').textContent.replace('৳', '')) || 0;
+                if (totalDue > 0) {
+                    document.getElementById('paymentModal').classList.add('active');
+                } else {
+                    showMessage('কোনো বকেয়া নেই! টাকা জমা দেওয়া যাবে না।', 'warning');
+                }
             });
             
             document.getElementById('discountBtn').addEventListener('click', () => {
@@ -1638,7 +1677,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 }
             });
 
-            // Message Modal - FIXED
+            // Message Modal
             document.getElementById('openMessageModalBtn').addEventListener('click', () => {
                 const modal = document.getElementById('messageModal');
                 modal.classList.add('active');
@@ -1647,68 +1686,16 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 selectedMessageType = '';
                 document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
                 document.getElementById('customMessage').value = '';
-                
-                // Show test message immediately
-                const testMessage = `প্রিয় [রোগীর নাম],
-
-এটি একটি টেস্ট মেসেজ। আপনি যখন কোনো অপশন সিলেক্ট করবেন, তখন এখানে প্রকৃত মেসেজ দেখাবে।
-
-উপরে তিনটি অপশন থেকে যেকোনো একটি নির্বাচন করুন:
-
-১. ক্রাউন/ক্যাপ তৈরি হয়েছে
-২. চিকিৎসা সম্পন্ন ও বিল পরিশোধ
-৩. বকেয়া টাকার তথ্য
-
-ধন্যবাদ
-চৌধুরী ডেন্টাল কেয়ার`;
-                
-                document.getElementById('previewText').innerText = testMessage;
+                document.getElementById('previewText').innerText = 'একটি অপশন নির্বাচন করুন';
             });
 
-            // Message Options Selection - FIXED
+            // Message Options Selection
             document.querySelectorAll('.message-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedMessageType = this.dataset.message;
-                    
-                    // Force preview update
-                    const previewElement = document.getElementById('previewText');
-                    if (!currentPatient) {
-                        // Test mode - show sample message
-                        const sampleMessages = {
-                            'ক্যাপ': `প্রিয় [রোগীর নাম],
-
-আপনার ক্রাউন/ক্যাপটির কাজ সম্পন্ন হয়েছে। অনুগ্রহ করে সুবিধামত সময়ে আমাদের চেম্বারে এসে সেটি লাগিয়ে নিয়ে যান।
-
-ধন্যবাদ
-চৌধুরী ডেন্টাল কেয়ার
-📞 ০১৭১২-৩৪৫৬৭৮`,
-                            'শেষ': `প্রিয় [রোগীর নাম],
-
-আপনার সকল চিকিৎসা সফলভাবে সম্পন্ন হয়েছে। আমাদের ওপর আস্থা রাখার জন্য ধন্যবাদ।
-
-ভবিষ্যতে সুস্থ থাকুন এই কামনা করি।
-
-ধন্যবাদ
-চৌধুরী ডেন্টাল কেয়ার
-📞 ০১৭১২-৩৪৫৬৭৮`,
-                            'ডিউ': `প্রিয় [রোগীর নাম],
-
-আপনার চিকিৎসার বিল বিবরণ:
-
-• চলমান চিকিৎসা: বকেয়া আছে
-
-অনুগ্রহ করে বাকি টাকা পরিশোধ করে চিকিৎসা সম্পন্ন করুন।
-
-ধন্যবাদ
-চৌধুরী ডেন্টাল কেয়ার
-📞 ০১৭১২-৩৪৫৬৭৮`
-                        };
-                        previewElement.innerText = sampleMessages[selectedMessageType] || 'মেসেজ প্রস্তুত হচ্ছে...';
-                    } else {
-                        updateMessagePreview();
-                    }
+                    updateMessagePreview();
                 });
             });
 
@@ -1716,11 +1703,18 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             
             document.getElementById('editPatientBtn').addEventListener('click', () => {
-                window.location.href = `amarghor.html?edit=${profileId}`;
+                // Pass all patient data to edit form
+                if (currentPatient) {
+                    const data = currentPatient.data;
+                    window.location.href = `amarghor.html?edit=${profileId}&name=${encodeURIComponent(data.name || '')}&phone=${encodeURIComponent(data.phone || '')}&address=${encodeURIComponent(data.address || '')}&age=${encodeURIComponent(data.age || '')}&source=rugipro`;
+                }
             });
             
             document.getElementById('addTreatmentBtn').addEventListener('click', () => {
-                window.location.href = `amarghor.html?phone=${currentPatient?.data?.phone}&name=${encodeURIComponent(currentPatient?.data?.name || '')}`;
+                if (currentPatient) {
+                    // Pass only name and phone, keep form empty for new treatment
+                    window.location.href = `amarghor.html?new=true&phone=${encodeURIComponent(currentPatient.data.phone || '')}&name=${encodeURIComponent(currentPatient.data.name || '')}`;
+                }
             });
             
             document.getElementById('switchPatientBtn').addEventListener('click', () => {
@@ -1793,10 +1787,22 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     return;
                 }
                 
+                const totalDue = parseFloat(document.getElementById('totalDue').textContent.replace('৳', '')) || 0;
+                if (totalDue <= 0) {
+                    showMessage('কোনো বকেয়া নেই! টাকা জমা দেওয়া যাবে না।', 'warning');
+                    return;
+                }
+                
+                if (amount > totalDue) {
+                    showMessage(`বকেয়া আছে মাত্র ৳${totalDue}! এর বেশি টাকা জমা দেওয়া যাবে না।`, 'warning');
+                    return;
+                }
+                
                 try {
                     const patientRef = doc(db, "patients", currentPatient.id);
                     const patientSnap = await getDoc(patientRef);
-                    const treatments = patientSnap.data().treatments || [];
+                    const patientData = patientSnap.data();
+                    const treatments = patientData.treatments || [];
                     
                     const now = new Date();
                     const paymentTime = now.toLocaleString('bn-BD', { 
@@ -1808,6 +1814,9 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     });
                     
                     let remaining = amount;
+                    const paymentLogs = [];
+                    
+                    // Distribute payment across treatments with due
                     const updatedTreatments = treatments.map(t => {
                         if (remaining <= 0) return t;
                         
@@ -1823,6 +1832,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                                 date: now.toISOString()
                             };
                             
+                            paymentLogs.push(paymentLog);
+                            
                             // Update treatment
                             t.paymentHistory = [...(t.paymentHistory || []), paymentLog];
                             t.paid = (parseFloat(t.paid || 0) + pay);
@@ -1834,7 +1845,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     
                     await updateDoc(patientRef, { treatments: updatedTreatments });
                     
-                    showMessage('পেমেন্ট সফল হয়েছে', 'success');
+                    showMessage(`${amount} টাকা জমা হয়েছে`, 'success');
                     closeModal('paymentModal');
                     document.getElementById('paymentAmount').value = '';
                     document.getElementById('paymentNotes').value = '';
@@ -1848,6 +1859,14 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             
             // Discount form
             document.getElementById('discountForm').addEventListener('submit', applyDiscount);
+        });
+
+        // Check URL for auto-fill from amarghor.html
+        window.addEventListener('load', () => {
+            if (urlParams.get('new') === 'true' && urlParams.get('phone')) {
+                // This is a new treatment for existing patient
+                document.getElementById('addTreatmentBtn').click();
+            }
         });
     </script>
 </body>
