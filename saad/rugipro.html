@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>রোগী প্রোফাইল - চৌধুরী ডেন্টাল কেয়ার</title>
-    <!-- Fonts and Icons - প্রফেশনাল বাংলা ফন্ট -->
+    <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔐 FIXED: Firebase কনফিগারেশন এবং Auth চেক - প্রথমেই লোড হবে -->
     <script>
         // Firebase Config
         const firebaseConfig = {
@@ -20,12 +19,11 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-        // 🔐 FIXED: পৃষ্ঠা লোড হওয়ার আগেই কন্টেন্ট হাইড করুন
+        // Auth check
         (function() {
             document.documentElement.style.visibility = 'hidden';
             document.documentElement.style.opacity = '0';
             
-            // localStorage এ auth চেক করুন (দ্রুত রিডাইরেক্টের জন্য)
             const hasAuth = Object.keys(localStorage).some(key => 
                 key.startsWith('firebase:authUser:') && localStorage.getItem(key)
             );
@@ -35,17 +33,17 @@
                 return;
             }
             
-            // SMS API Configuration (প্রোডাকশনে Cloud Function এ সরানো উচিত)
+            // SMS API Configuration
             window.API_CONFIG = {
                 baseUrl: "https://bulksmsdhaka.net/api/sendtext",
-                apikey: "e7b0da5a67ded72bd064e59bc2c382fc9b946900",  // আপনার API key দিন
-                callerID: "1234"     // আপনার caller ID দিন
+                apikey: "e7b0da5a67ded72bd064e59bc2c382fc9b946900",
+                callerID: "1234"
             };
         })();
     </script>
     
     <style>
-        /* আপনার আগের সব CSS ঠিক থাকবে - সম্পূর্ণ অপরিবর্তিত */
+        /* আপনার আগের CSS ঠিক থাকবে - অপরিবর্তিত */
         * {
             margin: 0;
             padding: 0;
@@ -84,7 +82,7 @@
             opacity: 1 !important;
         }
 
-        /* Header */
+        /* আপনার বাকি CSS ঠিক থাকবে - সম্পূর্ণ অপরিবর্তিত */
         .profile-header {
             background: linear-gradient(145deg, var(--primary), var(--primary-dark));
             color: white;
@@ -161,7 +159,6 @@
             font-size: 1.1rem;
         }
 
-        /* Patient Switcher */
         .patient-switcher {
             background: rgba(0,0,0,0.15);
             border-radius: 20px;
@@ -194,7 +191,6 @@
             font-weight: 500;
         }
 
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -227,7 +223,6 @@
             margin-top: 4px;
         }
 
-        /* Quick Actions */
         .action-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -274,7 +269,6 @@
             color: var(--dark);
         }
 
-        /* Message Action Button */
         .message-action-btn {
             background: linear-gradient(145deg, #4a6fa5, #3a5a8c);
             color: white;
@@ -297,7 +291,6 @@
             transform: scale(0.98);
         }
 
-        /* Search Section */
         .search-section {
             background: white;
             border-radius: 28px;
@@ -345,7 +338,6 @@
             cursor: pointer;
         }
 
-        /* Monthly Stats - Collapsible */
         .monthly-stats {
             background: linear-gradient(145deg, #f8fafc, #f0f4f8);
             border-radius: 24px;
@@ -413,7 +405,6 @@
             color: var(--gray);
         }
 
-        /* Treatment History */
         .history-section {
             background: white;
             border-radius: 28px;
@@ -561,7 +552,6 @@
             border-bottom: 1px dashed #dee2e6;
         }
 
-        /* Modal Styles */
         .modal {
             position: fixed;
             top: 0;
@@ -600,7 +590,6 @@
             gap: 12px;
         }
 
-        /* Message Options */
         .message-options {
             display: flex;
             flex-direction: column;
@@ -665,7 +654,6 @@
             outline: none;
         }
 
-        /* Message Preview */
         .message-preview {
             background: #f8fafc;
             border-radius: 16px;
@@ -687,7 +675,6 @@
             font-size: 0.9rem;
         }
 
-        /* Discount Row */
         .discount-row {
             background: var(--warning-light);
             border-radius: 16px;
@@ -706,7 +693,6 @@
             font-size: 1rem;
         }
 
-        /* Buttons */
         .btn {
             padding: 16px;
             border: none;
@@ -741,14 +727,12 @@
             color: white;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: var(--gray);
         }
 
-        /* Message */
         .message-box {
             position: fixed;
             top: 20px;
@@ -773,14 +757,12 @@
         .message-info { background: linear-gradient(145deg, var(--primary), var(--primary-dark)); }
         .message-warning { background: linear-gradient(145deg, var(--warning), #9e7627); }
 
-        /* Responsive */
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .action-grid { grid-template-columns: repeat(2, 1fr); }
             .monthly-grid { grid-template-columns: 1fr; }
         }
 
-        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -814,7 +796,6 @@
             font-size: 1.3rem;
         }
 
-        /* 🔐 FIXED: লোডিং স্টেট */
         .auth-loading {
             position: fixed;
             top: 0;
@@ -849,15 +830,12 @@
     </style>
 </head>
 <body>
-    <!-- 🔐 FIXED: Auth লোডিং এলিমেন্ট -->
     <div id="authLoading" class="auth-loading">
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- Message Container -->
     <div id="messageContainer"></div>
 
-    <!-- Main Header -->
     <div class="profile-header">
         <div class="header-top">
             <button class="nav-btn" id="backBtn"><i class="fas fa-arrow-left"></i></button>
@@ -878,7 +856,6 @@
         </div>
     </div>
 
-    <!-- Quick Stats -->
     <div class="stats-grid">
         <div class="stat-card"><div class="stat-value" id="totalBill">৳০</div><div class="stat-label">মোট বিল</div></div>
         <div class="stat-card success"><div class="stat-value" id="totalPaid">৳০</div><div class="stat-label">জমা</div></div>
@@ -886,7 +863,6 @@
         <div class="stat-card warning"><div class="stat-value" id="totalTreatments">০</div><div class="stat-label">চিকিৎসা</div></div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="action-grid">
         <button class="action-btn" id="addPaymentBtn">
             <div class="action-icon" style="background: linear-gradient(145deg, #1e7e34, #0f5922);"><i class="fas fa-coins"></i></div>
@@ -906,14 +882,12 @@
         </button>
     </div>
 
-    <!-- Message Button -->
     <button class="message-action-btn" id="openMessageModalBtn">
         <i class="fas fa-comment-dots"></i>
         <span>মেসেজ পাঠান</span>
         <i class="fas fa-chevron-right"></i>
     </button>
 
-    <!-- Search Section -->
     <div class="search-section">
         <div class="search-title"><i class="fas fa-search"></i> রোগী খুঁজুন</div>
         <div class="search-box">
@@ -923,20 +897,16 @@
         <div id="searchResult" style="display: none;"></div>
     </div>
 
-    <!-- Monthly Stats - Collapsible -->
     <div class="monthly-stats" id="monthlyStats">
         <div class="stats-header" id="toggleMonthlyStats">
             <h3><i class="fas fa-chart-line"></i> মাসিক পরিসংখ্যান</h3>
             <i class="fas fa-chevron-down" id="toggleIcon"></i>
         </div>
         <div class="stats-content" id="monthlyContent">
-            <div class="monthly-grid" id="monthlyData">
-                <!-- Dynamic monthly stats -->
-            </div>
+            <div class="monthly-grid" id="monthlyData"></div>
         </div>
     </div>
 
-    <!-- Treatment History -->
     <div class="history-section">
         <div class="section-header">
             <div class="section-title"><i class="fas fa-notes-medical"></i> চিকিৎসার ইতিহাস</div>
@@ -955,7 +925,6 @@
         </div>
     </div>
 
-    <!-- Payment Modal -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-hand-holding-usd"></i> টাকা জমা দিন</h2>
@@ -976,7 +945,6 @@
         </div>
     </div>
 
-    <!-- Discount Modal -->
     <div class="modal" id="discountModal">
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-percentage"></i> ডিসকাউন্ট দিন</h2>
@@ -1003,7 +971,6 @@
         </div>
     </div>
 
-    <!-- Message Modal -->
     <div class="modal" id="messageModal">
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-comment-dots"></i> মেসেজ পাঠান</h2>
@@ -1050,7 +1017,6 @@
         </div>
     </div>
 
-    <!-- Patient Selection Modal -->
     <div class="modal" id="patientSelectionModal">
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-users"></i> রোগী নির্বাচন করুন</h2>
@@ -1060,7 +1026,6 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <a href="amarghor.html" class="nav-item"><i class="fas fa-home nav-icon"></i><span>হোম</span></a>
         <a href="#" class="nav-item active"><i class="fas fa-user nav-icon"></i><span>প্রোফাইল</span></a>
@@ -1068,111 +1033,117 @@
         <a href="#" class="nav-item" id="searchNav"><i class="fas fa-search nav-icon"></i><span>খুঁজুন</span></a>
     </nav>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { 
-        getFirestore,
-        collection, 
-        doc, 
-        getDoc, 
-        getDocs,
-        updateDoc, 
-        query,
-        where,
-        arrayUnion
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore,
+            collection, 
+            doc, 
+            getDoc, 
+            getDocs,
+            updateDoc, 
+            query,
+            where,
+            arrayUnion
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // ============================================
-    // FIX 1: আপনার API তথ্য এখানে সেট করুন
-    // ============================================
-    const API_CONFIG = {
-        baseUrl: "https://bulksmsdhaka.net/api/sendtext",
-        apikey: "YOUR_ACTUAL_API_KEY",  // আপনার API key দিন
-        callerID: "YOUR_CALLER_ID"      // আপনার caller ID দিন
-    };
+        // ========== FIX 1: সঠিকভাবে Firebase initialize করুন ==========
+        const app = initializeApp(firebaseConfig);  // উপরে define করা config ব্যবহার করুন
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    // Firebase Config
-    
- // Firebase সরাসরি initialize করুন - কোনো আলাদা variable নেই
-const app = initializeApp({
-    apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
-    authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
-    projectId: "plasma-raceway-465016-v0",
-    storageBucket: "plasma-raceway-465016-v0.appspot.com",
-    messagingSenderId: "23620370976",
-    appId: "1:23620370976:web:3bb119ceb9e15608a33245"
-});
+        // ========== FIX 2: API_CONFIG সঠিকভাবে সেট করুন ==========
+        const API_CONFIG = window.API_CONFIG || {
+            baseUrl: "https://bulksmsdhaka.net/api/sendtext",
+            apikey: "e7b0da5a67ded72bd064e59bc2c382fc9b946900",
+            callerID: "1234"
+        };
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+        // ========== FIX 3: closeModal ফাংশন ==========
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('active');
+        };
 
-    // FIX 2: closeModal ফাংশন গ্লোবালি ডিফাইন করুন
-    window.closeModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) modal.classList.remove('active');
-    };
-
-    // Get patient ID from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const profileId = urlParams.get('profileId');
-
-    // Global variables
-    let currentPatient = null;
-    let allPatientsWithSamePhone = [];
-    let currentPatientIndex = 0;
-    let allTreatments = [];
-    let currentFilter = 'all';
-    let selectedMessageType = '';
-
-    // Message function
-    function showMessage(msg, type = 'info') {
-        const container = document.getElementById('messageContainer');
-        if (!container) return;
-        
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message-box message-${type}`;
-        msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
-        container.appendChild(msgDiv);
-        setTimeout(() => msgDiv.remove(), 3500);
-    }
-
-    // FIX 3: Generate message function এ treatment calculation ঠিক করুন
-    function generateMessage(type, patientData, treatments) {
-        const patientName = patientData?.name || 'ভালোবাসার রোগী';
-        
-        let totalBill = 0, totalPaid = 0, totalDue = 0;
-        let treatmentNames = [];
-        
-        if (treatments && treatments.length > 0) {
-            treatments.forEach(t => {
-                // Fix: bill calculation
-                const bill = parseFloat(t.bill || t.netBill || t.total || 0);
-                const paid = parseFloat(t.paid || t.totalPaid || 0);
-                const due = parseFloat(t.due || t.totalDue || (bill - paid));
-                
-                totalBill += bill;
-                totalPaid += paid;
-                totalDue += due;
-                
-                if (t.problems && t.problems.length) {
-                    t.problems.forEach(p => {
-                        if (p.problem) treatmentNames.push(p.problem);
-                    });
-                } else if (t.name) {
-                    treatmentNames.push(t.name);
-                }
-            });
+        // ========== FIX 4: Loading functions ==========
+        function showLoading() {
+            const loader = document.getElementById('authLoading');
+            if (loader) {
+                loader.style.display = 'flex';
+                loader.classList.remove('fade-out');
+            }
         }
-        
-        treatmentNames = [...new Set(treatmentNames)].filter(n => n).slice(0, 3);
-        const treatmentText = treatmentNames.length > 0 ? treatmentNames.join(', ') : 'চলমান চিকিৎসা';
 
-        let message = '';
+        function hideLoading() {
+            const loader = document.getElementById('authLoading');
+            if (loader) {
+                loader.classList.add('fade-out');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 300);
+            }
+        }
 
-        switch(type) {
-            case 'ক্যাপ':
-                message = `প্রিয় ${patientName},
+        // Get patient ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const profileId = urlParams.get('profileId');
+
+        // Global variables
+        let currentPatient = null;
+        let allPatientsWithSamePhone = [];
+        let currentPatientIndex = 0;
+        let allTreatments = [];
+        let currentFilter = 'all';
+        let selectedMessageType = '';
+
+        // Message function
+        function showMessage(msg, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            if (!container) return;
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message-box message-${type}`;
+            msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
+            container.appendChild(msgDiv);
+            setTimeout(() => msgDiv.remove(), 3500);
+        }
+
+        // Generate message function
+        function generateMessage(type, patientData, treatments) {
+            const patientName = patientData?.name || 'ভালোবাসার রোগী';
+            
+            let totalBill = 0, totalPaid = 0, totalDue = 0;
+            let treatmentNames = [];
+            
+            if (treatments && treatments.length > 0) {
+                treatments.forEach(t => {
+                    const bill = parseFloat(t.bill || t.netBill || t.total || 0);
+                    const paid = parseFloat(t.paid || t.totalPaid || 0);
+                    const due = parseFloat(t.due || t.totalDue || (bill - paid));
+                    
+                    totalBill += bill;
+                    totalPaid += paid;
+                    totalDue += due;
+                    
+                    if (t.problems && t.problems.length) {
+                        t.problems.forEach(p => {
+                            if (p.problem) treatmentNames.push(p.problem);
+                        });
+                    } else if (t.name) {
+                        treatmentNames.push(t.name);
+                    }
+                });
+            }
+            
+            treatmentNames = [...new Set(treatmentNames)].filter(n => n).slice(0, 3);
+            const treatmentText = treatmentNames.length > 0 ? treatmentNames.join(', ') : 'চলমান চিকিৎসা';
+
+            let message = '';
+
+            switch(type) {
+                case 'ক্যাপ':
+                    message = `প্রিয় ${patientName},
 
 আপনার ক্রাউন/ক্যাপটির কাজ সম্পন্ন হয়েছে। অনুগ্রহ করে সুবিধামত সময়ে আমাদের চেম্বারে এসে সেটি লাগিয়ে নিয়ে যান।
 
@@ -1180,10 +1151,10 @@ ${treatmentNames.length > 0 ? 'চিকিৎসার বিবরণ:\n' + tr
 ধন্যবাদ
 চৌধুরী ডেন্টাল কেয়ার
 📞 ০১৭১২-৩৪৫৬৭৮`;
-                break;
+                    break;
 
-            case 'শেষ':
-                message = `প্রিয় ${patientName},
+                case 'শেষ':
+                    message = `প্রিয় ${patientName},
 
 আপনার সকল চিকিৎসা সফলভাবে সম্পন্ন হয়েছে। আমাদের ওপর আস্থা রাখার জন্য ধন্যবাদ।
 
@@ -1195,21 +1166,21 @@ ${treatmentNames.length > 0 ? 'চিকিৎসা বিবরণ:\n' + treat
 ধন্যবাদ
 চৌধুরী ডেন্টাল কেয়ার
 📞 ০১৭১২-৩৪৫৬৭৮`;
-                break;
+                    break;
 
-            case 'ডিউ':
-                let dueDetails = '';
-                if (treatments && treatments.length > 0) {
-                    const dueTreatments = treatments.filter(t => t.due > 0);
-                    if (dueTreatments.length > 0) {
-                        dueTreatments.forEach((t, index) => {
-                            const tName = t.problems?.map(p => p.problem).join(', ') || t.name || 'চিকিৎসা';
-                            dueDetails += `• ${tName}: বকেয়া ৳${t.due}\n`;
-                        });
+                case 'ডিউ':
+                    let dueDetails = '';
+                    if (treatments && treatments.length > 0) {
+                        const dueTreatments = treatments.filter(t => t.due > 0);
+                        if (dueTreatments.length > 0) {
+                            dueTreatments.forEach((t, index) => {
+                                const tName = t.problems?.map(p => p.problem).join(', ') || t.name || 'চিকিৎসা';
+                                dueDetails += `• ${tName}: বকেয়া ৳${t.due}\n`;
+                            });
+                        }
                     }
-                }
 
-                message = `প্রিয় ${patientName},
+                    message = `প্রিয় ${patientName},
 
 আপনার চিকিৎসার বিল বিবরণ:
 
@@ -1222,245 +1193,469 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
 ধন্যবাদ
 চৌধুরী ডেন্টাল কেয়ার
 📞 ০১৭১২-৩৪৫৬৭৮`;
-                break;
+                    break;
 
-            default:
-                message = 'মেসেজ টাইপ নির্বাচন করুন';
+                default:
+                    message = 'মেসেজ টাইপ নির্বাচন করুন';
+            }
+
+            return message;
         }
 
-        return message;
-    }
+        // Send Message function
+        async function sendMessage() {
+            if (!currentPatient) {
+                showMessage('রোগী নির্বাচন করা হয়নি', 'error');
+                return;
+            }
 
-    // FIX 4: Send Message function - CORS সমস্যার সমাধান
-    async function sendMessage() {
-        if (!currentPatient) {
-            showMessage('রোগী নির্বাচন করা হয়নি', 'error');
-            return;
-        }
+            if (!selectedMessageType) {
+                showMessage('অনুগ্রহ করে একটি মেসেজ টাইপ নির্বাচন করুন', 'warning');
+                return;
+            }
 
-        if (!selectedMessageType) {
-            showMessage('অনুগ্রহ করে একটি মেসেজ টাইপ নির্বাচন করুন', 'warning');
-            return;
-        }
+            const customText = document.getElementById('customMessage')?.value.trim() || '';
+            let messageText = generateMessage(selectedMessageType, currentPatient.data, allTreatments);
 
-        const customText = document.getElementById('customMessage')?.value.trim() || '';
-        let messageText = generateMessage(selectedMessageType, currentPatient.data, allTreatments);
+            if (customText) {
+                messageText = customText + '\n\n' + messageText;
+            }
 
-        if (customText) {
-            messageText = customText + '\n\n' + messageText;
-        }
+            const patientPhone = currentPatient.data.phone;
+            
+            if (!patientPhone || patientPhone === '—') {
+                showMessage('রোগীর মোবাইল নম্বর নেই!', 'error');
+                return;
+            }
 
-        const patientPhone = currentPatient.data.phone;
-        
-        if (!patientPhone || patientPhone === '—') {
-            showMessage('রোগীর মোবাইল নম্বর নেই!', 'error');
-            return;
-        }
-
-        const cleanPhone = patientPhone.replace(/\D/g, '');
-        if (cleanPhone.length < 11) {
-            showMessage('সঠিক মোবাইল নম্বর নয়!', 'error');
-            return;
-        }
-        
-        // FIX: CORS সমস্যার জন্য প্রোফাইল দেখান + WhatsApp বিকল্প
-        const messagePreview = encodeURIComponent(messageText);
-        const whatsappUrl = `https://wa.me/${cleanPhone}?text=${messagePreview}`;
-        
-        // FIX: API key চেক করুন
-        if (API_CONFIG.apikey === "YOUR_ACTUAL_API_KEY" || API_CONFIG.apikey === "xxxxxx") {
-            // API key না থাকলে WhatsApp/সরাসরি মেসেজ কপি করার অপশন দিন
+            const cleanPhone = patientPhone.replace(/\D/g, '');
+            if (cleanPhone.length < 11) {
+                showMessage('সঠিক মোবাইল নম্বর নয়!', 'error');
+                return;
+            }
+            
+            const messagePreview = encodeURIComponent(messageText);
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=${messagePreview}`;
+            
+            // WhatsApp অপশন
             const action = confirm('আপনি কি WhatsApp এ মেসেজ পাঠাতে চান?\n"OK" চাপলে WhatsApp খুলবে,\n"Cancel" চাপলে মেসেজ কপি হবে।');
             
             if (action) {
-                // WhatsApp খুলুন
                 window.open(whatsappUrl, '_blank');
                 closeModal('messageModal');
             } else {
-                // মেসেজ কপি করুন
                 try {
                     await navigator.clipboard.writeText(messageText);
                     showMessage('📋 মেসেজ কপি হয়েছে! এখন আপনি যেকোনো অ্যাপে পেস্ট করতে পারেন।', 'success');
+                    closeModal('messageModal');
                 } catch (err) {
                     showMessage('কপি করতে সমস্যা!', 'error');
                 }
             }
-            return;
         }
-        
-        // API key থাকলে SMS পাঠানোর চেষ্টা করুন
-        showMessage(`📱 মেসেজ পাঠানো হচ্ছে...`, 'info');
-        
-        try {
-            // CORS সমস্যা এড়াতে fetch-এ mode: 'no-cors' ব্যবহার করুন
-            const apiUrl = new URL(API_CONFIG.baseUrl);
-            apiUrl.searchParams.append('apikey', API_CONFIG.apikey);
-            apiUrl.searchParams.append('callerID', API_CONFIG.callerID);
-            apiUrl.searchParams.append('number', cleanPhone);
-            apiUrl.searchParams.append('message', messageText);
-            
-            // fetch with no-cors (কাজ করলেও response পাবেন না)
-            await fetch(apiUrl.toString(), { mode: 'no-cors' });
-            
-            // no-cors mode-এ response চেক করা যায় না, তাই ধরে নিন成功了
-            showMessage(`✅ মেসেজ পাঠানোর চেষ্টা করা হয়েছে। ডেলিভারি কনফার্ম করতে SMS লগ চেক করুন।`, 'success');
-            
-            document.getElementById('customMessage').value = '';
-            document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
-            selectedMessageType = '';
-            document.getElementById('previewText').innerText = 'একটি অপশন নির্বাচন করুন';
-            closeModal('messageModal');
-            
-        } catch (error) {
-            console.error("Send message error:", error);
-            showMessage('❌ মেসেজ পাঠাতে সমস্যা! WhatsApp ব্যবহার করুন।', 'error');
-            
-            // Fallback: WhatsApp খুলুন
-            if (confirm('SMS পাঠাতে সমস্যা। WhatsApp এ পাঠাতে চান?')) {
-                window.open(whatsappUrl, '_blank');
-                closeModal('messageModal');
-            }
-        }
-    }
 
-    // FIX 5: ডিসকাউন্ট ফাংশন ঠিক করুন
-    async function applyDiscount(e) {
-        e.preventDefault();
-        
-        const treatmentIndex = parseInt(document.getElementById('treatmentSelect').value);
-        const discount = parseFloat(document.getElementById('discountAmount').value);
-        
-        if (isNaN(treatmentIndex) || !discount || discount <= 0) {
-            showMessage('সব তথ্য দিন', 'error');
-            return;
-        }
-        
-        // FIX: Original treatment find করতে হবে
-        const originalTreatments = currentPatient.data.treatments || [];
-        if (treatmentIndex >= originalTreatments.length) {
-            showMessage('ভুল চিকিৎসা নির্বাচন', 'error');
-            return;
-        }
-        
-        const treatment = originalTreatments[treatmentIndex];
-        const due = parseFloat(treatment.due || treatment.totalDue || 0);
-        
-        if (discount > due) {
-            showMessage('ডিসকাউন্ট বকেয়ার বেশি হতে পারবে না', 'error');
-            return;
-        }
-        
-        try {
-            const patientRef = doc(db, "patients", currentPatient.id);
-            const patientSnap = await getDoc(patientRef);
-            const treatments = patientSnap.data().treatments || [];
+        // Discount function
+        async function applyDiscount(e) {
+            e.preventDefault();
             
-            const updatedTreatments = treatments.map((t, idx) => {
-                if (idx === treatmentIndex) {
-                    const currentDue = parseFloat(t.due || t.totalDue || 0);
-                    const newDue = Math.max(0, currentDue - discount);
-                    const newPaid = (parseFloat(t.paid || t.totalPaid || 0) + discount);
-                    
-                    return { 
-                        ...t, 
-                        due: newDue,
-                        paid: newPaid,
-                        discount: (parseFloat(t.discount || 0) + discount)
-                    };
-                }
-                return t;
-            });
+            const treatmentIndex = parseInt(document.getElementById('treatmentSelect').value);
+            const discount = parseFloat(document.getElementById('discountAmount').value);
             
-            await updateDoc(patientRef, { treatments: updatedTreatments });
-            
-            showMessage('✅ ডিসকাউন্ট প্রয়োগ করা হয়েছে', 'success');
-            closeModal('discountModal');
-            document.getElementById('discountAmount').value = '';
-            await loadPatientsByPhone(currentPatient.data.phone, currentPatient.id);
-            
-        } catch (error) {
-            console.error("Discount error:", error);
-            showMessage('ডিসকাউন্ট দিতে সমস্যা!', 'error');
-        }
-    }
-
-    // FIX 6: All event listeners inside DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', () => {
-        // Navigation
-        document.getElementById('backBtn')?.addEventListener('click', () => window.history.back());
-        document.getElementById('homeBtn')?.addEventListener('click', () => window.location.href = 'amarghor.html');
-        
-        // FIX: Add payment button - বকেয়া চেক করে
-        document.getElementById('addPaymentBtn')?.addEventListener('click', () => {
-            const totalDueElement = document.getElementById('totalDue');
-            if (!totalDueElement) return;
-            
-            const totalDueText = totalDueElement.textContent.replace('৳', '');
-            const totalDue = parseFloat(totalDueText) || 0;
-            
-            if (totalDue <= 0) {
-                showMessage('এই রোগীর কোনো বকেয়া নেই!', 'warning');
+            if (isNaN(treatmentIndex) || !discount || discount <= 0) {
+                showMessage('সব তথ্য দিন', 'error');
                 return;
             }
-            document.getElementById('paymentModal')?.classList.add('active');
-        });
-        
-        // FIX: Discount button - বকেয়া চেক করে
-        document.getElementById('discountBtn')?.addEventListener('click', () => {
-            if (allTreatments.some(t => t.due > 0)) {
-                document.getElementById('discountModal')?.classList.add('active');
+            
+            const originalTreatments = currentPatient.data.treatments || [];
+            if (treatmentIndex >= originalTreatments.length) {
+                showMessage('ভুল চিকিৎসা নির্বাচন', 'error');
+                return;
+            }
+            
+            const treatment = originalTreatments[treatmentIndex];
+            const due = parseFloat(treatment.due || treatment.totalDue || 0);
+            
+            if (discount > due) {
+                showMessage('ডিসকাউন্ট বকেয়ার বেশি হতে পারবে না', 'error');
+                return;
+            }
+            
+            try {
+                const patientRef = doc(db, "patients", currentPatient.id);
+                const patientSnap = await getDoc(patientRef);
+                const treatments = patientSnap.data().treatments || [];
+                
+                const updatedTreatments = treatments.map((t, idx) => {
+                    if (idx === treatmentIndex) {
+                        const currentDue = parseFloat(t.due || t.totalDue || 0);
+                        const newDue = Math.max(0, currentDue - discount);
+                        const newPaid = (parseFloat(t.paid || t.totalPaid || 0) + discount);
+                        
+                        return { 
+                            ...t, 
+                            due: newDue,
+                            paid: newPaid,
+                            discount: (parseFloat(t.discount || 0) + discount)
+                        };
+                    }
+                    return t;
+                });
+                
+                await updateDoc(patientRef, { treatments: updatedTreatments });
+                
+                showMessage('✅ ডিসকাউন্ট প্রয়োগ করা হয়েছে', 'success');
+                closeModal('discountModal');
+                document.getElementById('discountAmount').value = '';
+                await loadPatientsByPhone(currentPatient.data.phone, currentPatient.id);
+                
+            } catch (error) {
+                console.error("Discount error:", error);
+                showMessage('ডিসকাউন্ট দিতে সমস্যা!', 'error');
+            }
+        }
+
+        // Load patients by phone
+        async function loadPatientsByPhone(phone, selectedProfileId = null) {
+            try {
+                showLoading();
+                
+                const q = query(collection(db, "patients"), where("phone", "==", phone));
+                const snapshot = await getDocs(q);
+                
+                allPatientsWithSamePhone = [];
+                snapshot.forEach(doc => {
+                    allPatientsWithSamePhone.push({ id: doc.id, data: doc.data() });
+                });
+                
+                if (allPatientsWithSamePhone.length === 0) {
+                    showMessage('কোনো রোগী পাওয়া যায়নি!', 'error');
+                    hideLoading();
+                    return;
+                }
+                
+                // Sort by latest treatment
+                allPatientsWithSamePhone.sort((a, b) => {
+                    const aDate = a.data.treatments?.[a.data.treatments.length-1]?.timestamp || a.data.createdAt || 0;
+                    const bDate = b.data.treatments?.[b.data.treatments.length-1]?.timestamp || b.data.createdAt || 0;
+                    return new Date(bDate) - new Date(aDate);
+                });
+                
+                if (selectedProfileId) {
+                    currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === selectedProfileId);
+                }
+                if (currentPatientIndex === -1) currentPatientIndex = 0;
+                
+                await loadCurrentPatient();
+                updatePatientSwitcher();
+                
+                hideLoading();
+                
+            } catch (error) {
+                console.error("Load patients error:", error);
+                showMessage("রোগী লোড করতে সমস্যা!", "error");
+                hideLoading();
+            }
+        }
+
+        // Load current patient
+        async function loadCurrentPatient() {
+            if (!allPatientsWithSamePhone.length) return;
+            currentPatient = allPatientsWithSamePhone[currentPatientIndex];
+            displayPatientData(currentPatient.data);
+        }
+
+        // Display patient data
+        function displayPatientData(data) {
+            document.getElementById('patientName').textContent = data.name || '—';
+            document.getElementById('patientPhone').textContent = `মোবাইল: ${data.phone || '—'}`;
+            document.getElementById('patientAddress').textContent = `ঠিকানা: ${data.address || '—'}`;
+            document.getElementById('patientAge').textContent = `বয়স: ${data.age || '—'} বছর`;
+            
+            let totalBill = 0, totalPaid = 0, totalDue = 0;
+            
+            allTreatments = (data.treatments || []).map(t => {
+                const bill = parseFloat(t.netBill || t.total || t.bill || 0);
+                const paid = parseFloat(t.totalPaid || t.paid || 0);
+                const due = parseFloat(t.totalDue || t.due || (bill - paid));
+                
+                const hasCrown = t.problems?.some(p => p.crownType) || t.crownType ? true : false;
+                
+                totalBill += bill;
+                totalPaid += paid;
+                totalDue += due;
+                
+                return { 
+                    ...t, 
+                    bill, 
+                    paid, 
+                    due, 
+                    isPaid: due <= 0,
+                    hasCrown
+                };
+            }).reverse();
+            
+            document.getElementById('totalBill').textContent = `৳${totalBill}`;
+            document.getElementById('totalPaid').textContent = `৳${totalPaid}`;
+            document.getElementById('totalDue').textContent = `৳${totalDue}`;
+            document.getElementById('totalTreatments').textContent = allTreatments.length;
+            document.getElementById('historyCount').textContent = `${allTreatments.length} টি`;
+            
+            updateTreatmentHistory();
+            loadMonthlyStats();
+            populateTreatmentSelect();
+        }
+
+        // Update treatment history
+        function updateTreatmentHistory() {
+            let filtered = allTreatments;
+            
+            if (currentFilter === 'due') filtered = allTreatments.filter(t => t.due > 0);
+            else if (currentFilter === 'paid') filtered = allTreatments.filter(t => t.due <= 0);
+            else if (currentFilter === 'crown') filtered = allTreatments.filter(t => t.hasCrown);
+            
+            const container = document.getElementById('treatmentHistory');
+            
+            if (!filtered.length) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>কোনো চিকিৎসা নেই</p></div>';
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach(t => {
+                const cardClass = t.due <= 0 ? 'paid' : (t.hasCrown ? 'crown' : 'due');
+                
+                html += `
+                    <div class="treatment-card ${cardClass}">
+                        <div class="card-header">
+                            <span class="card-date"><i class="far fa-calendar-alt"></i> ${t.date || 'তারিখ নেই'}</span>
+                            <span class="card-amount">৳${t.bill}</span>
+                        </div>
+                        
+                        <div class="problem-list">
+                            ${(t.problems && t.problems.length ? t.problems : [{
+                                problem: t.name || t.problem || 'চিকিৎসা',
+                                cost: t.cost || t.bill || 0,
+                                discount: t.discount || 0,
+                                crownType: t.crownType,
+                                crownShade: t.crownShade,
+                                crownQty: t.crownQty || 1
+                            }]).map(p => `
+                                <div class="problem-item">
+                                    <div class="problem-name">${p.problem || p.name || 'চিকিৎসা'}</div>
+                                    <div class="problem-detail">
+                                        <span>বিল: ৳${p.cost || 0}</span>
+                                        <span>ডিসকাউন্ট: ৳${p.discount || 0}</span>
+                                    </div>
+                                    ${p.crownType ? `
+                                        <div class="crown-info">
+                                            <i class="fas fa-crown"></i> ${p.crownType} | শেড: ${p.crownShade || 'A2'} | ×${p.crownQty || 1}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <span>জমা: ৳${t.paid}</span>
+                            <span style="color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'};">বকেয়া: ৳${t.due}</span>
+                        </div>
+                        
+                        ${t.paymentHistory?.length ? `
+                            <div class="payment-log">
+                                <div style="font-weight:600; margin-bottom:8px;">পেমেন্ট লগ:</div>
+                                ${t.paymentHistory.map(log => `
+                                    <div class="log-item">
+                                        <span>${log.time || log.date}</span>
+                                        <span style="color:var(--success);">+ ৳${log.amount}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Update patient switcher
+        function updatePatientSwitcher() {
+            const switcher = document.getElementById('patientSwitcher');
+            if (allPatientsWithSamePhone.length > 1) {
+                switcher.style.display = 'flex';
+                document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
             } else {
-                showMessage('কোনো বকেয়া নেই!', 'warning');
+                switcher.style.display = 'none';
             }
-        });
+        }
 
-        // FIX: Add treatment - fromProfile সহ পাঠান
-        document.getElementById('addTreatmentBtn')?.addEventListener('click', () => {
-            if (currentPatient) {
-                const patientData = currentPatient.data;
-                const params = new URLSearchParams({
-                    name: patientData.name || '',
-                    phone: patientData.phone || '',
-                    address: patientData.address || '',
-                    age: patientData.age || '',
-                    fromProfile: profileId
+        // Load monthly stats
+        async function loadMonthlyStats() {
+            try {
+                const snapshot = await getDocs(collection(db, "patients"));
+                const months = {};
+                const monthNames = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
+                                   'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    (data.treatments || []).forEach(t => {
+                        if (t.timestamp || t.date) {
+                            const date = new Date(t.timestamp || t.date);
+                            if (!isNaN(date.getTime())) {
+                                const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+                                
+                                if (!months[monthKey]) {
+                                    months[monthKey] = { 
+                                        name: `${monthNames[date.getMonth()]} ${date.getFullYear()}`, 
+                                        patients: 0, 
+                                        bill: 0
+                                    };
+                                }
+                                
+                                months[monthKey].patients++;
+                                months[monthKey].bill += parseFloat(t.netBill || t.total || t.bill || 0);
+                            }
+                        }
+                    });
                 });
                 
-                window.location.href = `amarghor.html?${params.toString()}`;
-            }
-        });
-
-        // FIX: Edit patient - edit mode
-        document.getElementById('editPatientBtn')?.addEventListener('click', () => {
-            if (currentPatient) {
-                const patientData = currentPatient.data;
-                const params = new URLSearchParams({
-                    edit: profileId,
-                    name: patientData.name || '',
-                    phone: patientData.phone || '',
-                    address: patientData.address || '',
-                    age: patientData.age || ''
-                });
+                const sortedMonths = Object.values(months).sort((a, b) => {
+                    return new Date(b.name) - new Date(a.name);
+                }).slice(0, 6);
                 
-                window.location.href = `amarghor.html?${params.toString()}`;
+                const container = document.getElementById('monthlyData');
+                container.innerHTML = sortedMonths.map(m => `
+                    <div class="month-card">
+                        <div class="month-name">${m.name}</div>
+                        <div class="month-value">${m.patients}</div>
+                        <div class="month-small">রোগী</div>
+                        <div class="month-value" style="font-size:1rem;">৳${m.bill}</div>
+                        <div class="month-small">মোট বিল</div>
+                    </div>
+                `).join('') || '<div class="empty-state">কোনো ডেটা নেই</div>';
+                
+            } catch (error) {
+                console.error("Monthly stats error:", error);
             }
-        });
+        }
 
-        // Message Modal
-        document.getElementById('openMessageModalBtn')?.addEventListener('click', () => {
-            const modal = document.getElementById('messageModal');
-            if (!modal) return;
+        // Populate treatment select for discount
+        function populateTreatmentSelect() {
+            const select = document.getElementById('treatmentSelect');
+            if (!select) return;
             
-            modal.classList.add('active');
+            select.innerHTML = '<option value="">নির্বাচন করুন</option>';
             
-            selectedMessageType = '';
-            document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('customMessage').value = '';
+            allTreatments.forEach((t, index) => {
+                if (t.due > 0) {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${t.date || 'তারিখ নেই'} - বকেয়া: ৳${t.due}`;
+                    select.appendChild(option);
+                }
+            });
+        }
+
+        // Initialize function
+        async function init() {
+            if (!profileId) {
+                window.location.href = "amarghor.html";
+                return;
+            }
             
-            // Show sample message
-            const previewElement = document.getElementById('previewText');
-            if (previewElement && currentPatient) {
-                previewElement.innerText = `প্রিয় ${currentPatient.data.name},
+            try {
+                const patientDoc = doc(db, "patients", profileId);
+                const patientSnap = await getDoc(patientDoc);
+                
+                if (patientSnap.exists()) {
+                    const data = patientSnap.data();
+                    await loadPatientsByPhone(data.phone, profileId);
+                } else {
+                    showMessage("রোগী পাওয়া যায়নি!", "error");
+                }
+            } catch (error) {
+                console.error("Init error:", error);
+                showMessage("লোড করতে সমস্যা!", "error");
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navigation
+            document.getElementById('backBtn')?.addEventListener('click', () => window.history.back());
+            document.getElementById('homeBtn')?.addEventListener('click', () => window.location.href = 'amarghor.html');
+            
+            // Add payment button
+            document.getElementById('addPaymentBtn')?.addEventListener('click', () => {
+                const totalDueElement = document.getElementById('totalDue');
+                if (!totalDueElement) return;
+                
+                const totalDueText = totalDueElement.textContent.replace('৳', '');
+                const totalDue = parseFloat(totalDueText) || 0;
+                
+                if (totalDue <= 0) {
+                    showMessage('এই রোগীর কোনো বকেয়া নেই!', 'warning');
+                    return;
+                }
+                document.getElementById('paymentModal')?.classList.add('active');
+            });
+            
+            // Discount button
+            document.getElementById('discountBtn')?.addEventListener('click', () => {
+                if (allTreatments.some(t => t.due > 0)) {
+                    document.getElementById('discountModal')?.classList.add('active');
+                } else {
+                    showMessage('কোনো বকেয়া নেই!', 'warning');
+                }
+            });
+
+            // Add treatment
+            document.getElementById('addTreatmentBtn')?.addEventListener('click', () => {
+                if (currentPatient) {
+                    const patientData = currentPatient.data;
+                    const params = new URLSearchParams({
+                        name: patientData.name || '',
+                        phone: patientData.phone || '',
+                        address: patientData.address || '',
+                        age: patientData.age || '',
+                        fromProfile: profileId
+                    });
+                    
+                    window.location.href = `amarghor.html?${params.toString()}`;
+                }
+            });
+
+            // Edit patient
+            document.getElementById('editPatientBtn')?.addEventListener('click', () => {
+                if (currentPatient) {
+                    const patientData = currentPatient.data;
+                    const params = new URLSearchParams({
+                        edit: profileId,
+                        name: patientData.name || '',
+                        phone: patientData.phone || '',
+                        address: patientData.address || '',
+                        age: patientData.age || ''
+                    });
+                    
+                    window.location.href = `amarghor.html?${params.toString()}`;
+                }
+            });
+
+            // Message Modal
+            document.getElementById('openMessageModalBtn')?.addEventListener('click', () => {
+                const modal = document.getElementById('messageModal');
+                if (!modal) return;
+                
+                modal.classList.add('active');
+                
+                selectedMessageType = '';
+                document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
+                document.getElementById('customMessage').value = '';
+                
+                const previewElement = document.getElementById('previewText');
+                if (previewElement && currentPatient) {
+                    previewElement.innerText = `প্রিয় ${currentPatient.data.name},
 
 একটি অপশন নির্বাচন করুন।
 
@@ -1469,321 +1664,56 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
 ১. ক্রাউন/ক্যাপ তৈরি হয়েছে
 ২. চিকিৎসা সম্পন্ন ও বিল পরিশোধ
 ৩. বকেয়া টাকার তথ্য`;
-            }
-        });
-
-        // Message Options
-        document.querySelectorAll('.message-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedMessageType = this.dataset.message;
-                
-                if (currentPatient) {
-                    const message = generateMessage(selectedMessageType, currentPatient.data, allTreatments);
-                    document.getElementById('previewText').innerText = message;
                 }
             });
-        });
 
-        // Send Message
-        document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
-        
-        // ... (বাকি event listeners আগের মতই)
-    });
-
-    // Auth check
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "log.html";
-        } else {
-            init();
-        }
-    });
-
-    // Initialize function
-    async function init() {
-        if (!profileId) {
-            window.location.href = "amarghor.html";
-            return;
-        }
-        
-        try {
-            const patientDoc = doc(db, "patients", profileId);
-            const patientSnap = await getDoc(patientDoc);
-            
-            if (patientSnap.exists()) {
-                const data = patientSnap.data();
-                await loadPatientsByPhone(data.phone, profileId);
-            } else {
-                showMessage("রোগী পাওয়া যায়নি!", "error");
-            }
-        } catch (error) {
-            console.error("Init error:", error);
-            showMessage("লোড করতে সমস্যা!", "error");
-        }
-    }
-
-    // ============================================
-// MISSING FUNCTIONS - এখানে যোগ করুন
-// ============================================
-
-// Load patients by phone
-async function loadPatientsByPhone(phone, selectedProfileId = null) {
-    try {
-        showLoading?.();
-        
-        const q = query(collection(db, "patients"), where("phone", "==", phone));
-        const snapshot = await getDocs(q);
-        
-        allPatientsWithSamePhone = [];
-        snapshot.forEach(doc => {
-            allPatientsWithSamePhone.push({ id: doc.id, data: doc.data() });
-        });
-        
-        if (allPatientsWithSamePhone.length === 0) {
-            showMessage('কোনো রোগী পাওয়া যায়নি!', 'error');
-            return;
-        }
-        
-        // Sort by latest treatment
-        allPatientsWithSamePhone.sort((a, b) => {
-            const aDate = a.data.treatments?.[a.data.treatments.length-1]?.timestamp || a.data.createdAt || 0;
-            const bDate = b.data.treatments?.[b.data.treatments.length-1]?.timestamp || b.data.createdAt || 0;
-            return new Date(bDate) - new Date(aDate);
-        });
-        
-        if (selectedProfileId) {
-            currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === selectedProfileId);
-        }
-        if (currentPatientIndex === -1) currentPatientIndex = 0;
-        
-        await loadCurrentPatient();
-        updatePatientSwitcher();
-        
-        hideLoading?.();
-        
-    } catch (error) {
-        console.error("Load patients error:", error);
-        showMessage("রোগী লোড করতে সমস্যা!", "error");
-        hideLoading?.();
-    }
-}
-
-// Load current patient
-async function loadCurrentPatient() {
-    if (!allPatientsWithSamePhone.length) return;
-    currentPatient = allPatientsWithSamePhone[currentPatientIndex];
-    displayPatientData(currentPatient.data);
-}
-
-// Display patient data
-function displayPatientData(data) {
-    document.getElementById('patientName').textContent = data.name || '—';
-    document.getElementById('patientPhone').textContent = `মোবাইল: ${data.phone || '—'}`;
-    document.getElementById('patientAddress').textContent = `ঠিকানা: ${data.address || '—'}`;
-    document.getElementById('patientAge').textContent = `বয়স: ${data.age || '—'} বছর`;
-    
-    let totalBill = 0, totalPaid = 0, totalDue = 0;
-    
-    // Process treatments
-    allTreatments = (data.treatments || []).map(t => {
-        const bill = parseFloat(t.netBill || t.total || t.bill || 0);
-        const paid = parseFloat(t.totalPaid || t.paid || 0);
-        const due = parseFloat(t.totalDue || t.due || (bill - paid));
-        
-        const hasCrown = t.problems?.some(p => p.crownType) || t.crownType ? true : false;
-        
-        totalBill += bill;
-        totalPaid += paid;
-        totalDue += due;
-        
-        return { 
-            ...t, 
-            bill, 
-            paid, 
-            due, 
-            isPaid: due <= 0,
-            hasCrown
-        };
-    }).reverse();
-    
-    document.getElementById('totalBill').textContent = `৳${totalBill}`;
-    document.getElementById('totalPaid').textContent = `৳${totalPaid}`;
-    document.getElementById('totalDue').textContent = `৳${totalDue}`;
-    document.getElementById('totalTreatments').textContent = allTreatments.length;
-    document.getElementById('historyCount').textContent = `${allTreatments.length} টি`;
-    
-    updateTreatmentHistory();
-    loadMonthlyStats();
-    populateTreatmentSelect();
-}
-
-// Update treatment history
-function updateTreatmentHistory() {
-    let filtered = allTreatments;
-    
-    if (currentFilter === 'due') filtered = allTreatments.filter(t => t.due > 0);
-    else if (currentFilter === 'paid') filtered = allTreatments.filter(t => t.due <= 0);
-    else if (currentFilter === 'crown') filtered = allTreatments.filter(t => t.hasCrown);
-    
-    const container = document.getElementById('treatmentHistory');
-    
-    if (!filtered.length) {
-        container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>কোনো চিকিৎসা নেই</p></div>';
-        return;
-    }
-    
-    let html = '';
-    filtered.forEach(t => {
-        const cardClass = t.due <= 0 ? 'paid' : (t.hasCrown ? 'crown' : 'due');
-        
-        html += `
-            <div class="treatment-card ${cardClass}">
-                <div class="card-header">
-                    <span class="card-date"><i class="far fa-calendar-alt"></i> ${t.date || 'তারিখ নেই'}</span>
-                    <span class="card-amount">৳${t.bill}</span>
-                </div>
-                
-                <div class="problem-list">
-                    ${(t.problems && t.problems.length ? t.problems : [{
-                        problem: t.name || t.problem || 'চিকিৎসা',
-                        cost: t.cost || t.bill || 0,
-                        discount: t.discount || 0,
-                        crownType: t.crownType,
-                        crownShade: t.crownShade,
-                        crownQty: t.crownQty || 1
-                    }]).map(p => `
-                        <div class="problem-item">
-                            <div class="problem-name">${p.problem || p.name || 'চিকিৎসা'}</div>
-                            <div class="problem-detail">
-                                <span>বিল: ৳${p.cost || 0}</span>
-                                <span>ডিসকাউন্ট: ৳${p.discount || 0}</span>
-                            </div>
-                            ${p.crownType ? `
-                                <div class="crown-info">
-                                    <i class="fas fa-crown"></i> ${p.crownType} | শেড: ${p.crownShade || 'A2'} | ×${p.crownQty || 1}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                    <span>জমা: ৳${t.paid}</span>
-                    <span style="color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'};">বকেয়া: ৳${t.due}</span>
-                </div>
-                
-                ${t.paymentHistory?.length ? `
-                    <div class="payment-log">
-                        <div style="font-weight:600; margin-bottom:8px;">পেমেন্ট লগ:</div>
-                        ${t.paymentHistory.map(log => `
-                            <div class="log-item">
-                                <span>${log.time || log.date}</span>
-                                <span style="color:var(--success);">+ ৳${log.amount}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-
-// Update patient switcher
-function updatePatientSwitcher() {
-    const switcher = document.getElementById('patientSwitcher');
-    if (allPatientsWithSamePhone.length > 1) {
-        switcher.style.display = 'flex';
-        document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
-    } else {
-        switcher.style.display = 'none';
-    }
-}
-
-// Load monthly stats
-async function loadMonthlyStats() {
-    try {
-        const snapshot = await getDocs(collection(db, "patients"));
-        const months = {};
-        const monthNames = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
-                           'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-        
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            (data.treatments || []).forEach(t => {
-                if (t.timestamp || t.date) {
-                    const date = new Date(t.timestamp || t.date);
-                    if (!isNaN(date.getTime())) {
-                        const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
-                        
-                        if (!months[monthKey]) {
-                            months[monthKey] = { 
-                                name: `${monthNames[date.getMonth()]} ${date.getFullYear()}`, 
-                                patients: 0, 
-                                bill: 0
-                            };
-                        }
-                        
-                        months[monthKey].patients++;
-                        months[monthKey].bill += parseFloat(t.netBill || t.total || t.bill || 0);
+            // Message Options
+            document.querySelectorAll('.message-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedMessageType = this.dataset.message;
+                    
+                    if (currentPatient) {
+                        const message = generateMessage(selectedMessageType, currentPatient.data, allTreatments);
+                        document.getElementById('previewText').innerText = message;
                     }
-                }
+                });
+            });
+
+            // Send Message
+            document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
+            
+            // Discount form submit
+            document.getElementById('discountForm')?.addEventListener('submit', applyDiscount);
+            
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    updateTreatmentHistory();
+                });
+            });
+            
+            // Toggle monthly stats
+            document.getElementById('toggleMonthlyStats')?.addEventListener('click', () => {
+                document.getElementById('monthlyContent')?.classList.toggle('active');
+                const icon = document.getElementById('toggleIcon');
+                if (icon) icon.classList.toggle('fa-chevron-down');
+                if (icon) icon.classList.toggle('fa-chevron-up');
             });
         });
-        
-        const sortedMonths = Object.values(months).sort((a, b) => {
-            return new Date(b.name) - new Date(a.name);
-        }).slice(0, 6);
-        
-        const container = document.getElementById('monthlyData');
-        container.innerHTML = sortedMonths.map(m => `
-            <div class="month-card">
-                <div class="month-name">${m.name}</div>
-                <div class="month-value">${m.patients}</div>
-                <div class="month-small">রোগী</div>
-                <div class="month-value" style="font-size:1rem;">৳${m.bill}</div>
-                <div class="month-small">মোট বিল</div>
-            </div>
-        `).join('') || '<div class="empty-state">কোনো ডেটা নেই</div>';
-        
-    } catch (error) {
-        console.error("Monthly stats error:", error);
-    }
-}
 
-// Populate treatment select for discount
-function populateTreatmentSelect() {
-    const select = document.getElementById('treatmentSelect');
-    if (!select) return;
-    
-    select.innerHTML = '<option value="">নির্বাচন করুন</option>';
-    
-    allTreatments.forEach((t, index) => {
-        if (t.due > 0) {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = `${t.date || 'তারিখ নেই'} - বকেয়া: ৳${t.due}`;
-            select.appendChild(option);
-        }
-    });
-}
-
-// Add loading functions if not defined
-function showLoading() {
-    const loader = document.getElementById('authLoading');
-    if (loader) loader.style.display = 'flex';
-}
-
-function hideLoading() {
-    const loader = document.getElementById('authLoading');
-    if (loader) loader.classList.add('fade-out');
-    setTimeout(() => {
-        if (loader) loader.style.display = 'none';
-    }, 300);
-}
-</script>
+        // Auth check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "log.html";
+            } else {
+                init();
+            }
+        });
+    </script>
 </body>
 </html>
