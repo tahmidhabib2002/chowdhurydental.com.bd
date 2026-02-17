@@ -1078,18 +1078,16 @@
             document.getElementById(modalId).classList.remove('active');
         };
 
-        // Auth Check
+      
+        // Auth check
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "log.html";
             } else {
-                loadDashboardStats();
-                loadRecentPatients();
-                
-                // URL প্যারামিটার চেক করুন
-                checkUrlParams();
+                init();
             }
         });
+
 
         // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
