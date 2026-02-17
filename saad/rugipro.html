@@ -33,6 +33,10 @@
                 return;
             }
             
+            // Auth check - এটা রাখার পর
+console.log("Profile ID from URL:", profileId);
+console.log("Auth check passed");
+
             // SMS API Configuration
             window.API_CONFIG = {
                 baseUrl: "https://bulksmsdhaka.net/api/sendtext",
@@ -1036,17 +1040,20 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore,
-            collection, 
-            doc, 
-            getDoc, 
-            getDocs,
-            updateDoc, 
-            query,
-            where,
-            arrayUnion
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+     import { 
+    getFirestore,
+    collection, 
+    doc, 
+    setDoc, 
+    getDoc, 
+    getDocs,
+    updateDoc, 
+    arrayUnion,
+    query,
+    orderBy,
+    limit,
+    where
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // ========== FIX 1: সঠিকভাবে Firebase initialize করুন ==========
         const app = initializeApp(firebaseConfig);  // উপরে define করা config ব্যবহার করুন
@@ -1682,7 +1689,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             });
 
             // Send Message
-            document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
+           document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
             
             // Discount form submit
             document.getElementById('discountForm')?.addEventListener('submit', applyDiscount);
