@@ -1032,24 +1032,25 @@
         <a href="amarghor.html?new=true" class="nav-item"><i class="fas fa-plus-circle nav-icon"></i><span>নতুন</span></a>
         <a href="#" class="nav-item" id="searchNav"><i class="fas fa-search nav-icon"></i><span>খুঁজুন</span></a>
     </nav>
-
-  <script type="module">
+    
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-     import { 
-    getFirestore,
-    collection, 
-    doc, 
-    setDoc, 
-    getDoc, 
-    getDocs,
-    updateDoc, 
-    arrayUnion,
-    query,
-    orderBy,
-    limit,
-    where
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { 
+            getFirestore,
+            collection, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            getDocs,
+            updateDoc, 
+            arrayUnion,
+            query,
+            orderBy,
+            limit,
+            where,
+            writeBatch
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // ========== Firebase initialize ==========
         const app = initializeApp(firebaseConfig);
@@ -1063,11 +1064,18 @@
             callerID: "1234"
         };
 
-        // ========== closeModal ফাংশন ==========
+        // ========== Global Variables ==========
         window.closeModal = function(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) modal.classList.remove('active');
         };
+
+        let currentPatient = null;
+        let allPatientsWithSamePhone = [];
+        let currentPatientIndex = 0;
+        let allTreatments = [];
+        let currentFilter = 'all';
+        let selectedMessageType = '';
 
         // ========== Loading functions ==========
         function showLoading() {
@@ -1088,19 +1096,7 @@
             }
         }
 
-        // Get patient ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const profileId = urlParams.get('profileId');
-
-        // Global variables
-        let currentPatient = null;
-        let allPatientsWithSamePhone = [];
-        let currentPatientIndex = 0;
-        let allTreatments = [];
-        let currentFilter = 'all';
-        let selectedMessageType = '';
-
-        // Message function
+        // ========== Message function ==========
         function showMessage(msg, type = 'info') {
             const container = document.getElementById('messageContainer');
             if (!container) return;
@@ -1112,7 +1108,7 @@
             setTimeout(() => msgDiv.remove(), 3500);
         }
 
-        // Generate message function
+        // ========== Generate Message ==========
         function generateMessage(type, patientData, treatments) {
             const patientName = patientData?.name || 'ভালোবাসার রোগী';
             
@@ -1205,7 +1201,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             return message;
         }
 
-        // Send Message function
+        // ========== Send Message ==========
         async function sendMessage() {
             if (!currentPatient) {
                 showMessage('রোগী নির্বাচন করা হয়নি', 'error');
@@ -1256,7 +1252,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // ========== পেমেন্ট ফাংশন (আপডেটেড) ==========
+        // ========== পেমেন্ট ফাংশন (সঠিকভাবে কাজ করবে) ==========
         async function processPayment(e) {
             e.preventDefault();
             
@@ -1278,37 +1274,84 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 
                 const patientRef = doc(db, "patients", currentPatient.id);
                 const patientSnap = await getDoc(patientRef);
+                
+                if (!patientSnap.exists()) {
+                    showMessage('রোগীর তথ্য পাওয়া যায়নি', 'error');
+                    return;
+                }
+                
                 const patientData = patientSnap.data();
                 const treatments = patientData.treatments || [];
                 
+                // প্রথমে মোট বকেয়া বের করি
+                let totalDue = 0;
+                const treatmentDetails = treatments.map(t => {
+                    const bill = t.bill || 
+                                (t.problems ? t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
+                    const paid = t.paid || 0;
+                    const discount = t.discount || 0;
+                    const due = Math.max(0, bill - (paid + discount));
+                    
+                    totalDue += due;
+                    
+                    return {
+                        ...t,
+                        calculatedBill: bill,
+                        calculatedDue: due
+                    };
+                });
+                
+                // যদি বকেয়া না থাকে
+                if (totalDue <= 0) {
+                    showMessage('এই রোগীর কোনো বকেয়া নেই!', 'warning');
+                    hideLoading();
+                    closeModal('paymentModal');
+                    return;
+                }
+                
+                // যদি দেওয়া টাকা বকেয়ার চেয়ে বেশি হয়
+                if (amount > totalDue) {
+                    showMessage(`আপনি মোট বকেয়ার চেয়ে বেশি টাকা দিতে চাচ্ছেন! মোট বকেয়া: ৳${totalDue}`, 'error');
+                    hideLoading();
+                    return;
+                }
+                
                 let remainingAmount = amount;
+                
+                // ট্রিটমেন্ট আপডেট করি
                 const updatedTreatments = treatments.map(treatment => {
                     if (remainingAmount <= 0) return treatment;
                     
-                    // বর্তমান বকেয়া বের করি
-                    const currentDue = treatment.due || 0;
+                    // বর্তমান বিল, পেইড, ডিউ হিসাব
+                    const currentBill = treatment.bill || 
+                                       (treatment.problems ? treatment.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
+                    const currentPaid = treatment.paid || 0;
+                    const currentDiscount = treatment.discount || 0;
+                    const currentDue = Math.max(0, currentBill - (currentPaid + currentDiscount));
                     
                     if (currentDue <= 0) return treatment;
                     
-                    const paidAmount = Math.min(remainingAmount, currentDue);
-                    remainingAmount -= paidAmount;
+                    // এই ট্রিটমেন্টের জন্য কত টাকা দেবেন
+                    const paymentForThis = Math.min(remainingAmount, currentDue);
+                    remainingAmount -= paymentForThis;
                     
                     // পেমেন্ট লগ তৈরি
                     const paymentLog = {
-                        amount: paidAmount,
+                        amount: paymentForThis,
                         date: new Date().toLocaleDateString('bn-BD'),
                         time: new Date().toLocaleTimeString('bn-BD'),
-                        notes: notes || 'টাকা জমা'
+                        notes: notes || 'টাকা জমা',
+                        timestamp: new Date().toISOString()
                     };
                     
                     // নতুন পেমেন্ট হিস্টোরি
                     const paymentHistory = [...(treatment.paymentHistory || []), paymentLog];
                     
-                    // নতুন পরিশোধিত টাকা = পুরনো পেইড + নতুন পেমেন্ট
-                    const newPaid = (treatment.paid || 0) + paidAmount;
+                    // নতুন পরিশোধিত টাকা
+                    const newPaid = (treatment.paid || 0) + paymentForThis;
                     
-                    // নতুন বকেয়া = পুরনো বকেয়া - পেমেন্ট
-                    const newDue = Math.max(0, currentDue - paidAmount);
+                    // নতুন বকেয়া
+                    const newDue = Math.max(0, currentBill - (newPaid + (treatment.discount || 0)));
                     
                     return {
                         ...treatment,
@@ -1318,7 +1361,16 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     };
                 });
                 
-                await updateDoc(patientRef, { treatments: updatedTreatments });
+                // ডাটাবেস আপডেট
+                await updateDoc(patientRef, { 
+                    treatments: updatedTreatments,
+                    lastUpdated: new Date().toISOString(),
+                    lastPayment: {
+                        amount: amount,
+                        date: new Date().toISOString(),
+                        notes: notes
+                    }
+                });
                 
                 showMessage(`✅ ৳${amount} জমা হয়েছে`, 'success');
                 closeModal('paymentModal');
@@ -1329,13 +1381,13 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 
             } catch (error) {
                 console.error("Payment error:", error);
-                showMessage('পেমেন্ট নিতে সমস্যা!', 'error');
+                showMessage('পেমেন্ট নিতে সমস্যা! ' + error.message, 'error');
             } finally {
                 hideLoading();
             }
         }
 
-        // ========== ডিসকাউন্ট ফাংশন (আপডেটেড) ==========
+        // ========== ডিসকাউন্ট ফাংশন (সঠিকভাবে কাজ করবে) ==========
         async function applyDiscount(e) {
             e.preventDefault();
             
@@ -1347,38 +1399,66 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 return;
             }
             
-            const treatments = currentPatient.data.treatments || [];
-            if (treatmentIndex >= treatments.length) {
-                showMessage('ভুল চিকিৎসা নির্বাচন', 'error');
-                return;
-            }
-            
-            const treatment = treatments[treatmentIndex];
-            const currentDue = treatment.due || 0;
-            
-            if (discount > currentDue) {
-                showMessage('ডিসকাউন্ট বকেয়ার বেশি হতে পারবে না', 'error');
+            if (!currentPatient) {
+                showMessage('রোগী নির্বাচন করা হয়নি', 'error');
                 return;
             }
             
             try {
+                showLoading();
+                
                 const patientRef = doc(db, "patients", currentPatient.id);
+                const patientSnap = await getDoc(patientRef);
+                
+                if (!patientSnap.exists()) {
+                    showMessage('রোগীর তথ্য পাওয়া যায়নি', 'error');
+                    return;
+                }
+                
+                const patientData = patientSnap.data();
+                const treatments = patientData.treatments || [];
+                
+                if (treatmentIndex >= treatments.length) {
+                    showMessage('ভুল চিকিৎসা নির্বাচন', 'error');
+                    return;
+                }
+                
+                const treatment = treatments[treatmentIndex];
+                
+                // বর্তমান বিল, পেইড, ডিউ হিসাব
+                const currentBill = treatment.bill || 
+                                   (treatment.problems ? treatment.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
+                const currentPaid = treatment.paid || 0;
+                const currentDiscount = treatment.discount || 0;
+                const currentDue = Math.max(0, currentBill - (currentPaid + currentDiscount));
+                
+                if (currentDue <= 0) {
+                    showMessage('এই চিকিৎসার কোনো বকেয়া নেই!', 'warning');
+                    hideLoading();
+                    return;
+                }
+                
+                if (discount > currentDue) {
+                    showMessage(`ডিসকাউন্ট বকেয়ার বেশি হতে পারবে না! বকেয়া: ৳${currentDue}`, 'error');
+                    return;
+                }
                 
                 // ডিসকাউন্ট লগ তৈরি
                 const discountLog = {
                     amount: discount,
                     date: new Date().toLocaleDateString('bn-BD'),
                     time: new Date().toLocaleTimeString('bn-BD'),
-                    type: 'ডিসকাউন্ট'
+                    type: 'ডিসকাউন্ট',
+                    timestamp: new Date().toISOString()
                 };
                 
                 // ডিসকাউন্ট হিস্টোরি
                 const discountHistory = [...(treatment.discountHistory || []), discountLog];
                 
-                // নতুন ডিসকাউন্ট = পুরনো ডিসকাউন্ট + নতুন ডিসকাউন্ট
+                // নতুন ডিসকাউন্ট
                 const newDiscount = (treatment.discount || 0) + discount;
                 
-                // নতুন বকেয়া = পুরনো বকেয়া - ডিসকাউন্ট
+                // নতুন বকেয়া
                 const newDue = currentDue - discount;
                 
                 const updatedTreatments = treatments.map((t, idx) => {
@@ -1393,23 +1473,36 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     return t;
                 });
                 
-                await updateDoc(patientRef, { treatments: updatedTreatments });
+                await updateDoc(patientRef, { 
+                    treatments: updatedTreatments,
+                    lastUpdated: new Date().toISOString()
+                });
                 
                 showMessage(`✅ ৳${discount} ডিসকাউন্ট দেওয়া হয়েছে`, 'success');
                 closeModal('discountModal');
                 document.getElementById('discountAmount').value = '';
+                document.getElementById('treatmentSelect').value = '';
+                
+                // রিলোড পেশেন্ট ডাটা
                 await loadPatientsByPhone(currentPatient.data.phone, currentPatient.id);
                 
             } catch (error) {
                 console.error("Discount error:", error);
-                showMessage('ডিসকাউন্ট দিতে সমস্যা!', 'error');
+                showMessage('ডিসকাউন্ট দিতে সমস্যা! ' + error.message, 'error');
+            } finally {
+                hideLoading();
             }
         }
 
-        // Load patients by phone
+        // ========== ফোন নম্বর দিয়ে রোগী লোড ==========
         async function loadPatientsByPhone(phone, selectedProfileId = null) {
             try {
                 showLoading();
+                
+                if (!phone) {
+                    showMessage('ফোন নম্বর নেই!', 'error');
+                    return;
+                }
                 
                 const q = query(collection(db, "patients"), where("phone", "==", phone));
                 const snapshot = await getDocs(q);
@@ -1425,38 +1518,46 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     return;
                 }
                 
-                // Sort by latest treatment
+                // সর্বশেষ ট্রিটমেন্ট অনুযায়ী সাজাই
                 allPatientsWithSamePhone.sort((a, b) => {
-                    const aDate = a.data.treatments?.[a.data.treatments.length-1]?.timestamp || a.data.createdAt || 0;
-                    const bDate = b.data.treatments?.[b.data.treatments.length-1]?.timestamp || b.data.createdAt || 0;
-                    return new Date(bDate) - new Date(aDate);
+                    const aTreatments = a.data.treatments || [];
+                    const bTreatments = b.data.treatments || [];
+                    
+                    const aLastDate = aTreatments.length > 0 ? 
+                        (aTreatments[aTreatments.length-1].timestamp || aTreatments[aTreatments.length-1].date || 0) : 0;
+                    const bLastDate = bTreatments.length > 0 ? 
+                        (bTreatments[bTreatments.length-1].timestamp || bTreatments[bTreatments.length-1].date || 0) : 0;
+                    
+                    return new Date(bLastDate) - new Date(aLastDate);
                 });
                 
                 if (selectedProfileId) {
-                    currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === selectedProfileId);
+                    const index = allPatientsWithSamePhone.findIndex(p => p.id === selectedProfileId);
+                    if (index !== -1) currentPatientIndex = index;
+                    else currentPatientIndex = 0;
+                } else {
+                    currentPatientIndex = 0;
                 }
-                if (currentPatientIndex === -1) currentPatientIndex = 0;
                 
                 await loadCurrentPatient();
                 updatePatientSwitcher();
                 
-                hideLoading();
-                
             } catch (error) {
                 console.error("Load patients error:", error);
-                showMessage("রোগী লোড করতে সমস্যা!", "error");
+                showMessage("রোগী লোড করতে সমস্যা! " + error.message, "error");
+            } finally {
                 hideLoading();
             }
         }
 
-        // Load current patient
+        // ========== বর্তমান রোগী লোড ==========
         async function loadCurrentPatient() {
             if (!allPatientsWithSamePhone.length) return;
             currentPatient = allPatientsWithSamePhone[currentPatientIndex];
             displayPatientData(currentPatient.data);
         }
 
-        // ========== Display patient data (আপডেটেড) ==========
+        // ========== পেশেন্ট ডাটা ডিসপ্লে (সঠিকভাবে কাজ করবে) ==========
         function displayPatientData(data) {
             document.getElementById('patientName').textContent = data.name || '—';
             document.getElementById('patientPhone').textContent = `মোবাইল: ${data.phone || '—'}`;
@@ -1465,13 +1566,13 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             
             let totalBill = 0, totalPaid = 0, totalDue = 0;
             
-            allTreatments = (data.treatments || []).map(t => {
+            allTreatments = (data.treatments || []).map((t, originalIndex) => {
                 // বিল ক্যালকুলেশন
                 let bill = 0;
                 if (t.problems && t.problems.length) {
                     bill = t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0);
                 } else {
-                    bill = parseFloat(t.netBill || t.total || t.bill || 0);
+                    bill = parseFloat(t.bill || t.netBill || t.total || 0);
                 }
                 
                 // পরিশোধিত টাকা
@@ -1480,8 +1581,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 // ডিসকাউন্ট
                 const discount = parseFloat(t.discount || 0);
                 
-                // বকেয়া = বিল - (পেইড + ডিসকাউন্ট)
-                const due = parseFloat(t.due || Math.max(0, bill - (paid + discount)));
+                // বকেয়া
+                const due = Math.max(0, bill - (paid + discount));
                 
                 const hasCrown = t.problems?.some(p => p.crownType) || t.crownType ? true : false;
                 
@@ -1491,6 +1592,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 
                 return { 
                     ...t, 
+                    originalIndex: originalIndex,
                     bill, 
                     paid, 
                     due, 
@@ -1498,7 +1600,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     isPaid: due <= 0,
                     hasCrown
                 };
-            }).reverse();
+            }).reverse(); // নতুনগুলো আগে দেখানোর জন্য রিভার্স
             
             document.getElementById('totalBill').textContent = `৳${totalBill}`;
             document.getElementById('totalPaid').textContent = `৳${totalPaid}`;
@@ -1511,7 +1613,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             populateTreatmentSelect();
         }
 
-        // Update treatment history
+        // ========== চিকিৎসার ইতিহাস আপডেট ==========
         function updateTreatmentHistory() {
             let filtered = allTreatments;
             
@@ -1561,17 +1663,17 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                             `).join('')}
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                            <span>জমা: ৳${t.paid}</span>
-                            <span>ডিসকাউন্ট: ৳${t.discount || 0}</span>
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; padding: 0 5px;">
+                            <span><strong>জমা:</strong> ৳${t.paid}</span>
+                            <span><strong>ডিসকাউন্ট:</strong> ৳${t.discount || 0}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-weight: bold;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px; padding: 0 5px; font-weight: bold;">
                             <span style="color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'};">বকেয়া: ৳${t.due}</span>
                         </div>
                         
                         ${t.paymentHistory?.length ? `
                             <div class="payment-log">
-                                <div style="font-weight:600; margin-bottom:8px;">পেমেন্ট লগ:</div>
+                                <div style="font-weight:600; margin-bottom:8px;">📝 পেমেন্ট লগ:</div>
                                 ${t.paymentHistory.map(log => `
                                     <div class="log-item">
                                         <span>${log.time || log.date}</span>
@@ -1583,7 +1685,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                         
                         ${t.discountHistory?.length ? `
                             <div class="payment-log" style="background: var(--warning-light);">
-                                <div style="font-weight:600; margin-bottom:8px;">ডিসকাউন্ট লগ:</div>
+                                <div style="font-weight:600; margin-bottom:8px;">🏷️ ডিসকাউন্ট লগ:</div>
                                 ${t.discountHistory.map(log => `
                                     <div class="log-item">
                                         <span>${log.time || log.date}</span>
@@ -1599,7 +1701,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             container.innerHTML = html;
         }
 
-        // Update patient switcher
+        // ========== পেশেন্ট স্যুইচার আপডেট ==========
         function updatePatientSwitcher() {
             const switcher = document.getElementById('patientSwitcher');
             if (allPatientsWithSamePhone.length > 1) {
@@ -1610,7 +1712,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // Load monthly stats
+        // ========== মাসিক পরিসংখ্যান লোড ==========
         async function loadMonthlyStats() {
             try {
                 const snapshot = await getDocs(collection(db, "patients"));
@@ -1635,7 +1737,10 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                                 }
                                 
                                 months[monthKey].patients++;
-                                months[monthKey].bill += parseFloat(t.netBill || t.total || t.bill || 0);
+                                
+                                const bill = t.bill || 
+                                           (t.problems ? t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
+                                months[monthKey].bill += bill;
                             }
                         }
                     });
@@ -1661,25 +1766,96 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // Populate treatment select for discount
+        // ========== ডিসকাউন্টের জন্য ট্রিটমেন্ট সিলেক্ট ==========
         function populateTreatmentSelect() {
             const select = document.getElementById('treatmentSelect');
             if (!select) return;
             
             select.innerHTML = '<option value="">নির্বাচন করুন</option>';
             
-            allTreatments.forEach((t, index) => {
-                if (t.due > 0) {
-                    const option = document.createElement('option');
-                    option.value = index;
-                    option.textContent = `${t.date || 'তারিখ নেই'} - বকেয়া: ৳${t.due}`;
-                    select.appendChild(option);
-                }
+            // অরিজিনাল ইনডেক্স ব্যবহার করি
+            const treatmentsWithDue = allTreatments.filter(t => t.due > 0);
+            
+            treatmentsWithDue.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.originalIndex; // অরিজিনাল ইনডেক্স ব্যবহার
+                option.textContent = `${t.date || 'তারিখ নেই'} - বকেয়া: ৳${t.due}`;
+                select.appendChild(option);
             });
+            
+            if (treatmentsWithDue.length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "কোনো বকেয়া নেই";
+                option.disabled = true;
+                select.appendChild(option);
+            }
         }
 
-        // Initialize function
+        // ========== সার্চ ফাংশন ==========
+        async function searchPatient() {
+            const phone = document.getElementById('searchPhone').value.trim();
+            
+            if (!phone) {
+                showMessage('মোবাইল নম্বর দিন', 'warning');
+                return;
+            }
+            
+            try {
+                showLoading();
+                
+                const q = query(collection(db, "patients"), where("phone", "==", phone));
+                const snapshot = await getDocs(q);
+                
+                const results = [];
+                snapshot.forEach(doc => {
+                    results.push({ id: doc.id, data: doc.data() });
+                });
+                
+                const resultDiv = document.getElementById('searchResult');
+                
+                if (results.length === 0) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = `
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 18px;">
+                            <p><i class="fas fa-exclamation-triangle" style="color: #856404;"></i> এই নম্বরে কোনো রোগী নেই</p>
+                            <button class="btn btn-primary" style="margin-top: 10px;" onclick="window.location.href='amarghor.html?phone=${phone}'">
+                                <i class="fas fa-plus"></i> নতুন রোগী যোগ করুন
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.style.display = 'block';
+                    let html = '<div style="background: #d4edda; padding: 15px; border-radius: 18px;">';
+                    html += `<p><i class="fas fa-check-circle" style="color: #155724;"></i> ${results.length} জন রোগী পাওয়া গেছে</p>`;
+                    
+                    results.forEach(r => {
+                        html += `
+                            <div style="background: white; padding: 10px; border-radius: 12px; margin-top: 10px; cursor: pointer;" 
+                                 onclick="window.location.href='profile.html?profileId=${r.id}'">
+                                <strong>${r.data.name}</strong><br>
+                                <small>📞 ${r.data.phone} | 🏠 ${r.data.address || '—'}</small>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    resultDiv.innerHTML = html;
+                }
+                
+            } catch (error) {
+                console.error("Search error:", error);
+                showMessage('খুঁজতে সমস্যা!', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // ========== ইনিশিয়ালাইজ ==========
         async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const profileId = urlParams.get('profileId');
+            
             if (!profileId) {
                 window.location.href = "amarghor.html";
                 return;
@@ -1694,25 +1870,25 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     await loadPatientsByPhone(data.phone, profileId);
                 } else {
                     showMessage("রোগী পাওয়া যায়নি!", "error");
+                    setTimeout(() => {
+                        window.location.href = "amarghor.html";
+                    }, 2000);
                 }
             } catch (error) {
                 console.error("Init error:", error);
-                showMessage("লোড করতে সমস্যা!", "error");
+                showMessage("লোড করতে সমস্যা! " + error.message, "error");
             }
         }
 
-        // Event Listeners
+        // ========== সব ইভেন্ট লিসেনার ==========
         document.addEventListener('DOMContentLoaded', () => {
-            // Navigation
+            // নেভিগেশন
             document.getElementById('backBtn')?.addEventListener('click', () => window.history.back());
             document.getElementById('homeBtn')?.addEventListener('click', () => window.location.href = 'amarghor.html');
             
-            // Add payment button
+            // পেমেন্ট বাটন
             document.getElementById('addPaymentBtn')?.addEventListener('click', () => {
-                const totalDueElement = document.getElementById('totalDue');
-                if (!totalDueElement) return;
-                
-                const totalDueText = totalDueElement.textContent.replace('৳', '');
+                const totalDueText = document.getElementById('totalDue').textContent.replace('৳', '');
                 const totalDue = parseFloat(totalDueText) || 0;
                 
                 if (totalDue <= 0) {
@@ -1724,22 +1900,24 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 document.getElementById('paymentModal')?.classList.add('active');
             });
             
-            // Payment form submit
+            // পেমেন্ট ফর্ম সাবমিট
             document.getElementById('paymentForm')?.addEventListener('submit', processPayment);
             
-            // Discount button
+            // ডিসকাউন্ট বাটন
             document.getElementById('discountBtn')?.addEventListener('click', () => {
-                if (allTreatments.some(t => t.due > 0)) {
+                const hasDue = allTreatments.some(t => t.due > 0);
+                if (hasDue) {
+                    populateTreatmentSelect();
                     document.getElementById('discountModal')?.classList.add('active');
                 } else {
                     showMessage('কোনো বকেয়া নেই!', 'warning');
                 }
             });
-
-            // Discount form submit
+            
+            // ডিসকাউন্ট ফর্ম সাবমিট
             document.getElementById('discountForm')?.addEventListener('submit', applyDiscount);
-
-            // Add treatment
+            
+            // নতুন চিকিৎসা যোগ
             document.getElementById('addTreatmentBtn')?.addEventListener('click', () => {
                 if (currentPatient) {
                     const patientData = currentPatient.data;
@@ -1748,19 +1926,19 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                         phone: patientData.phone || '',
                         address: patientData.address || '',
                         age: patientData.age || '',
-                        fromProfile: profileId
+                        fromProfile: currentPatient.id
                     });
                     
                     window.location.href = `amarghor.html?${params.toString()}`;
                 }
             });
-
-            // Edit patient
+            
+            // রোগী তথ্য সম্পাদনা
             document.getElementById('editPatientBtn')?.addEventListener('click', () => {
                 if (currentPatient) {
                     const patientData = currentPatient.data;
                     const params = new URLSearchParams({
-                        edit: profileId,
+                        edit: currentPatient.id,
                         name: patientData.name || '',
                         phone: patientData.phone || '',
                         address: patientData.address || '',
@@ -1770,8 +1948,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     window.location.href = `amarghor.html?${params.toString()}`;
                 }
             });
-
-            // Message Modal
+            
+            // মেসেজ মডাল
             document.getElementById('openMessageModalBtn')?.addEventListener('click', () => {
                 const modal = document.getElementById('messageModal');
                 if (!modal) return;
@@ -1795,8 +1973,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
 ৩. বকেয়া টাকার তথ্য`;
                 }
             });
-
-            // Message Options
+            
+            // মেসেজ অপশন
             document.querySelectorAll('.message-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.message-option').forEach(opt => opt.classList.remove('selected'));
@@ -1809,11 +1987,11 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     }
                 });
             });
-
-            // Send Message
-           document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
             
-            // Filter tabs
+            // মেসেজ পাঠান
+            document.getElementById('sendMessageBtn')?.addEventListener('click', sendMessage);
+            
+            // ফিল্টার ট্যাব
             document.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -1823,16 +2001,49 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 });
             });
             
-            // Toggle monthly stats
+            // মাসিক পরিসংখ্যান টগল
             document.getElementById('toggleMonthlyStats')?.addEventListener('click', () => {
                 document.getElementById('monthlyContent')?.classList.toggle('active');
                 const icon = document.getElementById('toggleIcon');
-                if (icon) icon.classList.toggle('fa-chevron-down');
-                if (icon) icon.classList.toggle('fa-chevron-up');
+                if (icon) {
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                }
+            });
+            
+            // পেশেন্ট স্যুইচার
+            document.getElementById('switchPatientBtn')?.addEventListener('click', () => {
+                if (allPatientsWithSamePhone.length > 1) {
+                    currentPatientIndex = (currentPatientIndex + 1) % allPatientsWithSamePhone.length;
+                    loadCurrentPatient();
+                    updatePatientSwitcher();
+                    
+                    // ইউআরএল আপডেট
+                    const url = new URL(window.location);
+                    url.searchParams.set('profileId', allPatientsWithSamePhone[currentPatientIndex].id);
+                    window.history.pushState({}, '', url);
+                }
+            });
+            
+            // সার্চ বাটন
+            document.getElementById('searchBtn')?.addEventListener('click', searchPatient);
+            
+            // সার্চ ইনপুটে এন্টার চাপলে
+            document.getElementById('searchPhone')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchPatient();
+                }
+            });
+            
+            // নেভিগেশন সার্চ
+            document.getElementById('searchNav')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('.search-section').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('searchPhone').focus();
             });
         });
 
-        // Auth check
+        // ========== অথ চেক ==========
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "log.html";
@@ -1843,4 +2054,3 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
     </script>
 </body>
 </html>
-
