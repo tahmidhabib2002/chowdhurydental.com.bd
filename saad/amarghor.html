@@ -1003,23 +1003,24 @@
         </a>
     </nav>
 
-    <script type="module">
+ <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-     import { 
-    getFirestore,
-    collection, 
-    doc, 
-    setDoc, 
-    getDoc, 
-    getDocs,
-    updateDoc, 
-    arrayUnion,
-    query,
-    orderBy,
-    limit,
-    where
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { 
+            getFirestore,
+            collection, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            getDocs,
+            updateDoc, 
+            arrayUnion,
+            query,
+            orderBy,
+            limit,
+            where
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
         // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
@@ -1030,12 +1031,12 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-        // Initialize Firebase - শুধু একবার
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);  // শুধু getFirestore ব্যবহার করুন
+        const db = getFirestore(app);
 
-        // ========== FIX 1: Global functions ==========
+        // ========== Global Functions ==========
         window.closeModal = function(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) modal.classList.remove('active');
@@ -1050,12 +1051,16 @@
             }
         };
 
-        // Loading
+        // ========== Loading Functions ==========
         const loadingOverlay = document.getElementById('loadingOverlay');
-        function showLoading() { loadingOverlay.classList.add('active'); }
-        function hideLoading() { loadingOverlay.classList.remove('active'); }
+        function showLoading() { 
+            if (loadingOverlay) loadingOverlay.classList.add('active'); 
+        }
+        function hideLoading() { 
+            if (loadingOverlay) loadingOverlay.classList.remove('active'); 
+        }
 
-        // Message
+        // ========== Message Function ==========
         function showMessage(msg, type) {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message-box message-${type}`;
@@ -1064,7 +1069,7 @@
             setTimeout(() => msgDiv.remove(), 3500);
         }
 
-        // Auth check
+        // ========== Auth Check ==========
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "log.html";
@@ -1073,7 +1078,7 @@
             }
         });
 
-        // Main initialization
+        // ========== Main Initialization ==========
         async function initApp() {
             try {
                 showLoading();
@@ -1090,8 +1095,8 @@
             }
         }
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
+        // ========== Logout ==========
+        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
             if (confirm('লগ আউট করবেন?')) {
                 try {
                     await signOut(auth);
@@ -1102,7 +1107,7 @@
             }
         });
 
-        // URL params check
+        // ========== URL Params Check ==========
         function checkUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
             
@@ -1146,7 +1151,7 @@
             }
         }
 
-        // Navigation
+        // ========== Navigation ==========
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1173,16 +1178,16 @@
             });
         });
 
-        // Action Buttons
-        document.getElementById('newPatientBtn').addEventListener('click', () => {
+        // ========== Action Buttons ==========
+        document.getElementById('newPatientBtn')?.addEventListener('click', () => {
             document.querySelector('[data-section="new"]').click();
         });
 
-        document.getElementById('patientListBtn').addEventListener('click', openPatientListModal);
-        document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
-        document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
+        document.getElementById('patientListBtn')?.addEventListener('click', openPatientListModal);
+        document.getElementById('patientHistoryBtn')?.addEventListener('click', openHistoryModal);
+        document.getElementById('phoneNumbersBtn')?.addEventListener('click', openNumbersModal);
 
-        // ========== FIX 2: patients কালেকশন থেকে ডেটা লোড করুন ==========
+        // ========== ফিক্স 1: সঠিক ডিউ ক্যালকুলেশন সহ রোগী তালিকা ==========
         async function openPatientListModal() {
             const modal = document.getElementById('patientListModal');
             const container = document.getElementById('patientListContainer');
@@ -1190,27 +1195,62 @@
             showLoading();
             
             try {
-                // সরাসরি patients কালেকশন থেকে ডেটা নিন
-                const snapshot = await getDocs(collection(db, "patients"));
+                const q = query(collection(db, "patients"), orderBy("lastUpdated", "desc"));
+                const snapshot = await getDocs(q);
                 let html = '';
                 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const lastTreat = data.treatments?.[data.treatments.length - 1];
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
+                    const treatments = data.treatments || [];
+                    
+                    // সঠিক ডিউ ক্যালকুলেশন
+                    let totalDue = 0;
+                    let lastDate = '';
+                    
+                    treatments.forEach(t => {
+                        const problems = t.problems || [];
+                        let treatmentBill = 0;
+                        let treatmentPaid = 0;
+                        let treatmentDiscount = 0;
+                        
+                        problems.forEach(p => {
+                            treatmentBill += parseFloat(p.totalCost || p.cost || 0) || 0;
+                        });
+                        
+                        // পেমেন্ট হিস্টোরি থেকে পেইড ক্যালকুলেট
+                        if (t.paymentHistory && t.paymentHistory.length) {
+                            treatmentPaid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                        } else {
+                            treatmentPaid = parseFloat(t.totalPaid || 0);
+                        }
+                        
+                        treatmentDiscount = parseFloat(t.totalDiscount || 0);
+                        
+                        const due = Math.max(0, treatmentBill - (treatmentPaid + treatmentDiscount));
+                        totalDue += due;
+                        
+                        if (t.date && (!lastDate || new Date(t.date) > new Date(lastDate))) {
+                            lastDate = t.date;
+                        }
+                    });
                     
                     html += `
-                        <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${doc.id}'">
+                        <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${docSnap.id}'">
                             <div style="font-weight:700; margin-bottom:5px;">${data.name || 'অজানা'}</div>
                             <div style="color:var(--primary); margin-bottom:3px;">${data.phone || 'নেই'}</div>
                             <div style="font-size:0.8rem; color:var(--gray);">
-                                সর্বশেষ: ${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳ ${lastTreat?.totalDue || 0}
+                                সর্বশেষ: ${lastDate || 'তারিখ নেই'} | 
+                                <span style="color: ${totalDue > 0 ? 'var(--danger)' : 'var(--success)'}; font-weight:600;">
+                                    বকেয়া: ৳${totalDue}
+                                </span>
                             </div>
                         </div>
                     `;
-                });
+                }
                 
                 container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
                 
+                // সার্চ ফাংশন
                 document.getElementById('searchPatient').oninput = (e) => {
                     const search = e.target.value.toLowerCase();
                     document.querySelectorAll('#patientListContainer .patient-option').forEach(opt => {
@@ -1227,7 +1267,7 @@
             }
         }
 
-        // ========== FIX 3: history patients কালেকশন থেকে লোড করুন ==========
+        // ========== ফিক্স 2: সঠিক ডিউ সহ চিকিৎসার ইতিহাস ==========
         async function openHistoryModal() {
             const modal = document.getElementById('historyModal');
             const container = document.getElementById('historyList');
@@ -1235,27 +1275,49 @@
             showLoading();
             
             try {
-                const snapshot = await getDocs(collection(db, "patients"));
+                const q = query(collection(db, "patients"), orderBy("lastUpdated", "desc"));
+                const snapshot = await getDocs(q);
                 let html = '';
                 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
                     const treatments = data.treatments || [];
                     
-                    treatments.forEach((t) => {
+                    treatments.forEach((t, index) => {
+                        // প্রতিটি চিকিৎসার জন্য ডিউ ক্যালকুলেট
+                        const problems = t.problems || [];
+                        let treatmentBill = 0;
+                        problems.forEach(p => {
+                            treatmentBill += parseFloat(p.totalCost || p.cost || 0) || 0;
+                        });
+                        
+                        let treatmentPaid = 0;
+                        if (t.paymentHistory && t.paymentHistory.length) {
+                            treatmentPaid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                        } else {
+                            treatmentPaid = parseFloat(t.totalPaid || 0);
+                        }
+                        
+                        const treatmentDiscount = parseFloat(t.totalDiscount || 0);
+                        const due = Math.max(0, treatmentBill - (treatmentPaid + treatmentDiscount));
+                        
                         html += `
-                            <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${doc.id}'">
+                            <div class="patient-option" onclick="window.location.href='rugipro.html?profileId=${docSnap.id}'">
                                 <div style="font-weight:700;">${data.name || 'অজানা'}</div>
                                 <div style="color:var(--primary); font-size:0.85rem;">${data.phone || 'নেই'}</div>
                                 <div style="margin:8px 0; padding:8px; background:#f0f0f0; border-radius:10px;">
-                                    <div>📋 ${t.problems?.[0]?.problem || 'চিকিৎসা'}</div>
-                                    <div>💰 বিল: ৳${t.netBill || 0} | বকেয়া: ৳${t.totalDue || 0}</div>
+                                    <div>📋 ${t.problems?.[0]?.problem || 'চিকিৎসা'} ${t.problems?.length > 1 ? `+${t.problems.length-1}` : ''}</div>
+                                    <div>💰 বিল: ৳${treatmentBill} | 
+                                        <span style="color: ${due > 0 ? 'var(--danger)' : 'var(--success)'};">
+                                            বকেয়া: ৳${due}
+                                        </span>
+                                    </div>
                                     <div style="font-size:0.75rem;">📅 ${t.date || ''}</div>
                                 </div>
                             </div>
                         `;
                     });
-                });
+                }
                 
                 container.innerHTML = html || '<div class="empty-state">কোনো ইতিহাস নেই</div>';
                 
@@ -1275,7 +1337,7 @@
             }
         }
 
-        // ========== FIX 4: numbers patients কালেকশন থেকে লোড করুন ==========
+        // ========== ফিক্স 3: ফোন নাম্বার লিস্ট ==========
         async function openNumbersModal() {
             const modal = document.getElementById('numbersModal');
             const container = document.getElementById('numbersList');
@@ -1284,11 +1346,17 @@
             
             try {
                 const snapshot = await getDocs(collection(db, "patients"));
-                const phones = new Set();  // ইউনিক ফোন নাম্বার রাখতে
+                const phones = new Set();
                 
                 snapshot.forEach(doc => {
                     const phone = doc.data().phone;
-                    if (phone && phone !== '—') phones.add(phone);
+                    if (phone && phone !== '—' && phone !== 'নেই') {
+                        // ফোন নাম্বার ফরম্যাট চেক
+                        const cleanPhone = phone.replace(/\D/g, '');
+                        if (cleanPhone.length >= 11) {
+                            phones.add(phone);
+                        }
+                    }
                 });
                 
                 const numbers = Array.from(phones).sort();
@@ -1305,7 +1373,7 @@
                 
                 document.getElementById('copyAllNumbers').onclick = async () => {
                     try {
-                        const allNumbers = numbers.join(', ');
+                        const allNumbers = numbers.join('\n');
                         await navigator.clipboard.writeText(allNumbers);
                         showMessage(`${numbers.length}টি নাম্বার কপি হয়েছে`, 'success');
                     } catch (err) {
@@ -1321,7 +1389,7 @@
             }
         }
 
-        // ========== FIX 5: Recent patients patients কালেকশন থেকে লোড করুন ==========
+        // ========== ফিক্স 4: সর্বশেষ রোগী (সঠিক ডিউ সহ) ==========
         async function loadRecentPatients() {
             const container = document.getElementById('recentPatientsList');
             
@@ -1338,31 +1406,63 @@
                 let html = '';
                 let firstPatient = null;
                 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                for (const docSnap of snapshot.docs) {
+                    const data = docSnap.data();
                     const name = data.name || 'অজানা';
                     const phone = data.phone || '—';
+                    const treatments = data.treatments || [];
+                    
+                    // সর্বশেষ চিকিৎসার ডিউ ক্যালকুলেট
+                    let totalDue = 0;
+                    let lastDate = '';
+                    
+                    treatments.forEach(t => {
+                        const problems = t.problems || [];
+                        let treatmentBill = 0;
+                        problems.forEach(p => {
+                            treatmentBill += parseFloat(p.totalCost || p.cost || 0) || 0;
+                        });
+                        
+                        let treatmentPaid = 0;
+                        if (t.paymentHistory && t.paymentHistory.length) {
+                            treatmentPaid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                        } else {
+                            treatmentPaid = parseFloat(t.totalPaid || 0);
+                        }
+                        
+                        const treatmentDiscount = parseFloat(t.totalDiscount || 0);
+                        const due = Math.max(0, treatmentBill - (treatmentPaid + treatmentDiscount));
+                        totalDue += due;
+                        
+                        if (t.date && (!lastDate || new Date(t.date) > new Date(lastDate))) {
+                            lastDate = t.date;
+                        }
+                    });
                     
                     if (!firstPatient) {
-                        firstPatient = { name, phone, id: doc.id };
+                        firstPatient = { name, phone, id: docSnap.id };
                     }
                     
-                    const lastTreat = data.treatments?.[data.treatments.length - 1];
-                    
                     html += `
-                        <div class="recent-item" onclick="window.location.href='rugipro.html?profileId=${doc.id}'">
+                        <div class="recent-item" onclick="window.location.href='rugipro.html?profileId=${docSnap.id}'">
                             <div class="recent-avatar"><i class="fas fa-user"></i></div>
                             <div class="recent-info">
                                 <div class="recent-name">${name}</div>
                                 <div class="recent-phone">${phone}</div>
-                                <div class="recent-date">${lastTreat?.date || 'তারিখ নেই'} | বকেয়া: ৳${lastTreat?.totalDue || 0}</div>
+                                <div class="recent-date">
+                                    📅 ${lastDate || 'তারিখ নেই'} | 
+                                    <span style="color: ${totalDue > 0 ? 'var(--danger)' : 'var(--success)'};">
+                                        বকেয়া: ৳${totalDue}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     `;
-                });
+                }
                 
-                container.innerHTML = html || '<div class="empty-state">কোনো রোগী নেই</div>';
+                container.innerHTML = html;
                 
+                // FAB মেনু আপডেট
                 const fabMenu = document.getElementById('fabMenu');
                 if (firstPatient) {
                     fabMenu.style.display = 'flex';
@@ -1381,20 +1481,35 @@
             }
         }
 
-        // Load Dashboard Stats
+        // ========== ড্যাশবোর্ড স্ট্যাটস ==========
         async function loadDashboardStats() {
             try {
                 const snapshot = await getDocs(collection(db, "patients"));
                 let totalPatients = 0;
                 let totalBill = 0;
+                let totalPaid = 0;
                 
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    if (data.treatments) {
-                        data.treatments.forEach(t => {
-                            totalBill += t.netBill || 0;
+                    const treatments = data.treatments || [];
+                    
+                    treatments.forEach(t => {
+                        // বিল ক্যালকুলেট
+                        const problems = t.problems || [];
+                        let treatmentBill = 0;
+                        problems.forEach(p => {
+                            treatmentBill += parseFloat(p.totalCost || p.cost || 0) || 0;
                         });
-                    }
+                        totalBill += treatmentBill;
+                        
+                        // পেমেন্ট ক্যালকুলেট
+                        if (t.paymentHistory && t.paymentHistory.length) {
+                            totalPaid += t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                        } else {
+                            totalPaid += parseFloat(t.totalPaid || 0);
+                        }
+                    });
+                    
                     totalPatients++;
                 });
                 
@@ -1406,7 +1521,9 @@
             }
         }
 
-        // Problem management functions
+        // ========== Problem Management Functions ==========
+        let problemCount = 1;
+
         function updateProblemBadges() {
             document.querySelectorAll('.problem-item').forEach((item, index) => {
                 const badge = item.querySelector('.problem-badge');
@@ -1423,7 +1540,8 @@
                     const crownSection = this.closest('.crown-options');
                     shadeGrid.querySelectorAll('.shade-item').forEach(s => s.classList.remove('active'));
                     this.classList.add('active');
-                    crownSection.querySelector('.crown-shade').value = this.dataset.shade;
+                    const shadeInput = crownSection.querySelector('.crown-shade');
+                    if (shadeInput) shadeInput.value = this.dataset.shade;
                 });
             });
         }
@@ -1448,10 +1566,8 @@
             crownDiv.classList.toggle('active', e.target.value === 'ডেন্টাল ক্রাউন');
         }
 
-        // Multiple Problems Management
-        let problemCount = 1;
-
-        document.getElementById('addProblemBtn').addEventListener('click', () => {
+        // Add Problem Button
+        document.getElementById('addProblemBtn')?.addEventListener('click', () => {
             const template = document.getElementById('problemTemplate');
             const clone = template.cloneNode(true);
             problemCount++;
@@ -1489,6 +1605,7 @@
             calculateTotals();
         });
 
+        // Initialize first problem
         attachShadeListeners(document);
         attachCalculationListeners(document);
         attachCrownToggle(document);
@@ -1498,7 +1615,7 @@
             firstRemoveBtn.style.display = 'none';
         }
 
-        // Calculate Totals
+        // ========== Calculate Totals ==========
         function calculateTotals() {
             const problems = document.querySelectorAll('.problem-item');
             let totalBill = 0, totalDiscount = 0, totalPaid = 0;
@@ -1530,7 +1647,7 @@
             document.getElementById('totalDue').innerHTML = `৳ ${due}`;
         }
 
-        // Reset Form
+        // ========== Reset Form ==========
         function resetForm() {
             document.getElementById('patientName').value = '';
             document.getElementById('patientPhone').value = '';
@@ -1568,8 +1685,8 @@
             document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> রোগীর তথ্য সংরক্ষণ করুন';
         }
 
-        // Form Submit
-        document.getElementById('patientForm').addEventListener('submit', async (e) => {
+        // ========== Form Submit ==========
+        document.getElementById('patientForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
@@ -1647,7 +1764,9 @@
                 totalDiscount: totalDiscount,
                 netBill: netBill,
                 totalPaid: totalPaid,
-                totalDue: due
+                totalDue: due,
+                paymentHistory: [], // পেমেন্ট হিস্টোরি শুরু
+                discountHistory: [] // ডিসকাউন্ট হিস্টোরি শুরু
             };
             
             showLoading();
@@ -1661,17 +1780,21 @@
                     const patientSnap = await getDoc(patientRef);
                     
                     if (patientSnap.exists()) {
+                        const existingData = patientSnap.data();
+                        const existingTreatments = existingData.treatments || [];
+                        
                         await updateDoc(patientRef, {
                             name: name,
                             phone: phone,
                             age: document.getElementById('patientAge').value,
                             address: document.getElementById('patientAddress').value,
+                            treatments: [...existingTreatments, treatment],
                             lastUpdated: now.toISOString()
                         });
                         
                         hideLoading();
                         submitBtn.classList.remove('loading');
-                        showMessage('✅ রোগীর তথ্য আপডেট হয়েছে!', 'success');
+                        showMessage('✅ নতুন চিকিৎসা যোগ হয়েছে!', 'success');
                         
                         window.location.href = `rugipro.html?profileId=${editId}`;
                         return;
@@ -1683,10 +1806,12 @@
                 
                 const patientSnap = await getDoc(patientRef);
                 if (patientSnap.exists()) {
+                    const existingData = patientSnap.data();
+                    const existingTreatments = existingData.treatments || [];
+                    
                     await updateDoc(patientRef, {
-                        treatments: arrayUnion(treatment),
-                        lastUpdated: now.toISOString(),
-                        lastTreatment: treatment
+                        treatments: [...existingTreatments, treatment],
+                        lastUpdated: now.toISOString()
                     });
                     
                     hideLoading();
@@ -1706,8 +1831,7 @@
                         address: document.getElementById('patientAddress').value,
                         treatments: [treatment],
                         createdAt: now.toISOString(),
-                        lastUpdated: now.toISOString(),
-                        lastTreatment: treatment
+                        lastUpdated: now.toISOString()
                     });
                     
                     hideLoading();
@@ -1732,6 +1856,6 @@
         window.openPatientListModal = openPatientListModal;
         window.openHistoryModal = openHistoryModal;
         window.openNumbersModal = openNumbersModal;
-    </script>
+</script>
 </body>
 </html>
