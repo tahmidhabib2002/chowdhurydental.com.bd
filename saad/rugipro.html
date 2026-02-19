@@ -1032,8 +1032,8 @@
         <a href="amarghor.html?new=true" class="nav-item"><i class="fas fa-plus-circle nav-icon"></i><span>নতুন</span></a>
         <a href="#" class="nav-item" id="searchNav"><i class="fas fa-search nav-icon"></i><span>খুঁজুন</span></a>
     </nav>
-    
-<script type="module">
+   
+   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
@@ -1252,7 +1252,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // ========== পেমেন্ট ফাংশন (সঠিকভাবে কাজ করবে) ==========
+        // ========== পেমেন্ট ফাংশন (সম্পূর্ণ ঠিক করা) ==========
         async function processPayment(e) {
             e.preventDefault();
             
@@ -1283,22 +1283,30 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 const patientData = patientSnap.data();
                 const treatments = patientData.treatments || [];
                 
-                // প্রথমে মোট বকেয়া বের করি
+                // প্রথমে মোট বকেয়া বের করি (পেমেন্ট হিস্টোরি থেকে ক্যালকুলেট করে)
                 let totalDue = 0;
-                const treatmentDetails = treatments.map(t => {
+                treatments.forEach(t => {
                     const bill = t.bill || 
-                                (t.problems ? t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
-                    const paid = t.paid || 0;
-                    const discount = t.discount || 0;
+                               (t.problems ? t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
+                    
+                    // পেমেন্ট হিস্টোরি থেকে পেইড ক্যালকুলেট করি
+                    let paid = 0;
+                    if (t.paymentHistory && t.paymentHistory.length) {
+                        paid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                    } else {
+                        paid = parseFloat(t.paid || 0);
+                    }
+                    
+                    // ডিসকাউন্ট হিস্টোরি থেকে ডিসকাউন্ট ক্যালকুলেট করি
+                    let discount = 0;
+                    if (t.discountHistory && t.discountHistory.length) {
+                        discount = t.discountHistory.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
+                    } else {
+                        discount = parseFloat(t.discount || 0);
+                    }
+                    
                     const due = Math.max(0, bill - (paid + discount));
-                    
                     totalDue += due;
-                    
-                    return {
-                        ...t,
-                        calculatedBill: bill,
-                        calculatedDue: due
-                    };
                 });
                 
                 // যদি বকেয়া না থাকে
@@ -1322,11 +1330,26 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 const updatedTreatments = treatments.map(treatment => {
                     if (remainingAmount <= 0) return treatment;
                     
-                    // বর্তমান বিল, পেইড, ডিউ হিসাব
+                    // বর্তমান বিল ক্যালকুলেট করি
                     const currentBill = treatment.bill || 
                                        (treatment.problems ? treatment.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
-                    const currentPaid = treatment.paid || 0;
-                    const currentDiscount = treatment.discount || 0;
+                    
+                    // বর্তমান পেইড ক্যালকুলেট করি (হিস্টোরি থেকে)
+                    let currentPaid = 0;
+                    if (treatment.paymentHistory && treatment.paymentHistory.length) {
+                        currentPaid = treatment.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                    } else {
+                        currentPaid = parseFloat(treatment.paid || 0);
+                    }
+                    
+                    // বর্তমান ডিসকাউন্ট ক্যালকুলেট করি (হিস্টোরি থেকে)
+                    let currentDiscount = 0;
+                    if (treatment.discountHistory && treatment.discountHistory.length) {
+                        currentDiscount = treatment.discountHistory.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
+                    } else {
+                        currentDiscount = parseFloat(treatment.discount || 0);
+                    }
+                    
                     const currentDue = Math.max(0, currentBill - (currentPaid + currentDiscount));
                     
                     if (currentDue <= 0) return treatment;
@@ -1347,17 +1370,17 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     // নতুন পেমেন্ট হিস্টোরি
                     const paymentHistory = [...(treatment.paymentHistory || []), paymentLog];
                     
-                    // নতুন পরিশোধিত টাকা
-                    const newPaid = (treatment.paid || 0) + paymentForThis;
+                    // নতুন পেইড টোটাল
+                    const newPaid = currentPaid + paymentForThis;
                     
-                    // নতুন বকেয়া
-                    const newDue = Math.max(0, currentBill - (newPaid + (treatment.discount || 0)));
+                    // নতুন ডিউ (শুধু হিস্টোরি থেকে ক্যালকুলেট করা হবে, আলাদা due ফিল্ড না রাখলেও চলে)
+                    const newDue = currentBill - (newPaid + currentDiscount);
                     
                     return {
                         ...treatment,
-                        paid: newPaid,
-                        due: newDue,
-                        paymentHistory: paymentHistory
+                        paymentHistory: paymentHistory,
+                        // due ফিল্ড আপডেট করা (হিস্টোরি অনুযায়ী)
+                        due: newDue > 0 ? newDue : 0
                     };
                 });
                 
@@ -1387,7 +1410,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             }
         }
 
-        // ========== ডিসকাউন্ট ফাংশন (সঠিকভাবে কাজ করবে) ==========
+        // ========== ডিসকাউন্ট ফাংশন (সম্পূর্ণ ঠিক করা) ==========
         async function applyDiscount(e) {
             e.preventDefault();
             
@@ -1425,11 +1448,26 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 
                 const treatment = treatments[treatmentIndex];
                 
-                // বর্তমান বিল, পেইড, ডিউ হিসাব
+                // বর্তমান বিল ক্যালকুলেট করি
                 const currentBill = treatment.bill || 
                                    (treatment.problems ? treatment.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
-                const currentPaid = treatment.paid || 0;
-                const currentDiscount = treatment.discount || 0;
+                
+                // বর্তমান পেইড ক্যালকুলেট করি (হিস্টোরি থেকে)
+                let currentPaid = 0;
+                if (treatment.paymentHistory && treatment.paymentHistory.length) {
+                    currentPaid = treatment.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                } else {
+                    currentPaid = parseFloat(treatment.paid || 0);
+                }
+                
+                // বর্তমান ডিসকাউন্ট ক্যালকুলেট করি (হিস্টোরি থেকে)
+                let currentDiscount = 0;
+                if (treatment.discountHistory && treatment.discountHistory.length) {
+                    currentDiscount = treatment.discountHistory.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
+                } else {
+                    currentDiscount = parseFloat(treatment.discount || 0);
+                }
+                
                 const currentDue = Math.max(0, currentBill - (currentPaid + currentDiscount));
                 
                 if (currentDue <= 0) {
@@ -1455,19 +1493,18 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 // ডিসকাউন্ট হিস্টোরি
                 const discountHistory = [...(treatment.discountHistory || []), discountLog];
                 
-                // নতুন ডিসকাউন্ট
-                const newDiscount = (treatment.discount || 0) + discount;
+                // নতুন ডিসকাউন্ট টোটাল
+                const newDiscount = currentDiscount + discount;
                 
-                // নতুন বকেয়া
+                // নতুন ডিউ
                 const newDue = currentDue - discount;
                 
                 const updatedTreatments = treatments.map((t, idx) => {
                     if (idx === treatmentIndex) {
                         return { 
                             ...t, 
-                            discount: newDiscount,
-                            due: newDue,
-                            discountHistory: discountHistory
+                            discountHistory: discountHistory,
+                            due: newDue
                         };
                     }
                     return t;
@@ -1557,7 +1594,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
             displayPatientData(currentPatient.data);
         }
 
-        // ========== পেশেন্ট ডাটা ডিসপ্লে (সঠিকভাবে কাজ করবে) ==========
+        // ========== পেশেন্ট ডাটা ডিসপ্লে (সম্পূর্ণ ঠিক করা) ==========
         function displayPatientData(data) {
             document.getElementById('patientName').textContent = data.name || '—';
             document.getElementById('patientPhone').textContent = `মোবাইল: ${data.phone || '—'}`;
@@ -1575,13 +1612,23 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     bill = parseFloat(t.bill || t.netBill || t.total || 0);
                 }
                 
-                // পরিশোধিত টাকা
-                const paid = parseFloat(t.paid || 0);
+                // পরিশোধিত টাকা - পেমেন্ট হিস্টোরি থেকে ক্যালকুলেট করি
+                let paid = 0;
+                if (t.paymentHistory && t.paymentHistory.length) {
+                    paid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                } else {
+                    paid = parseFloat(t.paid || 0);
+                }
                 
-                // ডিসকাউন্ট
-                const discount = parseFloat(t.discount || 0);
+                // ডিসকাউন্ট - ডিসকাউন্ট হিস্টোরি থেকে ক্যালকুলেট করি
+                let discount = 0;
+                if (t.discountHistory && t.discountHistory.length) {
+                    discount = t.discountHistory.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
+                } else {
+                    discount = parseFloat(t.discount || 0);
+                }
                 
-                // বকেয়া
+                // বকেয়া = বিল - (পেইড + ডিসকাউন্ট)
                 const due = Math.max(0, bill - (paid + discount));
                 
                 const hasCrown = t.problems?.some(p => p.crownType) || t.crownType ? true : false;
@@ -1732,7 +1779,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                                     months[monthKey] = { 
                                         name: `${monthNames[date.getMonth()]} ${date.getFullYear()}`, 
                                         patients: 0, 
-                                        bill: 0
+                                        bill: 0,
+                                        paid: 0
                                     };
                                 }
                                 
@@ -1741,6 +1789,14 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                                 const bill = t.bill || 
                                            (t.problems ? t.problems.reduce((sum, p) => sum + (parseFloat(p.cost) || 0), 0) : 0);
                                 months[monthKey].bill += bill;
+                                
+                                // পেমেন্ট হিস্টোরি থেকে পেইড ক্যালকুলেট করি
+                                if (t.paymentHistory && t.paymentHistory.length) {
+                                    const paid = t.paymentHistory.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                                    months[monthKey].paid += paid;
+                                } else {
+                                    months[monthKey].paid += (parseFloat(t.paid || 0));
+                                }
                             }
                         }
                     });
@@ -1758,6 +1814,8 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                         <div class="month-small">রোগী</div>
                         <div class="month-value" style="font-size:1rem;">৳${m.bill}</div>
                         <div class="month-small">মোট বিল</div>
+                        <div class="month-value" style="font-size:0.9rem; color:var(--success);">৳${m.paid}</div>
+                        <div class="month-small">আদায়</div>
                     </div>
                 `).join('') || '<div class="empty-state">কোনো ডেটা নেই</div>';
                 
@@ -1832,7 +1890,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                     results.forEach(r => {
                         html += `
                             <div style="background: white; padding: 10px; border-radius: 12px; margin-top: 10px; cursor: pointer;" 
-                                 onclick="window.location.href='profile.html?profileId=${r.id}'">
+                                 onclick="window.location.href='?profileId=${r.id}'">
                                 <strong>${r.data.name}</strong><br>
                                 <small>📞 ${r.data.phone} | 🏠 ${r.data.address || '—'}</small>
                             </div>
@@ -2051,6 +2109,7 @@ ${totalPaid > 0 ? `মোট পরিশোধিত: ৳${totalPaid}` : ''}
                 init();
             }
         });
-    </script>
+    </script> 
+
 </body>
 </html>
