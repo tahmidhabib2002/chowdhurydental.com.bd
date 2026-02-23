@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>যোগাযোগ - Chowdhury Dental</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="contact.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("-n8tk5sKyOgB9RahF"); 
+       })();
+    </script>
+</head>
+<body>
+
+    <div class="top-offer-bar">
+        <div class="container">
+            <div class="offer-wrapper">
+                <div class="offer-left">
+                    <i class="fas fa-clock"></i> <span>শনি - বৃহস্পতি: ১০:০০ AM - ০৮:০০ PM</span>
+                </div>
+                <div class="offer-right">
+                    <a href="tel:+8801608580002" class="top-phone"><i class="fas fa-phone-alt"></i> ০১৬০৮-৫৮০০০২</a>
+                    <span class="offer-divider">|</span>
+                    <a href="https://www.facebook.com/Habibur.Rahman.Chowdhury.76" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    <img src="img/Chowdhury Dental Logo.png" alt="Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">Chowdhury</span>
+                    <span class="logo-sub">Dental</span>
+                </div>
+            </a>
+            
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">হোম</a></li>
+                <li><a href="about.html" class="nav-link">আমাদের সম্পর্কে</a></li>
+                <li><a href="doctors.html" class="nav-link">ডাক্তারগণ</a></li>
+                <li><a href="services.html" class="nav-link">সেবাসমূহ</a></li>
+                <li><a href="cases.html" class="nav-link">কেস স্টাডি</a></li>
+                <li><a href="contact.html" class="nav-link active">যোগাযোগ</a></li>
+            </ul>
+            
+            <div class="nav-right">
+                <a href="tel:+8801608580002" class="btn-nav-appointment">
+                    <i class="fas fa-phone-alt"></i> <span>কল করুন</span>
+                </a>
+                <button class="mobile-menu-btn"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+            </div>
+        </div>
+
+        <div class="mobile-menu-overlay"></div>
+        <div class="mobile-menu-sidebar">
+            <div class="mobile-menu-header">
+                <div class="mobile-logo">
+                    <img src="img/Chowdhury Dental Logo.png" alt="Logo">
+                    <h3>Chowdhury<br>Dental</h3>
+                </div>
+                <button class="close-menu-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> হোম</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> আমাদের সম্পর্কে</a></li>
+                <li><a href="doctors.html"><i class="fas fa-user-md"></i> ডাক্তারগণ</a></li>
+                <li><a href="services.html"><i class="fas fa-tooth"></i> সেবাসমূহ</a></li>
+                <li><a href="cases.html"><i class="fas fa-images"></i> কেস স্টাডি</a></li>
+                <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i> যোগাযোগ</a></li>
+            </ul>
+            <div class="mobile-menu-footer">
+                <a href="tel:+8801608580002" class="mobile-call-btn">
+                    <i class="fas fa-phone-alt"></i> ০১৬০৮-৫৮০০০২
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header-section">
+        <div class="container">
+            <h1 class="fade-in-up">যোগাযোগ করুন</h1>
+            <p class="fade-in-up delay-1">পরামর্শ বা অ্যাপয়েন্টমেন্টের জন্য ২৪/৭ আমরা আপনার পাশে আছি</p>
+        </div>
+    </header>
+
+    <section class="contact-page-main">
+        <div class="container">
+            <div class="contact-grid">
+                
+                <div class="contact-form-box fade-in-left">
+                    <div class="form-header">
+                        <h2>অ্যাপয়েন্টমেন্ট রিকুয়েস্ট</h2>
+                        <p>নিচের ফর্মটি পূরণ করুন, আমরা দ্রুত যোগাযোগ করব</p>
+                    </div>
+                    
+                    <form id="appointmentForm">
+                        <div class="form-group">
+                            <label>আপনার নাম </label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="name" name="from_name" placeholder="আপনার পূর্ণ নাম" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>ফোন নম্বর </label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone-alt"></i>
+                                <input type="tel" id="phone" name="phone_number" placeholder="০১৬০৮-৫৮০০০২" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ইমেইল  </label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>অ্যাপয়েন্টমেন্টের তারিখ </label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar"></i>
+                                <input type="date" id="date" name="date">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>কোন সেবা নিতে চান?</label>
+                            <div class="input-icon">
+                                <i class="fas fa-tooth"></i>
+                                <select id="service" name="service_type">
+                                    <option value="General Checkup">সেবা নির্বাচন করুন</option>
+                                    <option value="Root Canal">রুট ক্যানেল</option>
+                                    <option value="Crown/Bridge">ক্রাউন/ব্রিজ</option>
+                                    <option value="Extraction">দাঁত তোলা</option>
+                                    <option value="Whitening">দাঁত সাদাকরণ</option>
+                                    <option value="Gum Treatment">মাড়ির চিকিৎসা</option>
+                                    <option value="Child Dental">শিশুদের চিকিৎসা</option>
+                                    <option value="Emergency">জরুরি চিকিৎসা</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>আপনার সমস্যা/মেসেজ *</label>
+                            <textarea id="message" name="message" placeholder="আপনার সমস্যার বিস্তারিত লিখুন..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit">
+                            রিকুয়েস্ট পাঠান <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="contact-info-sidebar fade-in-right">
+                    <div class="info-card">
+                        <div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h3>আমাদের ঠিকানা</h3>
+                            <p>মোল্লা জামে মসজিদের ২য় তলা,<br>আরজু হোটেলের সামনে, সদর রোড,<br>লালমোহন, ভোলা - ৮৩৩০</p>
+                            <a href="https://goo.gl/maps/example" target="_blank" class="link-text">ম্যাপে দেখুন <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="icon-circle"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h3>ফোন নম্বর</h3>
+                            <p>
+                                <a href="tel:+8801608580002">০১৬০৮-৫৮০০০২</a><br>
+                                <a href="tel:+8801715586670">০১৭১৫-৫৮৬৬৭০</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="icon-circle"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h3>ইমেইল</h3>
+                            <p>info.chowdhurydental@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="emergency-box">
+                        <i class="fas fa-ambulance"></i>
+                        <h3>জরুরি সেবা ২৪/৭</h3>
+                        <p>তীব্র ব্যথায় আমাদের সাথে যোগাযোগ করুন।</p>
+                        <a href="tel:+8801608580002" class="btn-emergency">কল করুন</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3669.756286598565!2d90.73033707593258!3d22.34865764287661!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3754b5005b4b726d%3A0x6c6e752940251430!2sChowdhury%20Dental!5e1!3m2!1sen!2sbd!4v1737398000000!5m2!1sen!2sbd" 
+            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+        </iframe>
+    </section>
+
+    <footer class="footer-pro">
+        <div class="container footer-container-inner">
+            <div class="footer-top">
+                <div class="footer-widget brand-widget">
+                    <a href="#" class="footer-logo">
+                        <img src="img/Chowdhury Dental Logo.png" alt="Logo">
+                        <div class="text"><h3>Chowdhury</h3><span>Dental</span></div>
+                    </a>
+                    <p>আধুনিক প্রযুক্তি ও আন্তরিক সেবার এক অনন্য প্রতিষ্ঠান। ভোলা জেলার মানুষের বিশ্বস্ত ডেন্টাল ক্লিনিক।</p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/Habibur.Rahman.Chowdhury.76" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn yt"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-btn ig"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>দ্রুত লিংক</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> আমাদের সম্পর্কে</a></li>
+                        <li><a href="doctors.html"><i class="fas fa-chevron-right"></i> ডাক্তারগণ</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> সেবাসমূহ</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> যোগাযোগ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>যোগাযোগ</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt icon"></i> <span>লালমোহন, ভোলা</span></li>
+                        <li><i class="fas fa-phone-alt icon"></i> <a href="tel:+8801608580002" class="phone-link">০১৬০৮-৫৮০০০২</a></li>
+                        <li><i class="fas fa-envelope icon"></i> <span>info.chowdhurydental@gmail.com</span></li>
+                    </ul>
+                </div>
+
+                <div class="footer-widget">
+                    <h4>সময়সূচী</h4>
+                    <ul class="footer-hours">
+                        <li><span>শনি - বৃহস্পতি</span> <span class="time">১০:০০ - ০৮:০০</span></li>
+                        <li class="closed"><span>শুক্রবার</span> <span class="tag">বন্ধ</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© ২০২৬ চৌধুরী ডেন্টাল। Developed by <span class="highlight">Tahmid Habib</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="floating-container">
+        <button class="float-btn scroll-btn" id="scrollTopBtn"><i class="fas fa-arrow-up"></i></button>
+        <a href="https://wa.me/qr/YBLBD6Q5GWYIN1" target="_blank" class="float-btn whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+        <a href="tel:+8801608580002" class="float-btn call-btn"><div class="pulse-wave"></div><i class="fas fa-phone-alt"></i></a>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    const appointmentForm = document.getElementById('appointmentForm');
+
+    appointmentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const submitBtn = appointmentForm.querySelector('.btn-submit');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> পাঠানো হচ্ছে...';
+        submitBtn.disabled = true;
+
+        const templateParams = {
+            from_name: document.getElementById('name').value,
+            phone_number: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            service_type: document.getElementById('service').value,
+            message: document.getElementById('message').value,
+            date: document.getElementById('date').value
+        };
+
+        // আপনার ড্যাশবোর্ড থেকে প্রাপ্ত সঠিক আইডি
+        emailjs.send('service_oy5veii', 'template_ktfmdqc', templateParams)
+            .then(function(response) {
+                alert('ধন্যবাদ! আপনার রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।');
+                appointmentForm.reset();
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, function(error) {
+                console.error('FAILED...', error);
+                alert('দুঃখিত! কিছু ভুল হয়েছে। আবার চেষ্টা করুন।');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+    });
+});
+    </script>
+</body>
+</html>

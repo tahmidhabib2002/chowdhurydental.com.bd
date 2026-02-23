@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>লগইন - চৌধুরী ডেন্টাল কেয়ার</title>
+    <!-- Google Fonts - প্রফেশনাল বাংলা ফন্ট -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="/saad/manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Noto Serif Bengali', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* 3D ব্যাকগ্রাউন্ড */
+        .dental-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 20%, #0a5c4b, #02231c);
+            transform-style: preserve-3d;
+        }
+
+        /* 3D অ্যানিমেটেড টুথ আইকন */
+        .animated-teeth {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .tooth-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.03);
+            font-size: 3.5rem;
+            animation: floatTooth3D 20s infinite linear;
+            transform-style: preserve-3d;
+        }
+
+        .tooth-icon:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 4rem; transform: rotateX(45deg) rotateY(30deg); }
+        .tooth-icon:nth-child(2) { top: 70%; left: 85%; animation-delay: 3s; font-size: 5rem; transform: rotateX(-30deg) rotateY(45deg); }
+        .tooth-icon:nth-child(3) { top: 40%; left: 20%; animation-delay: 6s; font-size: 3.8rem; transform: rotateX(60deg) rotateY(-20deg); }
+        .tooth-icon:nth-child(4) { top: 80%; left: 15%; animation-delay: 9s; font-size: 4.5rem; transform: rotateX(-45deg) rotateY(-30deg); }
+        .tooth-icon:nth-child(5) { top: 20%; left: 80%; animation-delay: 12s; font-size: 5.5rem; transform: rotateX(30deg) rotateY(-45deg); }
+        .tooth-icon:nth-child(6) { top: 50%; left: 50%; animation-delay: 15s; font-size: 6rem; transform: translate(-50%, -50%) rotateX(45deg) rotateY(45deg); }
+
+        @keyframes floatTooth3D {
+            0% { transform: rotateX(0deg) rotateY(0deg) translateY(0) translateX(0); opacity: 0.03; }
+            25% { transform: rotateX(20deg) rotateY(15deg) translateY(-20px) translateX(10px); opacity: 0.06; }
+            50% { transform: rotateX(0deg) rotateY(0deg) translateY(0) translateX(0); opacity: 0.03; }
+            75% { transform: rotateX(-20deg) rotateY(-15deg) translateY(20px) translateX(-10px); opacity: 0.06; }
+            100% { transform: rotateX(0deg) rotateY(0deg) translateY(0) translateX(0); opacity: 0.03; }
+        }
+
+        /* 3D কন্টেইনার - মোবাইলের জন্য ছোট করা হয়েছে */
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+            animation: floatIn 1s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transform-style: preserve-3d;
+            transform: perspective(800px) rotateX(1.5deg) rotateY(0.8deg) translateZ(15px);
+            box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.3) inset, 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .login-container:hover {
+            transform: perspective(800px) rotateX(0.8deg) rotateY(1.5deg) translateZ(20px);
+            box-shadow: 0 50px 80px -15px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.4) inset, 0 0 35px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        @keyframes floatIn {
+            0% { opacity: 0; transform: perspective(800px) rotateX(8deg) rotateY(-4deg) translateZ(-80px) translateY(80px); }
+            100% { opacity: 1; transform: perspective(800px) rotateX(1.5deg) rotateY(0.8deg) translateZ(15px) translateY(0); }
+        }
+
+        /* 3D শাইন ইফেক্ট */
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+            transform: rotate(25deg);
+            animation: shine3D 6s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine3D {
+            0% { transform: rotate(25deg) translateX(-100%) translateY(-100%); }
+            100% { transform: rotate(25deg) translateX(100%) translateY(100%); }
+        }
+
+        /* হেডার সেকশন - সাইজ কমালাম */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            transform: translateZ(20px);
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-circle {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(145deg, #0a5c4b, #064635);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(30px) rotateY(5deg) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.2) inset, -4px -4px 12px rgba(0, 0, 0, 0.5) inset, 4px 4px 12px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .logo-circle::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            filter: blur(4px);
+            z-index: -1;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            color: white;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3));
+            animation: pulse3D 3s infinite ease-in-out;
+            transform: translateZ(8px);
+        }
+
+        @keyframes pulse3D {
+            0%, 100% { transform: translateZ(8px) scale(1); text-shadow: 0 0 15px rgba(255, 255, 255, 0.5); }
+            50% { transform: translateZ(15px) scale(1.08); text-shadow: 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        .clinic-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #064635;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            text-shadow: 1.5px 1.5px 3px rgba(255, 255, 255, 0.5), 2px 2px 5px rgba(0, 0, 0, 0.1);
+            font-family: 'Noto Serif Bengali', serif;
+            transform: translateZ(15px);
+        }
+
+        .clinic-subtitle {
+            color: #2d5a4c;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            opacity: 0.9;
+            transform: translateZ(10px);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            color: #0a5c4b;
+            margin-top: 15px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding: 0 15px 10px;
+            transform: translateZ(18px);
+        }
+
+        .login-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, #0a5c4b, #2d9c7a, #0a5c4b);
+            border-radius: 3px;
+            box-shadow: 0 1px 8px rgba(10, 92, 75, 0.5);
+        }
+
+        /* ফর্ম এলিমেন্ট - 3D এবং সাইজ কমালাম */
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(10px);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #064635;
+            font-size: 0.95rem;
+            padding-left: 6px;
+            letter-spacing: 0.2px;
+            transform: translateZ(8px);
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            color: #0a5c4b;
+            font-size: 1.1rem;
+            z-index: 2;
+            opacity: 0.9;
+            transform: translateZ(15px);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #064635;
+            font-weight: 500;
+            -webkit-appearance: none;
+            appearance: none;
+            transform-style: preserve-3d;
+            transform: translateZ(8px);
+            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.3), 0 0 0 1.5px rgba(255, 255, 255, 0.5) inset, 0 -1.5px 4px rgba(0, 0, 0, 0.1) inset;
+        }
+
+        .form-input:focus {
+            outline: none;
+            background: white;
+            transform: translateZ(15px) scale(1.01);
+            box-shadow: 0 15px 25px -8px rgba(10, 92, 75, 0.4), 0 0 0 2px rgba(10, 92, 75, 0.3) inset, 0 -1.5px 4px rgba(0, 0, 0, 0.1) inset;
+        }
+
+        .form-input::placeholder {
+            color: #9ab5ab;
+            font-weight: 400;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #0a5c4b;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.25s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            opacity: 0.8;
+            transform: translateZ(18px);
+        }
+
+        .password-toggle:hover, .password-toggle:active {
+            opacity: 1;
+            background: rgba(10, 92, 75, 0.1);
+            transform: translateZ(22px) scale(1.08);
+        }
+
+        /* 3D লগইন বাটন - সাইজ কমালাম */
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(145deg, #0a5c4b, #04312a);
+            color: white;
+            border: none;
+            border-radius: 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.4px;
+            transform-style: preserve-3d;
+            transform: translateZ(20px) translateY(0);
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.3) inset, 0 -4px 0 rgba(0, 0, 0, 0.2) inset, 0 4px 8px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+            transform: rotate(25deg);
+            animation: buttonShine 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes buttonShine {
+            0% { transform: rotate(25deg) translateX(-100%) translateY(-100%); }
+            100% { transform: rotate(25deg) translateX(100%) translateY(100%); }
+        }
+
+        .login-btn:hover {
+            transform: translateZ(28px) translateY(-3px);
+            box-shadow: 0 25px 40px -8px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.4) inset, 0 -4px 0 rgba(0, 0, 0, 0.3) inset, 0 4px 12px rgba(255, 255, 255, 0.3) inset;
+        }
+
+        .login-btn:active {
+            transform: translateZ(15px) translateY(0);
+            box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.3) inset, 0 -2px 0 rgba(0, 0, 0, 0.2) inset;
+        }
+
+        .login-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: translateZ(15px) translateY(0) !important;
+            box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* ফুটার - ছোট করা হয়েছে */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #4a7b6e;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            font-weight: 500;
+            transform: translateZ(10px);
+        }
+
+        .footer p {
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .footer i {
+            color: #0a5c4b;
+        }
+
+        /* লোডিং অ্যানিমেশন */
+        .loading {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin3D 1s ease-in-out infinite;
+            margin-left: 12px;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes spin3D {
+            0% { transform: rotate(0deg) rotateX(0deg); }
+            50% { transform: rotate(180deg) rotateX(30deg); }
+            100% { transform: rotate(360deg) rotateX(0deg); }
+        }
+
+        /* মেসেজ পপআপ - 3D (ছোট করা হয়েছে) */
+        .message-popup {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.3) inset;
+            animation: messageSlide3D 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            max-width: 350px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transform: perspective(800px) translateZ(40px);
+        }
+
+        @keyframes messageSlide3D {
+            0% { opacity: 0; transform: perspective(800px) translateZ(-80px) translateY(-80%); }
+            100% { opacity: 1; transform: perspective(800px) translateZ(40px) translateY(0); }
+        }
+
+        /* এরর মেসেজ */
+        .error-message {
+            color: #b22234;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            padding-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: fadeIn3D 0.3s ease;
+            transform-style: preserve-3d;
+            transform: translateZ(4px);
+        }
+
+        .error-message i {
+            font-size: 0.9rem;
+            filter: drop-shadow(0 1px 2px rgba(178, 34, 52, 0.3));
+        }
+
+        .form-input.error {
+            background: rgba(255, 240, 240, 0.9);
+            box-shadow: 0 12px 20px -8px rgba(178, 34, 52, 0.3), 0 0 0 1.5px #b22234 inset;
+        }
+
+        @keyframes fadeIn3D {
+            from { opacity: 0; transform: translateZ(-8px) translateY(-4px); }
+            to { opacity: 1; transform: translateZ(4px) translateY(0); }
+        }
+
+        /* ছোট মোবাইল ডিভাইসের জন্য (৪৮০px এর নিচে) */
+        @media (max-width: 380px) {
+            body { padding: 8px; }
+            .login-container { padding: 20px 18px; max-width: 320px; }
+            .logo-circle { width: 75px; height: 75px; }
+            .logo-icon { font-size: 2.4rem; }
+            .clinic-name { font-size: 1.7rem; }
+            .login-title { font-size: 1.3rem; }
+            .form-input { padding: 14px 14px 14px 45px; font-size: 0.9rem; }
+            .input-icon { left: 15px; font-size: 1rem; }
+            .password-toggle { right: 10px; width: 35px; height: 35px; }
+            .login-btn { padding: 16px; font-size: 1.1rem; }
+            .footer { font-size: 0.75rem; }
+        }
+
+        /* মোবাইল টাচ ইম্প্রুভমেন্ট */
+        @media (hover: none) {
+            .login-container:hover { transform: perspective(800px) rotateX(1.5deg) rotateY(0.8deg) translateZ(15px); }
+            .login-btn:active, .password-toggle:active { transform: scale(0.96); }
+        }
+
+        /* সেফ এরিয়া সাপোর্ট */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ডেন্টাল থিম ব্যাকগ্রাউন্ড -->
+    <div class="dental-bg"></div>
+    
+    <!-- 3D অ্যানিমেটেড টুথ আইকন -->
+    <div class="animated-teeth">
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+        <div class="tooth-icon"><i class="fas fa-tooth"></i></div>
+    </div>
+
+    <!-- লগইন কন্টেইনার -->
+    <div class="login-container">
+        <!-- হেডার -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <i class="fas fa-tooth logo-icon"></i>
+                </div>
+                <div>
+                    <h1 class="clinic-name">চৌধুরী ডেন্টাল</h1>
+                    <p class="clinic-subtitle">সুস্থ হাসি, সুস্থ জীবন</p>
+                </div>
+            </div>
+            <h2 class="login-title">এডমিন লগইন</h2>
+        </div>
+
+        <!-- লগইন ফর্ম -->
+        <form id="loginForm">
+            <!-- ইমেইল ফিল্ড -->
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    <i class="far fa-envelope" style="margin-right: 6px;"></i>
+                    ইমেইল ঠিকানা
+                </label>
+                <div class="input-container">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" class="form-input" 
+                           placeholder="your@email.com" 
+                           required autocomplete="email" inputmode="email">
+                </div>
+            </div>
+
+            <!-- পাসওয়ার্ড ফিল্ড -->
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock" style="margin-right: 6px;"></i>
+                    পাসওয়ার্ড
+                </label>
+                <div class="input-container">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" class="form-input" 
+                           placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" id="togglePassword" class="password-toggle" 
+                            aria-label="পাসওয়ার্ড দেখান/লুকান">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- লগইন বাটন -->
+            <button type="submit" class="login-btn" id="loginButton">
+                <i class="fas fa-sign-in-alt"></i>
+                প্রবেশ করুন
+                <div class="loading" id="loginLoading"></div>
+            </button>
+        </form>
+
+        <!-- ফুটার -->
+        <div class="footer">
+            <p>© ২০২৬ চৌধুরী ডেন্টাল</p>
+            <p style="margin-top: 5px; font-size: 0.75rem;">
+                <i class="far fa-hospital"></i> ডিজিটাল ডেন্টাল সলিউশন
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
+            authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+            projectId: "plasma-raceway-465016-v0",
+            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+            messagingSenderId: "23620370976",
+            appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+        };
+
+        // ফায়ারবেস ইনিশিয়ালাইজ
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // ইতিমধ্যে লগইন করা থাকলে ড্যাশবোর্ডে পাঠাও
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "amarghor.html";
+            }
+        });
+
+        // DOM এলিমেন্টস
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePassword');
+        const loginButton = document.getElementById('loginButton');
+        const loginLoading = document.getElementById('loginLoading');
+
+        // অনুমোদিত ইমেইল লিস্ট
+        const ALLOWED_EMAILS = [
+            'tahmidhabib29@gmail.com',
+            'admin@chowdhurydental.com'
+        ];
+
+        // পাসওয়ার্ড দেখান/লুকান টগল
+        togglePasswordBtn.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                this.setAttribute('aria-label', 'পাসওয়ার্ড লুকান');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                this.setAttribute('aria-label', 'পাসওয়ার্ড দেখান');
+            }
+        });
+
+        // ফর্ম ভ্যালিডেশন
+        function validateForm() {
+            let isValid = true;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                showInputError(emailInput, 'ইমেইল ঠিকানা দিন');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showInputError(emailInput, 'সঠিক ইমেইল ঠিকানা দিন');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showInputError(passwordInput, 'পাসওয়ার্ড দিন');
+                isValid = false;
+            } else if (password.length < 6) {
+                showInputError(passwordInput, 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // ইনপুট এরর দেখাও
+        function showInputError(input, message) {
+            input.classList.add('error');
+            
+            const errorEl = document.createElement('div');
+            errorEl.className = 'error-message';
+            errorEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            
+            input.closest('.form-group').appendChild(errorEl);
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    this.classList.remove('error');
+                    errorEl.remove();
+                }
+            }, { once: true });
+        }
+
+        // মেসেজ দেখাও
+        function showMessage(message, type = 'success') {
+            const existingMessage = document.querySelector('.message-popup');
+            if (existingMessage) existingMessage.remove();
+            
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message-popup';
+            messageEl.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" 
+                   style="margin-right: 8px;"></i>
+                ${message}
+            `;
+            
+            if (type === 'success') {
+                messageEl.style.background = 'linear-gradient(145deg, #1e7e34, #146b2a)';
+            } else {
+                messageEl.style.background = 'linear-gradient(145deg, #b22234, #8b1a1a)';
+            }
+            
+            document.body.appendChild(messageEl);
+            
+            setTimeout(() => {
+                messageEl.style.animation = 'messageSlide3D 0.5s reverse';
+                setTimeout(() => messageEl.remove(), 500);
+            }, 2500);
+        }
+
+        // ইমেইল/পাসওয়ার্ড লগইন
+        async function loginWithEmail() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!validateForm()) return;
+            
+            if (!ALLOWED_EMAILS.includes(email)) {
+                showMessage('এই ইমেইল দিয়ে লগইন অনুমোদিত নয়!', 'error');
+                return;
+            }
+            
+            loginButton.disabled = true;
+            loginLoading.style.display = 'block';
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> লগইন হচ্ছে...';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('সফলভাবে লগইন হয়েছে! রিডাইরেক্ট হচ্ছে...', 'success');
+                
+                if (navigator.vibrate) navigator.vibrate(80);
+                
+                setTimeout(() => {
+                    window.location.href = "amarghor.html";
+                }, 1500);
+                
+            } catch (error) {
+                console.error("Login error:", error);
+                
+                if (navigator.vibrate) navigator.vibrate(150);
+                
+                let errorMessage = "ইমেইল বা পাসওয়ার্ড ভুল!";
+                if (error.code === 'auth/invalid-email') errorMessage = "ইমেইল ঠিকানা সঠিক নয়!";
+                else if (error.code === 'auth/user-not-found') errorMessage = "এই ইমেইলে কোনো অ্যাকাউন্ট নেই!";
+                else if (error.code === 'auth/wrong-password') errorMessage = "পাসওয়ার্ড ভুল!";
+                else if (error.code === 'auth/too-many-requests') errorMessage = "অনেকবার চেষ্টা! কিছুক্ষণ পর আবার চেষ্টা করুন";
+                else if (error.code === 'auth/network-request-failed') errorMessage = "নেটওয়ার্ক ত্রুটি! ইন্টারনেট সংযোগ পরীক্ষা করুন";
+                
+                showMessage(errorMessage, 'error');
+                
+            } finally {
+                loginButton.disabled = false;
+                loginLoading.style.display = 'none';
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> প্রবেশ করুন';
+            }
+        }
+
+        // ফর্ম সাবমিট
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            loginWithEmail();
+        });
+
+        // এন্টার কী হ্যান্ডলিং
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (e.target.id === 'email') {
+                    e.preventDefault();
+                    passwordInput.focus();
+                } else if (e.target.id === 'password') {
+                    e.preventDefault();
+                    loginWithEmail();
+                }
+            }
+        });
+
+        // অটো ফোকাস
+        setTimeout(() => emailInput.focus(), 400);
+    </script>
+</body>
+</html>
