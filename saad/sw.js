@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chowdhury-dental-v4';
+const CACHE_NAME = 'chowdhury-dental-v1';
 const SAAD_PATH = '/saad/';
 
 self.addEventListener('install', event => {
@@ -17,14 +17,17 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  
   // শুধুমাত্র /saad/ পাথের রিকোয়েস্ট হ্যান্ডেল করবে
-  if (!event.request.url.includes('/saad/') && !event.request.url.startsWith('https://fonts.') && !event.request.url.startsWith('https://cdnjs.')) {
-    // অন্য কোনো ডোমেইনে রিকোয়েস্ট গেলে ব্লক করবেন না
+  if (!url.pathname.startsWith('/saad/') && 
+      !url.href.startsWith('https://fonts.') && 
+      !url.href.startsWith('https://cdnjs.')) {
     return;
   }
 
   // HTML নেভিগেশন - সবসময় index.html দেখাবে
-  if (event.request.mode === 'navigate') {
+  if (event.request.mode === 'navigate' && url.pathname.startsWith('/saad/')) {
     event.respondWith(
       fetch(event.request)
         .catch(() => {
