@@ -3686,6 +3686,16 @@
             .catch((error) => {
                 console.error('Persistence error:', error);
             });
+        // Firebase Auth State Check
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      // ইউজার লগইন না থাকলে লগইন পৃষ্ঠায় পাঠিয়ে দাও
+      window.location.href = '/saad/index.html';
+    } else {
+      // লগইন করা থাকলে ড্যাশবোর্ড দেখাও
+      console.log('লগইন সফল:', user.email);
+    }
+  });
     </script>
 </body>
 </html>
