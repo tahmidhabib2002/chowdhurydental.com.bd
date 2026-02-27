@@ -2,7 +2,7 @@
   "name": "চৌধুরী ডেন্টাল কেয়ার",
   "short_name": "চৌধুরী ডেন্টাল",
   "description": "ডেন্টাল কেস ম্যানেজমেন্ট সিস্টেম",
-  "start_url": "/",
+  "start_url": "/log.html",
   "display": "standalone",
   "background_color": "#0a5c4b",
   "theme_color": "#064635",
