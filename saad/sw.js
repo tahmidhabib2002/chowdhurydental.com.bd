@@ -1,8 +1,7 @@
-const CACHE_NAME = 'chowdhury-dental-v1';
+const CACHE_NAME = 'chowdhury-dental-v2'; // ভার্সন আপডেট করুন
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/log.html',
+  '/log.html',           // লগইন পৃষ্ঠা
+  '/index.html',         // মূল অ্যাপ্লিকেশন (লগইনের পর)
   '/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
@@ -13,22 +12,43 @@ const urlsToCache = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => {
+      console.log('ক্যাশিং হচ্ছে...');
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
 self.addEventListener('fetch', event => {
+  // HTML পৃষ্ঠাগুলোর জন্য
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          // নেটওয়ার্ক অফলাইনে থাকলে লগইন পৃষ্ঠা দেখাও
+          return caches.match('/log.html');
+        })
+    );
+    return;
+  }
+
+  // অন্যান্য রিসোর্স (CSS, JS, ছবি) ক্যাশ থেকে দেখাবে
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
   );
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    ))
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME)
+          .map(key => {
+            console.log('পুরনো ক্যাশ ডিলিট: ' + key);
+            return caches.delete(key);
+          })
+      );
+    })
   );
 });
