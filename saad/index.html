@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>চৌধুরী ডেন্টাল - সম্পূর্ণ সিস্টেম</title>
+    <title>চৌধুরী ডেন্টাল কেয়ার</title>
     
     <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,11 +13,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <!-- এইটুকুই যথেষ্ট PWA চালু করতে -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#064635">
-
-
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1a4d4a">
 
     <style>
         * {
@@ -29,43 +28,117 @@
         }
 
         :root {
-            --primary: #0a5c4b;
-            --primary-dark: #064635;
-            --primary-light: #e0f2e9;
-            --success: #1e7e34;
-            --success-dark: #146b2a;
-            --success-light: #e8f5e9;
-            --danger: #b22234;
-            --danger-light: #ffebee;
-            --warning: #bf8c2b;
-            --warning-light: #fff8e1;
-            --gray: #5a6b7a;
-            --light-gray: #e9ecef;
-            --dark: #2d3e50;
-            --border-radius: 20px;
-            --box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            --primary: #1a4d4a;
+            --primary-dark: #0e3a37;
+            --primary-light: #e8f3f2;
+            --primary-soft: #d4e9e7;
+            --secondary: #c7a25c;
+            --secondary-light: #faf3e5;
+            --success: #2c6b3f;
+            --success-light: #e6f3ea;
+            --danger: #b44343;
+            --danger-light: #fee9e9;
+            --warning: #c78a2b;
+            --warning-light: #fff4e0;
+            --info: #3a6b9e;
+            --info-light: #e3ecf5;
+            --gray: #5f6b7a;
+            --light-gray: #eef2f6;
+            --dark: #1e2b3a;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 15px 30px rgba(0,0,0,0.12);
+            --border-radius: 24px;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         body {
-            background: #f4f7fb;
+            background: #f8fafd;
             min-height: 100vh;
             padding-bottom: 85px;
             padding-top: var(--safe-top);
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* অ্যানিমেশন */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.9); 
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1); 
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        /* অ্যানিমেটেড ক্লাস */
+        .fade-in { animation: fadeIn 0.4s ease; }
+        .slide-up { animation: slideUp 0.4s ease; }
+        .slide-down { animation: slideDown 0.4s ease; }
+        .scale-in { animation: scaleIn 0.3s ease; }
+        .pulse { animation: pulse 2s infinite; }
+
+        /* লোডিং শিমার */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
 
         /* মোবাইল হেডার */
         .mobile-header {
-            background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             padding: 22px 20px;
-            border-radius: 0 0 28px 28px;
-            box-shadow: 0 10px 20px rgba(6, 70, 53, 0.15);
+            border-radius: 0 0 32px 32px;
+            box-shadow: var(--shadow-lg);
             position: sticky;
             top: 0;
             z-index: 100;
             padding-top: calc(22px + var(--safe-top));
+            transition: all 0.3s ease;
         }
 
         .header-top {
@@ -76,56 +149,73 @@
         }
 
         .clinic-name {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 700;
             font-family: 'Noto Serif Bengali', serif;
             line-height: 1.2;
+            letter-spacing: -0.5px;
         }
 
         .clinic-sub {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             opacity: 0.9;
             margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .menu-btn {
             background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.25);
             color: white;
             width: 48px;
             height: 48px;
-            border-radius: 16px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.4rem;
             cursor: pointer;
             backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(0.95);
         }
 
         .menu-btn:active {
-            transform: scale(0.92);
-            background: rgba(255,255,255,0.25);
+            transform: scale(0.9);
         }
 
         /* স্ট্যাটস গ্রিড */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 16px;
             padding: 20px;
             margin-top: -15px;
         }
 
         .stat-card {
             background: white;
-            padding: 20px 15px;
-            border-radius: 20px;
-            box-shadow: var(--box-shadow);
+            padding: 22px 18px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
             border-bottom: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
         }
 
         .stat-card.success { border-bottom-color: var(--success); }
@@ -133,25 +223,30 @@
         .stat-card.warning { border-bottom-color: var(--warning); }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: var(--primary-light);
-            border-radius: 15px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .stat-info h3 {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--gray);
             font-weight: 500;
         }
 
         .stat-number {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--dark);
             line-height: 1.2;
@@ -168,36 +263,51 @@
         .action-card {
             background: white;
             border-radius: 20px;
-            padding: 20px 10px;
+            padding: 18px 8px;
             text-align: center;
-            box-shadow: var(--box-shadow);
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             border: 2px solid transparent;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .action-card:nth-child(2) { animation-delay: 0.1s; }
+        .action-card:nth-child(3) { animation-delay: 0.2s; }
+        .action-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
         .action-card:active {
             transform: scale(0.95);
-            border-color: var(--primary);
         }
 
         .action-icon {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             background: var(--primary-light);
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
+            margin: 0 auto 12px;
             color: var(--primary);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .action-icon {
+            transform: rotate(360deg);
         }
 
         .action-title {
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             font-size: 1rem;
         }
 
@@ -209,27 +319,34 @@
         /* সেকশন কার্ড */
         .section-card {
             background: white;
-            border-radius: 25px;
-            padding: 22px;
+            border-radius: 32px;
+            padding: 24px;
             margin: 0 20px 25px;
-            box-shadow: var(--box-shadow);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .section-card:hover {
+            box-shadow: var(--shadow-lg);
         }
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
+            gap: 14px;
+            margin-bottom: 22px;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--primary-dark);
             border-bottom: 2px solid var(--light-gray);
-            padding-bottom: 15px;
+            padding-bottom: 18px;
         }
 
         /* ফর্ম এলিমেন্টস */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            animation: slideUp 0.3s ease;
         }
 
         .form-label {
@@ -242,55 +359,45 @@
 
         .form-control {
             width: 100%;
-            padding: 14px 16px;
+            padding: 15px 18px;
             border: 2px solid var(--light-gray);
-            border-radius: 16px;
+            border-radius: 18px;
             font-size: 1rem;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             background: white;
         }
 
         .form-control:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 4px rgba(10, 92, 75, 0.1);
-        }
-
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
+            box-shadow: 0 0 0 5px rgba(26, 77, 74, 0.1);
+            transform: translateY(-2px);
         }
 
         .gender-group {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             align-items: center;
             background: #f8fafc;
-            padding: 12px 16px;
-            border-radius: 14px;
+            padding: 14px 18px;
+            border-radius: 18px;
             border: 2px solid var(--light-gray);
         }
 
         .gender-group label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-weight: 500;
             color: var(--dark);
+            cursor: pointer;
         }
 
         .gender-group input[type="radio"] {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             accent-color: var(--primary);
+            cursor: pointer;
         }
 
         /* প্রোবলেম আইটেম */
@@ -300,26 +407,33 @@
 
         .problem-item {
             background: #f8fafc;
-            border-radius: 18px;
-            padding: 18px;
-            margin-bottom: 15px;
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 18px;
             border: 1px solid var(--light-gray);
             position: relative;
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .problem-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
         .problem-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .problem-badge {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-size: 0.8rem;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
@@ -327,175 +441,166 @@
             background: none;
             border: none;
             color: var(--danger);
-            font-size: 1.2rem;
-            width: 36px;
-            height: 36px;
+            font-size: 1.3rem;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .remove-problem:active {
-            background: #fee;
+        .remove-problem:hover {
+            background: var(--danger-light);
+            transform: rotate(90deg);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 14px;
+            margin-bottom: 14px;
         }
 
         .crown-checkbox {
-            margin: 15px 0 10px;
+            margin: 18px 0 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 14px;
+            cursor: pointer;
         }
 
         .crown-checkbox label {
             font-weight: 600;
             color: var(--dark);
+            cursor: pointer;
         }
 
         .crown-checkbox input {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             accent-color: var(--primary);
+            cursor: pointer;
         }
 
         .crown-options {
-            background: #f8f4ff;
-            border-radius: 16px;
-            padding: 15px;
-            margin-top: 12px;
+            background: linear-gradient(135deg, #f8f4ff, #f0eaff);
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 15px;
             display: none;
+            animation: scaleIn 0.3s ease;
         }
 
         .crown-options.active {
             display: block;
-            animation: fadeIn 0.3s;
         }
 
         .shade-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 12px 0;
+            gap: 10px;
+            margin: 15px 0;
         }
 
         .shade-item {
             background: white;
             border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            padding: 10px 5px;
+            border-radius: 14px;
+            padding: 12px 5px;
             text-align: center;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shade-item:hover {
+            transform: scale(0.95);
+            border-color: var(--primary);
         }
 
         .shade-item.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-        }
-
-        .discount-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+            animation: pulse 1s;
         }
 
         /* ইমেজ আপলোড */
         .image-upload-area {
-            border: 2px dashed var(--primary);
-            border-radius: 16px;
-            padding: 20px;
+            border: 3px dashed var(--primary);
+            border-radius: 24px;
+            padding: 30px;
             text-align: center;
             background: var(--primary-light);
-            margin: 20px 0;
+            margin: 25px 0;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .image-upload-area:hover {
-            background: #d0e8dc;
+            background: #c5e0da;
+            transform: scale(0.98);
         }
 
         .image-upload-area i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--primary);
+            animation: pulse 2s infinite;
         }
 
         .image-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 18px;
         }
 
         .preview-img {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
-            border-radius: 12px;
-            border: 2px solid var(--primary);
+            border-radius: 16px;
+            border: 3px solid var(--primary);
+            transition: all 0.3s ease;
+            animation: scaleIn 0.3s ease;
         }
 
-        .upload-progress {
-            width: 100%;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .upload-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            border-radius: 2px;
-            transition: width 0.3s;
+        .preview-img:hover {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: var(--shadow-md);
         }
 
         /* টোটাল সেকশন */
         .total-section {
-            background: linear-gradient(145deg, #f8fafc, #f0f4f8);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
+            background: linear-gradient(145deg, #f8fafc, #f0f5fa);
+            border-radius: 24px;
+            padding: 22px;
+            margin: 25px 0;
+            animation: scaleIn 0.4s ease;
         }
 
         .total-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #dee2e6;
+            transition: all 0.2s ease;
         }
 
-        .total-row:last-child {
-            border-bottom: none;
-        }
-
-        .total-label {
-            font-weight: 600;
-            color: var(--gray);
-        }
-
-        .total-amount {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark);
+        .total-row:hover {
+            transform: translateX(5px);
         }
 
         .grand-total {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             color: var(--primary);
         }
 
@@ -504,21 +609,44 @@
         }
 
         .submit-btn {
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
             padding: 20px;
-            border-radius: 18px;
-            font-size: 1.2rem;
+            border-radius: 24px;
+            font-size: 1.3rem;
             font-weight: 700;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(10, 92, 75, 0.25);
-            margin-top: 20px;
+            box-shadow: var(--shadow-lg);
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 30px rgba(26, 77, 74, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
         }
 
         .submit-btn:active {
@@ -526,53 +654,62 @@
         }
 
         .submit-btn.loading {
-            opacity: 0.7;
+            opacity: 0.8;
             pointer-events: none;
         }
 
         .submit-btn.loading::after {
             content: '';
-            width: 20px;
-            height: 20px;
-            border: 2px solid white;
+            width: 24px;
+            height: 24px;
+            border: 3px solid white;
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 10px;
         }
 
         /* রোগী তালিকা */
         .recent-list {
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
         .recent-item {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 18px;
             background: #f8fafc;
-            border-radius: 16px;
-            margin-bottom: 10px;
+            border-radius: 20px;
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            animation: slideUp 0.3s ease;
+            border: 2px solid transparent;
         }
 
         .recent-item:hover {
             background: var(--primary-light);
+            transform: translateX(8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
         .recent-avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-light);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-soft));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary);
-            font-size: 1.4rem;
-            margin-right: 15px;
+            font-size: 1.6rem;
+            margin-right: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .recent-item:hover .recent-avatar {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .recent-info {
@@ -582,111 +719,338 @@
         .recent-name {
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
         }
 
         .recent-phone {
             color: var(--primary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .recent-date {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
         }
 
         /* প্রোফাইল হেডার */
         .profile-header {
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            border-radius: 28px;
-            padding: 24px 20px;
+            border-radius: 32px;
+            padding: 28px 22px;
             margin: 0 20px 20px;
-            box-shadow: 0 15px 25px rgba(6, 70, 53, 0.2);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
+            animation: slideDown 0.4s ease;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s infinite;
         }
 
         .profile-header::after {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
+            bottom: -30%;
+            left: -10%;
             width: 200px;
             height: 200px;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
 
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(0.95);
+        }
+
         .patient-name {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             line-height: 1.3;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .info-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
         }
 
         .info-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-size: 1rem;
             opacity: 0.95;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
         }
 
         .info-item i {
             width: 24px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         .patient-switcher {
-            background: rgba(0,0,0,0.15);
-            border-radius: 20px;
-            padding: 12px 16px;
-            margin-top: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 24px;
+            padding: 14px 20px;
+            margin-top: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 2;
         }
 
         .switch-btn {
             background: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
+            padding: 10px 22px;
+            border-radius: 40px;
             color: var(--primary);
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .switch-btn:hover {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* স্ট্যাটস গ্রিড প্রোফাইলে */
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px;
+        }
+
+        .profile-stat {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: scaleIn 0.4s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .profile-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-stat.primary { border-bottom-color: var(--primary); }
+        .profile-stat.success { border-bottom-color: var(--success); }
+        .profile-stat.danger { border-bottom-color: var(--danger); }
+        .profile-stat.warning { border-bottom-color: var(--warning); }
+
+        .profile-stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .profile-stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        /* প্রোফাইল অ্যাকশন */
+        .profile-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px;
+        }
+
+        .profile-action {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 16px 8px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-action:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            background: var(--primary-light);
+        }
+
+        .profile-action i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* মেসেজ বাটন */
+        .message-action-btn {
+            background: linear-gradient(135deg, var(--info), #2d4b7a);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 18px 24px;
+            margin: 0 20px 25px;
+            width: calc(100% - 40px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .message-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .message-action-btn:hover::before {
+            left: 100%;
         }
 
         /* ইমেজ গ্যালারি */
+        .image-gallery-section {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .treatment-count {
+            background: var(--primary-light);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 15px;
-            margin: 15px 0;
         }
 
         .gallery-item {
             position: relative;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
-            border: 2px solid var(--primary-light);
+            border: 3px solid var(--primary-light);
             cursor: pointer;
             aspect-ratio: 1;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
 
         .gallery-item .overlay {
@@ -694,110 +1058,124 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(10, 92, 75, 0.8);
+            background: linear-gradient(to top, rgba(26, 77, 74, 0.9), transparent);
             color: white;
-            padding: 5px;
-            font-size: 0.7rem;
+            padding: 8px;
+            font-size: 0.8rem;
             text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
         }
 
-        .no-images {
-            background: var(--light-gray);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            color: var(--gray);
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
         }
 
         /* প্রেসক্রিপশন কার্ড */
+        .prescription-section {
+            margin: 20px;
+        }
+
         .prescription-card {
-            background: #f8fafc;
-            border-radius: 20px;
-            padding: 20px;
+            background: linear-gradient(145deg, #f8fafc, #f0f5fa);
+            border-radius: 28px;
+            padding: 24px;
             border: 1px solid var(--light-gray);
-            margin-top: 20px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .prescription-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
         }
 
         .prescription-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
             border-bottom: 2px dashed var(--primary);
         }
 
         .clinic-name-pres {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 700;
             color: var(--primary);
+            font-family: 'Noto Serif Bengali', serif;
         }
 
         .prescription-date {
             background: var(--primary-light);
-            padding: 8px 15px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 40px;
             font-weight: 600;
+            color: var(--primary-dark);
         }
 
         .patient-info-pres {
             background: white;
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 25px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
+            box-shadow: var(--shadow-sm);
         }
 
         .info-item-pres {
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .info-label {
             color: var(--gray);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
         }
 
         .info-value {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--dark);
+            font-size: 1.1rem;
         }
 
         .problems-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         .problems-table th {
             background: var(--primary-light);
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--primary-dark);
         }
 
         .problems-table td {
-            padding: 12px 8px;
+            padding: 15px 10px;
             border-bottom: 1px solid #dee2e6;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .crown-badge {
             background: var(--warning-light);
             color: var(--warning);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             display: inline-block;
         }
 
         .total-pres {
             background: white;
-            border-radius: 16px;
-            padding: 15px;
-            margin-top: 15px;
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -807,145 +1185,174 @@
         /* চিকিৎসার ইতিহাস */
         .history-section {
             background: white;
-            border-radius: 28px;
-            padding: 20px;
+            border-radius: 32px;
+            padding: 24px;
             margin: 20px;
-            box-shadow: var(--box-shadow);
+            box-shadow: var(--shadow-md);
         }
 
         .filter-tabs {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
         }
 
         .filter-tab {
-            padding: 8px 20px;
-            border: 1.5px solid var(--light-gray);
-            border-radius: 30px;
+            padding: 10px 24px;
+            border: 2px solid var(--light-gray);
+            border-radius: 40px;
             background: white;
             color: var(--gray);
-            font-weight: 500;
+            font-weight: 600;
             white-space: nowrap;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .filter-tab.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+            animation: pulse 1s;
         }
 
         .treatment-card {
             background: #f8fafc;
-            border-radius: 20px;
-            padding: 18px;
-            border-left: 6px solid var(--primary);
+            border-radius: 24px;
+            padding: 22px;
+            border-left: 8px solid var(--primary);
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            margin-bottom: 18px;
+            animation: slideUp 0.3s ease;
+            border: 2px solid transparent;
+            border-left-width: 8px;
         }
 
         .treatment-card:hover {
-            transform: translateX(5px);
-            box-shadow: var(--box-shadow);
+            transform: translateX(8px) translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
 
-        .treatment-card.paid { border-left-color: var(--success); background: var(--success-light); }
-        .treatment-card.due { border-left-color: var(--danger); background: var(--danger-light); }
-        .treatment-card.crown { border-left-color: var(--warning); background: var(--warning-light); }
+        .treatment-card.paid { 
+            border-left-color: var(--success); 
+            background: linear-gradient(145deg, #f8fafc, var(--success-light));
+        }
+        .treatment-card.due { 
+            border-left-color: var(--danger); 
+            background: linear-gradient(145deg, #f8fafc, var(--danger-light));
+        }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .card-date {
             background: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
             color: var(--gray);
+            box-shadow: var(--shadow-sm);
         }
 
         .card-amount {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 700;
             color: var(--primary);
         }
 
-        .problem-list {
-            margin: 12px 0;
-        }
-
-        .problem-item {
-            background: white;
-            border-radius: 14px;
-            padding: 12px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .payment-log {
-            background: white;
-            border-radius: 14px;
-            padding: 12px;
-            margin-top: 12px;
-        }
-
-        .log-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px dashed #dee2e6;
-        }
-
         /* মাসিক পরিসংখ্যান */
         .monthly-stats {
-            background: linear-gradient(145deg, #f8fafc, #f0f4f8);
-            border-radius: 24px;
+            background: white;
+            border-radius: 28px;
             margin: 20px;
             overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
         .stats-header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 16px 20px;
+            padding: 18px 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-        }
-
-        .stats-content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
 
+        .stats-header:hover {
+            background: var(--primary-dark);
+        }
+
+        .stats-header i {
+            transition: transform 0.3s ease;
+        }
+
+        .stats-header.active i {
+            transform: rotate(180deg);
+        }
+
+        .stats-content {
+            padding: 0 22px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
         .stats-content.active {
-            padding: 20px;
-            max-height: 500px;
+            padding: 22px;
+            max-height: 600px;
         }
 
         .monthly-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 18px;
         }
 
         .month-card {
-            background: white;
-            padding: 15px;
-            border-radius: 18px;
+            background: linear-gradient(145deg, #f8fafc, #f0f5fa);
+            padding: 18px;
+            border-radius: 22px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .month-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .month-name {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .month-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .month-small {
+            font-size: 0.8rem;
+            color: var(--gray);
         }
 
         /* মোডাল */
@@ -955,100 +1362,80 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             display: none;
             align-items: flex-end;
             z-index: 2000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
 
         .modal.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background: white;
             width: 100%;
-            border-radius: 30px 30px 0 0;
-            padding: 25px;
-            max-height: 80vh;
+            border-radius: 40px 40px 0 0;
+            padding: 30px 25px;
+            max-height: 85vh;
             overflow-y: auto;
-            animation: slideUp 0.3s;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+            animation: slideUp 0.4s ease;
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             color: var(--primary);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
-        /* মেসেজ অপশন */
-        .message-options {
-            display: flex;
+        /* FAB মেনু */
+        .fab-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            display: none;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .message-option {
-            background: var(--primary-light);
-            border: 2px solid transparent;
-            border-radius: 18px;
-            padding: 16px;
-            display: flex;
             align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+            z-index: 1001;
         }
 
-        .message-option.selected {
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 5px 15px rgba(10, 92, 75, 0.1);
-        }
-
-        .message-preview {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 16px;
-            margin: 15px 0;
-            border-left: 4px solid var(--primary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--dark);
-            white-space: pre-line;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        /* বোতাম */
-        .btn {
-            padding: 16px;
+        .fab-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 35px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
             border: none;
-            border-radius: 18px;
-            font-weight: 700;
-            font-size: 1rem;
+            box-shadow: var(--shadow-lg);
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             cursor: pointer;
-            width: 100%;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
         }
 
-        .btn-primary { background: linear-gradient(145deg, var(--primary), var(--primary-dark)); color: white; }
-        .btn-success { background: linear-gradient(145deg, var(--success), var(--success-dark)); color: white; }
-        .btn-danger { background: linear-gradient(145deg, var(--danger), #8b1a1a); color: white; }
-        .btn-info { background: linear-gradient(145deg, #4a6fa5, #3a5a8c); color: white; }
+        .fab-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .fab-label {
+            background: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.3s ease;
+        }
 
         /* নিচের নেভিগেশন */
         .bottom-nav {
@@ -1059,10 +1446,10 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 12px 15px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
-            border-radius: 30px 30px 0 0;
-            padding-bottom: calc(12px + var(--safe-bottom));
+            padding: 14px 15px;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
+            border-radius: 35px 35px 0 0;
+            padding-bottom: calc(14px + var(--safe-bottom));
             z-index: 1000;
         }
 
@@ -1072,12 +1459,30 @@
             align-items: center;
             text-decoration: none;
             color: var(--gray);
-            font-size: 0.8rem;
-            gap: 4px;
-            padding: 8px 12px;
-            border-radius: 16px;
-            transition: all 0.2s;
+            font-size: 0.85rem;
+            gap: 5px;
+            padding: 10px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
             flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::before {
+            width: 30%;
         }
 
         .nav-item.active {
@@ -1085,45 +1490,12 @@
             background: var(--primary-light);
         }
 
+        .nav-item.active::before {
+            width: 50%;
+        }
+
         .nav-icon {
-            font-size: 1.4rem;
-        }
-
-        /* FAB মেনু */
-        .fab-menu {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .fab-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
-            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            box-shadow: 0 10px 25px rgba(10, 92, 75, 0.3);
             font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .fab-label {
-            background: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            margin-top: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         /* লোডিং ওভারলে */
@@ -1133,7 +1505,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1143,39 +1515,21 @@
 
         .loading-overlay.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--primary-light);
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--primary-light);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
-        /* মেসেজ বক্স */
-        .message-box {
-            position: fixed;
-            bottom: 100px;
-            left: 20px;
-            right: 20px;
-            background: white;
-            padding: 16px 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            z-index: 10000;
-            animation: slideUp 0.3s;
-            border-left: 5px solid;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-
-        .message-success { border-left-color: var(--success); color: var(--success-dark); }
-        .message-error { border-left-color: var(--danger); color: var(--danger); }
-        .message-info { border-left-color: var(--primary); color: var(--primary-dark); }
 
         /* ইমেজ ভিউয়ার */
         .image-viewer-modal {
@@ -1194,46 +1548,84 @@
 
         .image-viewer-modal.active {
             display: flex;
+            animation: fadeIn 0.3s ease;
         }
 
         .image-viewer-content {
             position: relative;
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 95%;
+            animation: scaleIn 0.3s ease;
         }
 
         .image-viewer-content img {
             max-width: 100%;
             max-height: 90vh;
-            border-radius: 20px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
         }
 
         .close-viewer {
             position: absolute;
-            top: -40px;
+            top: -50px;
             right: 0;
             background: rgba(255,255,255,0.2);
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
         }
 
+        .close-viewer:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        /* এম্পটি স্টেট */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             color: var(--gray);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--light-gray);
         }
 
+        /* মেসেজ বক্স */
+        .message-box {
+            position: fixed;
+            bottom: 120px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            padding: 18px 22px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideUp 0.3s ease;
+            border-left: 6px solid;
+        }
+
+        .message-success { border-left-color: var(--success); color: var(--success-dark); }
+        .message-error { border-left-color: var(--danger); color: var(--danger); }
+        .message-info { border-left-color: var(--primary); color: var(--primary-dark); }
+
+        /* রেসপনসিভ */
         @media (max-width: 480px) {
             .action-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-actions { grid-template-columns: repeat(2, 1fr); }
             .monthly-grid { grid-template-columns: 1fr; }
             .patient-info-pres { grid-template-columns: 1fr; }
         }
@@ -1263,7 +1655,10 @@
         <div class="header-top">
             <div>
                 <div class="clinic-name">চৌধুরী ডেন্টাল</div>
-                <div class="clinic-sub">সম্পূর্ণ ব্যবস্থাপনা</div>
+                <div class="clinic-sub">
+                    <i class="fas fa-tooth"></i>
+                    <span>সম্পূর্ণ ব্যবস্থাপনা</span>
+                </div>
             </div>
             <button class="menu-btn" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i>
@@ -1273,14 +1668,14 @@
 
     <!-- স্ট্যাটস কার্ড -->
     <div class="stats-grid" id="homeStats">
-        <div class="stat-card">
+        <div class="stat-card" onclick="document.querySelector('[data-section=\'home\']').click()">
             <div class="stat-icon"><i class="fas fa-users"></i></div>
             <div class="stat-info">
                 <h3>মোট রোগী</h3>
                 <div class="stat-number" id="totalPatients">0</div>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card success" onclick="document.querySelector('[data-section=\'home\']').click()">
             <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
             <div class="stat-info">
                 <h3>মোট বিল</h3>
@@ -1322,7 +1717,7 @@
             </div>
             <div class="recent-list" id="recentPatientsList">
                 <div class="empty-state">
-                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
                     <p>লোড হচ্ছে...</p>
                 </div>
             </div>
@@ -1453,7 +1848,7 @@
                 </div>
             </div>
 
-            <button type="button" class="add-problem-btn" id="addProblemBtn">
+            <button type="button" class="add-problem-btn" id="addProblemBtn" style="background: var(--primary-light); border: 2px dashed var(--primary); border-radius: 18px; padding: 16px; width: 100%; color: var(--primary); font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.3s ease;">
                 <i class="fas fa-plus-circle"></i>
                 আরেকটি সমস্যা যোগ করুন
             </button>
@@ -1504,7 +1899,7 @@
     <!-- প্রোফাইল সেকশন (লুকানো) -->
     <div id="profileSection" style="display: none;">
         <div class="profile-header">
-            <div class="header-top">
+            <div class="header-nav">
                 <button class="nav-btn" id="backFromProfile"><i class="fas fa-arrow-left"></i></button>
                 <button class="nav-btn" id="homeFromProfile"><i class="fas fa-home"></i></button>
             </div>
@@ -1523,42 +1918,53 @@
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-value" id="profileTotalBill">৳০</div><div class="stat-label">মোট বিল</div></div>
-            <div class="stat-card success"><div class="stat-value" id="profileTotalPaid">৳০</div><div class="stat-label">জমা</div></div>
-            <div class="stat-card danger"><div class="stat-value" id="profileTotalDue">৳০</div><div class="stat-label">বকেয়া</div></div>
-            <div class="stat-card warning"><div class="stat-value" id="profileTotalTreatments">০</div><div class="stat-label">চিকিৎসা</div></div>
+        <div class="profile-stats">
+            <div class="profile-stat primary">
+                <div class="profile-stat-value" id="profileTotalBill">৳০</div>
+                <div class="profile-stat-label">মোট বিল</div>
+            </div>
+            <div class="profile-stat success">
+                <div class="profile-stat-value" id="profileTotalPaid">৳০</div>
+                <div class="profile-stat-label">জমা</div>
+            </div>
+            <div class="profile-stat danger">
+                <div class="profile-stat-value" id="profileTotalDue">৳০</div>
+                <div class="profile-stat-label">বকেয়া</div>
+            </div>
+            <div class="profile-stat warning">
+                <div class="profile-stat-value" id="profileTotalTreatments">০</div>
+                <div class="profile-stat-label">চিকিৎসা</div>
+            </div>
         </div>
 
-        <div class="action-grid">
-            <button class="action-card" id="profileAddPayment">
-                <div class="action-icon" style="background: var(--success-light); color: var(--success);"><i class="fas fa-coins"></i></div>
-                <div class="action-title">টাকা জমা</div>
+        <div class="profile-actions">
+            <button class="profile-action" id="profileAddPayment">
+                <i class="fas fa-coins"></i>
+                <span>টাকা জমা</span>
             </button>
-            <button class="action-card" id="profileAddTreatment">
-                <div class="action-icon" style="background: var(--primary-light); color: var(--primary);"><i class="fas fa-tooth"></i></div>
-                <div class="action-title">নতুন চিকিৎসা</div>
+            <button class="profile-action" id="profileAddTreatment">
+                <i class="fas fa-tooth"></i>
+                <span>নতুন চিকিৎসা</span>
             </button>
-            <button class="action-card" id="profileEditPatient">
-                <div class="action-icon" style="background: var(--warning-light); color: var(--warning);"><i class="fas fa-user-edit"></i></div>
-                <div class="action-title">সম্পাদনা</div>
+            <button class="profile-action" id="profileEditPatient">
+                <i class="fas fa-user-edit"></i>
+                <span>সম্পাদনা</span>
             </button>
-            <button class="action-card" id="profileDiscountBtn">
-                <div class="action-icon" style="background: #ffe6e6; color: var(--danger);"><i class="fas fa-percentage"></i></div>
-                <div class="action-title">ডিসকাউন্ট</div>
+            <button class="profile-action" id="profileDiscountBtn">
+                <i class="fas fa-percentage"></i>
+                <span>ডিসকাউন্ট</span>
             </button>
         </div>
 
         <button class="message-action-btn" id="openMessageModalBtn">
-            <i class="fas fa-comment-dots"></i>
-            <span>মেসেজ পাঠান</span>
+            <span><i class="fas fa-comment-dots"></i> মেসেজ পাঠান</span>
             <i class="fas fa-chevron-right"></i>
         </button>
 
-        <div class="prescription-section" style="margin: 0 20px 20px;">
+        <div class="image-gallery-section">
             <div class="section-header">
-                <h3><i class="fas fa-prescription"></i> প্রেসক্রিপশন</h3>
-                <span class="treatment-count" id="imageCount">০ টি ছবি</span>
+                <h3><i class="fas fa-images"></i> প্রেসক্রিপশনের ছবি</h3>
+                <span class="treatment-count" id="imageCount">০ টি</span>
             </div>
             
             <div id="imageGallery" class="image-gallery">
@@ -1567,7 +1973,12 @@
                     <p>কোনো ছবি নেই</p>
                 </div>
             </div>
-            
+        </div>
+
+        <div class="prescription-section">
+            <div class="section-header">
+                <h3><i class="fas fa-prescription"></i> সর্বশেষ প্রেসক্রিপশন</h3>
+            </div>
             <div class="prescription-card" id="prescriptionCard"></div>
         </div>
 
@@ -1583,7 +1994,7 @@
 
         <div class="history-section">
             <div class="section-header">
-                <div class="section-title"><i class="fas fa-notes-medical"></i> চিকিৎসার ইতিহাস</div>
+                <h3><i class="fas fa-notes-medical"></i> চিকিৎসার ইতিহাস</h3>
                 <span class="treatment-count" id="historyCount">০ টি</span>
             </div>
 
@@ -1594,7 +2005,7 @@
             </div>
 
             <div class="history-list" id="treatmentHistory">
-                <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>লোড হচ্ছে...</p></div>
+                <div class="empty-state"><i class="fas fa-spinner fa-spin fa-3x"></i><p>লোড হচ্ছে...</p></div>
             </div>
         </div>
     </div>
@@ -1610,11 +2021,11 @@
                 </div>
                 <div class="form-group">
                     <label>মন্তব্য</label>
-                    <textarea id="paymentNotes" class="form-control" rows="3"></textarea>
+                    <textarea id="paymentNotes" class="form-control" rows="3" placeholder="ঐচ্ছিক"></textarea>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-success" style="flex: 2;">জমা দিন</button>
-                    <button type="button" class="btn btn-danger" style="flex: 1;" onclick="closeModal('paymentModal')">বাতিল</button>
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">জমা দিন</button>
+                    <button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('paymentModal')">বাতিল</button>
                 </div>
             </form>
         </div>
@@ -1634,9 +2045,9 @@
                     <label>পরিমাণ (৳)</label>
                     <input type="number" id="discountAmount" class="form-control" min="1" required>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 2;">প্রয়োগ করুন</button>
-                    <button type="button" class="btn btn-danger" style="flex: 1;" onclick="closeModal('discountModal')">বাতিল</button>
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">প্রয়োগ করুন</button>
+                    <button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('discountModal')">বাতিল</button>
                 </div>
             </form>
         </div>
@@ -1667,41 +2078,41 @@
 
             <div class="form-group">
                 <label>অতিরিক্ত মেসেজ</label>
-                <textarea id="customMessage" class="form-control" rows="3"></textarea>
+                <textarea id="customMessage" class="form-control" rows="3" placeholder="আপনার মেসেজ লিখুন..."></textarea>
             </div>
 
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-info" id="sendMessageBtn" style="flex: 2;">
+            <div style="display: flex; gap: 12px;">
+                <button class="submit-btn" id="sendMessageBtn" style="flex: 2;">
                     <i class="fas fa-paper-plane"></i> পাঠান
                 </button>
-                <button class="btn btn-danger" style="flex: 1;" onclick="closeModal('messageModal')">বাতিল</button>
+                <button class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('messageModal')">বাতিল</button>
             </div>
         </div>
     </div>
 
     <div class="modal" id="historyModal">
         <div class="modal-content">
-            <div class="section-title">
+            <h2 class="modal-title">
                 <i class="fas fa-history"></i>
                 <span>চিকিৎসার ইতিহাস</span>
-            </div>
+            </h2>
             <input type="text" class="form-control" id="searchHistory" placeholder="খুঁজুন..." style="margin-bottom: 20px;">
             <div class="patient-list" id="historyList"></div>
-            <button class="submit-btn" onclick="closeModal('historyModal')">বন্ধ করুন</button>
+            <button class="submit-btn" style="margin-top: 20px; background: var(--danger);" onclick="closeModal('historyModal')">বন্ধ করুন</button>
         </div>
     </div>
 
     <div class="modal" id="numbersModal">
         <div class="modal-content">
-            <div class="section-title">
+            <h2 class="modal-title">
                 <i class="fas fa-phone"></i>
                 <span>সকল ফোন নাম্বার</span>
-            </div>
-            <button class="add-problem-btn" id="copyAllNumbers">
+            </h2>
+            <button class="submit-btn" id="copyAllNumbers" style="margin-bottom: 20px; background: var(--info);">
                 <i class="fas fa-copy"></i> সব কপি করুন
             </button>
             <div class="patient-list" id="numbersList"></div>
-            <button class="submit-btn" onclick="closeModal('numbersModal')">বন্ধ করুন</button>
+            <button class="submit-btn" style="margin-top: 20px; background: var(--danger);" onclick="closeModal('numbersModal')">বন্ধ করুন</button>
         </div>
     </div>
 
@@ -1720,13 +2131,13 @@
     </nav>
 
     <script>
-
         // Service Worker রেজিস্টার
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
-  });
-}
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+
         // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
@@ -1773,16 +2184,68 @@ if ('serviceWorker' in navigator) {
             msgDiv.className = `message-box message-${type}`;
             msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
             container.appendChild(msgDiv);
-            setTimeout(() => msgDiv.remove(), 3000);
+            setTimeout(() => {
+                msgDiv.style.animation = 'slideUp 0.3s reverse';
+                setTimeout(() => msgDiv.remove(), 300);
+            }, 3000);
         }
 
         window.closeModal = function(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+            const modal = document.getElementById(modalId);
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                modal.classList.remove('active');
+                modal.style.animation = '';
+            }, 300);
         };
 
         window.viewImage = function(imageUrl) {
             document.getElementById('viewerImage').src = imageUrl;
             document.getElementById('imageViewerModal').classList.add('active');
+        };
+
+        window.showProfile = async function(profileId) {
+            showLoading();
+            
+            try {
+                const doc = await db.collection("patients").doc(profileId).get();
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    currentPatient = { id: doc.id, data: data };
+                    
+                    document.getElementById('homeSection').style.display = 'none';
+                    document.getElementById('newPatientSection').style.display = 'none';
+                    document.getElementById('profileSection').style.display = 'block';
+                    
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    document.querySelector('[data-section="profile"]').classList.add('active');
+                    
+                    displayPatientData(data);
+                    
+                    const phone = data.phone;
+                    if (phone) {
+                        const q = await db.collection("patients").where("phone", "==", phone).get();
+                        allPatientsWithSamePhone = [];
+                        q.forEach(d => {
+                            allPatientsWithSamePhone.push({ id: d.id, data: d.data() });
+                        });
+                        
+                        if (allPatientsWithSamePhone.length > 1) {
+                            currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === doc.id);
+                            document.getElementById('patientSwitcher').style.display = 'flex';
+                            document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
+                        } else {
+                            document.getElementById('patientSwitcher').style.display = 'none';
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Profile error:', err);
+                showMessage('প্রোফাইল লোড করতে সমস্যা', 'error');
+            } finally {
+                hideLoading();
+            }
         };
 
         // Cloudinary Upload
@@ -1963,9 +2426,12 @@ if ('serviceWorker' in navigator) {
             });
             
             removeBtn.addEventListener('click', function() {
-                clone.remove();
-                calculateTotals();
-                problemCount = document.querySelectorAll('.problem-item').length;
+                clone.style.animation = 'scaleOut 0.3s ease';
+                setTimeout(() => {
+                    clone.remove();
+                    calculateTotals();
+                    problemCount = document.querySelectorAll('.problem-item').length;
+                }, 300);
             });
             
             document.getElementById('problemsContainer').appendChild(clone);
@@ -2108,7 +2574,7 @@ if ('serviceWorker' in navigator) {
             const due = Math.max(0, netBill - totalPaid);
 
             const now = new Date();
-            const dateTime = now.toLocaleString('bn-BD');
+            const dateTime = now.toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
 
             const treatment = {
                 id: Date.now(),
@@ -2224,11 +2690,30 @@ if ('serviceWorker' in navigator) {
                     totalPatients++;
                 });
                 
-                document.getElementById('totalPatients').textContent = totalPatients;
-                document.getElementById('totalBill').innerHTML = `৳ ${totalBill}`;
+                animateNumber('totalPatients', 0, totalPatients, 1000);
+                animateNumber('totalBill', 0, totalBill, 1000, '৳ ');
             } catch (err) { 
                 console.error('Stats error:', err);
             }
+        }
+
+        function animateNumber(elementId, start, end, duration, prefix = '') {
+            const element = document.getElementById(elementId);
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const animate = () => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    element.innerHTML = prefix + end;
+                    return;
+                }
+                element.innerHTML = prefix + Math.round(current);
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
         }
 
         // Recent Patients
@@ -2239,7 +2724,7 @@ if ('serviceWorker' in navigator) {
                 const snapshot = await db.collection("patients").orderBy("lastUpdated", "desc").limit(5).get();
                 
                 if (snapshot.empty) {
-                    container.innerHTML = '<div class="empty-state"><p>কোনো রোগী নেই</p></div>';
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>কোনো রোগী নেই</p></div>';
                     document.getElementById('fabMenu').style.display = 'none';
                     return;
                 }
@@ -2251,7 +2736,7 @@ if ('serviceWorker' in navigator) {
                     const data = doc.data();
                     const name = data.name || 'অজানা';
                     const phone = data.phone || '—';
-                    const lastDate = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('bn-BD') : '';
+                    const lastDate = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' }) : '';
                     
                     if (!firstPatient) {
                         firstPatient = { name, phone, id: doc.id };
@@ -2262,8 +2747,8 @@ if ('serviceWorker' in navigator) {
                             <div class="recent-avatar"><i class="fas fa-user"></i></div>
                             <div class="recent-info">
                                 <div class="recent-name">${name}</div>
-                                <div class="recent-phone">${phone}</div>
-                                <div class="recent-date">📅 ${lastDate}</div>
+                                <div class="recent-phone"><i class="fas fa-phone-alt"></i> ${phone}</div>
+                                <div class="recent-date"><i class="fas fa-calendar-alt"></i> ${lastDate}</div>
                             </div>
                         </div>
                     `;
@@ -2282,7 +2767,7 @@ if ('serviceWorker' in navigator) {
                 
             } catch (err) {
                 console.error('Recent patients error:', err);
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা</div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
             }
         }
 
@@ -2309,15 +2794,15 @@ if ('serviceWorker' in navigator) {
                                 <div class="recent-avatar"><i class="fas fa-history"></i></div>
                                 <div class="recent-info">
                                     <div class="recent-name">${data.name || 'অজানা'}</div>
-                                    <div class="recent-phone">${data.phone || ''}</div>
-                                    <div class="recent-date">📋 ${t.problems?.[0]?.problem || 'চিকিৎসা'} | বকেয়া: ৳${t.totalDue || 0}</div>
+                                    <div class="recent-phone"><i class="fas fa-phone-alt"></i> ${data.phone || ''}</div>
+                                    <div class="recent-date"><i class="fas fa-tooth"></i> ${t.problems?.[0]?.problem || 'চিকিৎসা'} | বকেয়া: ৳${t.totalDue || 0}</div>
                                 </div>
                             </div>
                         `;
                     });
                 });
                 
-                container.innerHTML = html || '<div class="empty-state">কোনো ইতিহাস নেই</div>';
+                container.innerHTML = html || '<div class="empty-state"><i class="fas fa-history"></i><p>কোনো ইতিহাস নেই</p></div>';
                 
                 document.getElementById('searchHistory').addEventListener('input', (e) => {
                     const search = e.target.value.toLowerCase();
@@ -2329,7 +2814,7 @@ if ('serviceWorker' in navigator) {
                 
             } catch (err) {
                 console.error('History error:', err);
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা</div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
             } finally {
                 hideLoading();
             }
@@ -2355,13 +2840,13 @@ if ('serviceWorker' in navigator) {
                 const numbers = Array.from(phones).sort();
                 
                 container.innerHTML = numbers.map((phone, i) => `
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee;">
-                        <span>${i+1}. ${phone}</span>
-                        <button class="add-problem-btn" style="padding: 8px 15px; width: auto;" onclick="copyNumber('${phone}')">
-                            <i class="fas fa-copy"></i>
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; transition: all 0.2s;">
+                        <span><i class="fas fa-phone-alt" style="color: var(--primary); margin-right: 10px;"></i> ${phone}</span>
+                        <button class="add-problem-btn" style="padding: 8px 18px; width: auto; background: var(--primary-light); border: none; border-radius: 30px; color: var(--primary); font-weight: 600; cursor: pointer;" onclick="copyNumber('${phone}')">
+                            <i class="fas fa-copy"></i> কপি
                         </button>
                     </div>
-                `).join('') || '<div class="empty-state">কোনো নাম্বার নেই</div>';
+                `).join('') || '<div class="empty-state"><i class="fas fa-phone"></i><p>কোনো নাম্বার নেই</p></div>';
                 
                 document.getElementById('copyAllNumbers').onclick = async () => {
                     await navigator.clipboard.writeText(numbers.join('\n'));
@@ -2370,7 +2855,7 @@ if ('serviceWorker' in navigator) {
                 
             } catch (err) {
                 console.error('Numbers error:', err);
-                container.innerHTML = '<div class="empty-state">লোড করতে সমস্যা</div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
             } finally {
                 hideLoading();
             }
@@ -2380,51 +2865,6 @@ if ('serviceWorker' in navigator) {
             await navigator.clipboard.writeText(phone);
             showMessage('📋 নাম্বার কপি হয়েছে', 'success');
         };
-
-        // Show Profile
-        async function showProfile(profileId) {
-            showLoading();
-            
-            try {
-                const doc = await db.collection("patients").doc(profileId).get();
-                
-                if (doc.exists) {
-                    const data = doc.data();
-                    currentPatient = { id: doc.id, data: data };
-                    
-                    document.getElementById('homeSection').style.display = 'none';
-                    document.getElementById('newPatientSection').style.display = 'none';
-                    document.getElementById('profileSection').style.display = 'block';
-                    
-                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                    document.querySelector('[data-section="profile"]').classList.add('active');
-                    
-                    displayPatientData(data);
-                    
-                    const phone = data.phone;
-                    if (phone) {
-                        const q = await db.collection("patients").where("phone", "==", phone).get();
-                        allPatientsWithSamePhone = [];
-                        q.forEach(d => {
-                            allPatientsWithSamePhone.push({ id: d.id, data: d.data() });
-                        });
-                        
-                        if (allPatientsWithSamePhone.length > 1) {
-                            currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === doc.id);
-                            document.getElementById('patientSwitcher').style.display = 'flex';
-                            document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
-                        } else {
-                            document.getElementById('patientSwitcher').style.display = 'none';
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error('Profile error:', err);
-                showMessage('প্রোফাইল লোড করতে সমস্যা', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
 
         function displayPatientData(data) {
             document.getElementById('profilePatientName').textContent = data.name || '—';
@@ -2446,10 +2886,10 @@ if ('serviceWorker' in navigator) {
                 return { ...t, originalIndex: i, bill, paid, due, isPaid: due <= 0 };
             }).reverse();
             
-            document.getElementById('profileTotalBill').textContent = `৳${totalBill}`;
-            document.getElementById('profileTotalPaid').textContent = `৳${totalPaid}`;
-            document.getElementById('profileTotalDue').textContent = `৳${totalDue}`;
-            document.getElementById('profileTotalTreatments').textContent = allTreatments.length;
+            animateNumber('profileTotalBill', 0, totalBill, 800, '৳');
+            animateNumber('profileTotalPaid', 0, totalPaid, 800, '৳');
+            animateNumber('profileTotalDue', 0, totalDue, 800, '৳');
+            animateNumber('profileTotalTreatments', 0, allTreatments.length, 800);
             document.getElementById('historyCount').textContent = `${allTreatments.length} টি`;
             
             updateImageGallery(allTreatments);
@@ -2473,8 +2913,8 @@ if ('serviceWorker' in navigator) {
             });
             
             if (allImages.length === 0) {
-                gallery.innerHTML = '<div class="no-images"><i class="fas fa-images"></i><p>কোনো ছবি নেই</p></div>';
-                document.getElementById('imageCount').textContent = '০ টি ছবি';
+                gallery.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>কোনো ছবি নেই</p></div>';
+                document.getElementById('imageCount').textContent = '০ টি';
                 return;
             }
             
@@ -2483,18 +2923,18 @@ if ('serviceWorker' in navigator) {
                 html += `
                     <div class="gallery-item" onclick="viewImage('${img}')">
                         <img src="${img}" alt="Image ${i+1}">
-                        <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                        <div class="overlay"><i class="fas fa-search-plus"></i> দেখুন</div>
                     </div>
                 `;
             });
             
             gallery.innerHTML = html;
-            document.getElementById('imageCount').textContent = `${allImages.length} টি ছবি`;
+            document.getElementById('imageCount').textContent = `${allImages.length} টি`;
         }
 
         function generatePrescriptionPreview(treatment) {
             const patient = currentPatient.data;
-            const date = new Date(treatment.timestamp || Date.now()).toLocaleDateString('bn-BD');
+            const date = new Date(treatment.timestamp || Date.now()).toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' });
             
             let problemsHtml = '';
             let totalBill = 0;
@@ -2523,8 +2963,10 @@ if ('serviceWorker' in navigator) {
                 </div>
                 
                 <div class="patient-info-pres">
-                    <div><span class="info-label">রোগীর নাম</span><div class="info-value">${patient.name}</div></div>
-                    <div><span class="info-label">মোবাইল</span><div class="info-value">${patient.phone}</div></div>
+                    <div class="info-item-pres"><span class="info-label">রোগীর নাম</span><div class="info-value">${patient.name}</div></div>
+                    <div class="info-item-pres"><span class="info-label">মোবাইল</span><div class="info-value">${patient.phone}</div></div>
+                    <div class="info-item-pres"><span class="info-label">বয়স/লিঙ্গ</span><div class="info-value">${patient.age || '—'} ${patient.gender || ''}</div></div>
+                    <div class="info-item-pres"><span class="info-label">ঠিকানা</span><div class="info-value">${patient.address || '—'}</div></div>
                 </div>
                 
                 <table class="problems-table">
@@ -2554,7 +2996,7 @@ if ('serviceWorker' in navigator) {
             const container = document.getElementById('treatmentHistory');
             
             if (!filtered.length) {
-                container.innerHTML = '<div class="empty-state"><p>কোনো চিকিৎসা নেই</p></div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-notes-medical"></i><p>কোনো চিকিৎসা নেই</p></div>';
                 return;
             }
             
@@ -2570,19 +3012,20 @@ if ('serviceWorker' in navigator) {
                         </div>
                         
                         <div class="problem-list">
-                            ${(t.problems || [t]).map(p => `
+                            ${(t.problems || [t]).slice(0, 2).map(p => `
                                 <div class="problem-item">
                                     <div class="problem-name">${p.problem || 'চিকিৎসা'}</div>
                                     <div class="problem-detail">বিল: ৳${p.cost || 0}</div>
                                 </div>
                             `).join('')}
+                            ${(t.problems?.length || 0) > 2 ? `<div style="color: var(--gray); font-size: 0.85rem;">+ আরও ${t.problems.length - 2}টি</div>` : ''}
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
                             <span>জমা: ৳${t.paid}</span>
                             <span>ডিসকাউন্ট: ৳${t.discount || 0}</span>
                         </div>
-                        <div style="margin-top: 5px; font-weight: bold; color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'}">
+                        <div style="margin-top: 8px; font-weight: bold; color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'}">
                             বাকি: ৳${t.due}
                         </div>
                     </div>
@@ -2597,6 +3040,7 @@ if ('serviceWorker' in navigator) {
             if (treatment) {
                 document.getElementById('prescriptionCard').innerHTML = generatePrescriptionPreview(treatment);
                 document.querySelector('.prescription-section').scrollIntoView({ behavior: 'smooth' });
+                showMessage('প্রেসক্রিপশন আপডেট হয়েছে', 'success');
             }
         };
 
@@ -2638,6 +3082,7 @@ if ('serviceWorker' in navigator) {
                         <div class="month-value">${m.patients}</div>
                         <div class="month-small">রোগী</div>
                         <div class="month-value">৳${m.bill}</div>
+                        <div class="month-small">বিল</div>
                     </div>
                 `).join('') || '<div class="empty-state">কোনো ডেটা নেই</div>';
                 
@@ -2807,7 +3252,7 @@ if ('serviceWorker' in navigator) {
                     
                     const paymentLog = {
                         amount: pay,
-                        date: new Date().toLocaleDateString('bn-BD'),
+                        date: new Date().toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' }),
                         notes: notes
                     };
                     
@@ -2875,7 +3320,7 @@ if ('serviceWorker' in navigator) {
                 
                 const discountLog = {
                     amount: amount,
-                    date: new Date().toLocaleDateString('bn-BD')
+                    date: new Date().toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' })
                 };
                 
                 const discountHistory = [...(treatment.discountHistory || []), discountLog];
@@ -2961,9 +3406,10 @@ if ('serviceWorker' in navigator) {
         });
 
         // Toggle Monthly Stats
-        document.getElementById('toggleMonthlyStats').addEventListener('click', () => {
-            document.getElementById('monthlyContent').classList.toggle('active');
+        document.getElementById('toggleMonthlyStats').addEventListener('click', function() {
+            const content = document.getElementById('monthlyContent');
             const icon = document.getElementById('toggleIcon');
+            content.classList.toggle('active');
             icon.classList.toggle('fa-chevron-down');
             icon.classList.toggle('fa-chevron-up');
         });
