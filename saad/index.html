@@ -1984,14 +1984,43 @@
         }
 
         // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
-            authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
-            projectId: "plasma-raceway-465016-v0",
-            storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
-            messagingSenderId: "23620370976",
-            appId: "1:23620370976:web:3bb119ceb9e15608a33245"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
+        authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
+        projectId: "plasma-raceway-465016-v0",
+        storageBucket: "plasma-raceway-465016-v0.firebasestorage.app",
+        messagingSenderId: "23620370976",
+        appId: "1:23620370976:web:3bb119ceb9e15608a33245"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // ⚡⚡⚡ ক্রিটিক্যাল: লগইন চেক - এখুনি চালু হবে ⚡⚡⚡
+    (function() {
+        console.log('Auth Guard চালু হচ্ছে...');
+        
+        // পৃষ্ঠা লোড হওয়ার সাথে সাথে চেক করুন
+        firebase.auth().onAuthStateChanged(function(user) {
+            console.log('Auth State পরিবর্তন:', user ? 'লগইন আছে' : 'লগইন নেই');
+            
+            if (!user) {
+                // ইউজার লগইন না থাকলে - সাথে সাথে লগইন পৃষ্ঠায় পাঠান
+                console.log('লগইন নেই! লগইন পৃষ্ঠায় যাচ্ছে...');
+                
+                // সব কন্টেন্ট লুকিয়ে দিন
+                document.body.style.display = 'none';
+                
+                // রিডাইরেক্ট
+                window.location.replace('/saad/log.html');
+                return;
+            }
+            
+            // লগইন করা থাকলে সব কন্টেন্ট দেখান
+            console.log('লগইনকৃত ইউজার:', user.email);
+            document.body.style.display = 'block';
+        });
+    })();
 
         // Cloudinary Config
         const CLOUDINARY_CONFIG = {
