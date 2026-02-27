@@ -1,7 +1,7 @@
 {
-  "name": "চৌধুরী ডেন্টাল কেয়ার",
-  "short_name": "চৌধুরী ডেন্টাল",
-  "description": "ডেন্টাল কেস ম্যানেজমেন্ট সিস্টেম",
+  "name": "Chowdhury Dental",
+  "short_name": "Chowdhury Dental",
+  "description": "Chowdhury Dental case management system ",
   "start_url": "/saad/index.html",
   "scope": "/saad/",
   "display": "standalone",
