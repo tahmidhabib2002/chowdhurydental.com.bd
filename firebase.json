@@ -5,23 +5,6 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/saad/**",
-        "destination": "/saad/index.html"
-      },
-      {
-        "source": "**",
-        "destination": "/saad/index.html"
-      }
-    ],
-    "redirects": [
-      {
-        "source": "/",
-        "destination": "/saad/index.html",
-        "type": 301
-      }
     ]
   }
 }
