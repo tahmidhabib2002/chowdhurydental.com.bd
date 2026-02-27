@@ -464,30 +464,7 @@
             margin-bottom: 14px;
         }
 
-        .crown-checkbox {
-            margin: 18px 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            background: white;
-            border-radius: 14px;
-            cursor: pointer;
-        }
-
-        .crown-checkbox label {
-            font-weight: 600;
-            color: var(--dark);
-            cursor: pointer;
-        }
-
-        .crown-checkbox input {
-            width: 24px;
-            height: 24px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
+        /* ক্রাউন অপশন - আপডেটেড */
         .crown-options {
             background: linear-gradient(135deg, #f8f4ff, #f0eaff);
             border-radius: 20px;
@@ -495,6 +472,7 @@
             margin-top: 15px;
             display: none;
             animation: scaleIn 0.3s ease;
+            border: 2px solid var(--primary-light);
         }
 
         .crown-options.active {
@@ -570,6 +548,7 @@
             border: 3px solid var(--primary);
             transition: all 0.3s ease;
             animation: scaleIn 0.3s ease;
+            cursor: pointer;
         }
 
         .preview-img:hover {
@@ -577,7 +556,7 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* টোটাল সেকশন */
+        /* টোটাল সেকশন - আপডেটেড (শুধু বকেয়া) */
         .total-section {
             background: linear-gradient(145deg, #f8fafc, #f0f5fa);
             border-radius: 24px;
@@ -606,6 +585,8 @@
 
         .due-amount {
             color: var(--danger);
+            font-size: 2rem;
+            font-weight: 700;
         }
 
         .submit-btn {
@@ -1675,11 +1656,11 @@
                 <div class="stat-number" id="totalPatients">0</div>
             </div>
         </div>
-        <div class="stat-card success" onclick="document.querySelector('[data-section=\'home\']').click()">
-            <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+        <div class="stat-card danger" onclick="document.querySelector('[data-section=\'home\']').click()">
+            <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="stat-info">
-                <h3>মোট বিল</h3>
-                <div class="stat-number" id="totalBill">৳ 0</div>
+                <h3>মোট বকেয়া</h3>
+                <div class="stat-number" id="totalDue">৳ 0</div>
             </div>
         </div>
     </div>
@@ -1784,11 +1765,7 @@
                         </select>
                     </div>
 
-                    <div class="crown-checkbox">
-                        <input type="checkbox" class="crown-toggle-checkbox" id="crownToggle1">
-                        <label for="crownToggle1">ডেন্টাল ক্রাউন প্রয়োজন</label>
-                    </div>
-
+                    <!-- ক্রাউন অপশন - এখন শুধু ডেন্টাল ক্রাউন সিলেক্ট করলে দেখাবে -->
                     <div class="crown-options crown-section">
                         <div class="form-group">
                             <label class="form-label">ক্রাউনের ধরন</label>
@@ -1863,6 +1840,7 @@
             </div>
             <div class="image-preview" id="imagePreview"></div>
 
+            <!-- টোটাল সেকশন - শুধু বকেয়া দেখাচ্ছে -->
             <div class="total-section">
                 <div class="total-row">
                     <span class="total-label">মোট বিল</span>
@@ -1882,7 +1860,7 @@
                 </div>
                 <div class="total-row">
                     <span class="total-label">বাকি</span>
-                    <span class="total-amount due-amount" id="totalDue">৳ 0</span>
+                    <span class="due-amount" id="totalDue">৳ 0</span>
                 </div>
             </div>
 
@@ -1968,7 +1946,7 @@
             </div>
             
             <div id="imageGallery" class="image-gallery">
-                <div class="no-images">
+                <div class="empty-state">
                     <i class="fas fa-images"></i>
                     <p>কোনো ছবি নেই</p>
                 </div>
@@ -2264,7 +2242,7 @@
             return data.secure_url;
         }
 
-        // Image Upload Handler
+        // Image Upload Handler - আপডেটেড
         document.getElementById('imageUploadArea')?.addEventListener('click', () => {
             document.getElementById('prescriptionImages').click();
         });
@@ -2287,6 +2265,7 @@
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         img.className = 'preview-img';
+                        img.onclick = () => viewImage(img.src);
                         document.getElementById('imagePreview').appendChild(img);
                     };
                     reader.readAsDataURL(file);
@@ -2309,16 +2288,33 @@
             showMessage(`${completed}টি ছবি আপলোড হয়েছে`, 'success');
         });
 
-        // Crown Checkbox Handler
-        function handleCrownCheckbox(e) {
-            const problemItem = e.target.closest('.problem-item');
+        // নতুন ফাংশন: ক্রাউন অপশন টগল করার জন্য
+        function toggleCrownOptions(problemItem, show) {
             const crownDiv = problemItem.querySelector('.crown-options');
-            if (e.target.checked) {
+            if (show) {
                 crownDiv.classList.add('active');
             } else {
                 crownDiv.classList.remove('active');
+                // ক্রাউন সম্পর্কিত ফিল্ডগুলো রিসেট করা
+                const crownQty = problemItem.querySelector('.crown-qty');
+                const crownPrice = problemItem.querySelector('.crown-price');
+                if (crownQty) crownQty.value = '1';
+                if (crownPrice) crownPrice.value = '0';
             }
             calculateTotals();
+        }
+
+        // প্রোবলেম টাইপ চেঞ্জ হ্যান্ডলার - আপডেটেড
+        function handleProblemTypeChange(e) {
+            const problemItem = e.target.closest('.problem-item');
+            const selectedValue = e.target.value;
+            
+            // যদি ডেন্টাল ক্রাউন সিলেক্ট করা হয়, তাহলে ক্রাউন অপশন দেখাও
+            if (selectedValue === 'ডেন্টাল ক্রাউন') {
+                toggleCrownOptions(problemItem, true);
+            } else {
+                toggleCrownOptions(problemItem, false);
+            }
         }
 
         // Discount Handler
@@ -2348,17 +2344,23 @@
             });
         }
 
-        // Calculate Totals
+        // Calculate Totals - আপডেটেড
         function calculateTotals() {
             const problems = document.querySelectorAll('.problem-item');
             let totalBill = 0, totalDiscount = 0, totalPaid = 0;
             
             problems.forEach(p => {
                 const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
-                const isCrown = p.querySelector('.crown-toggle-checkbox')?.checked;
-                const crownQty = isCrown ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
-                const crownPrice = isCrown ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
-                const crownCost = crownQty * crownPrice;
+                const problemType = p.querySelector('.problem-type')?.value;
+                const isCrown = problemType === 'ডেন্টাল ক্রাউন';
+                
+                let crownCost = 0;
+                if (isCrown) {
+                    const crownQty = parseFloat(p.querySelector('.crown-qty')?.value) || 0;
+                    const crownPrice = parseFloat(p.querySelector('.crown-price')?.value) || 0;
+                    crownCost = crownQty * crownPrice;
+                }
+                
                 const problemTotal = cost + crownCost;
                 
                 let discount = 0;
@@ -2388,7 +2390,7 @@
             document.getElementById('totalDue').innerHTML = `৳ ${due}`;
         }
 
-        // Add Problem
+        // Add Problem - আপডেটেড
         document.getElementById('addProblemBtn')?.addEventListener('click', () => {
             const template = document.getElementById('problemTemplate');
             const clone = template.cloneNode(true);
@@ -2416,7 +2418,8 @@
             
             attachShadeListeners(clone);
             
-            clone.querySelector('.crown-toggle-checkbox').addEventListener('change', handleCrownCheckbox);
+            // প্রোবলেম টাইপ চেঞ্জ ইভেন্ট লিসেনার
+            clone.querySelector('.problem-type').addEventListener('change', handleProblemTypeChange);
             
             clone.querySelector('.discount-percent').addEventListener('input', discountInputHandler);
             clone.querySelector('.discount-amount').addEventListener('input', discountInputHandler);
@@ -2440,9 +2443,12 @@
 
         // Initialize Form Listeners
         attachShadeListeners(document);
-        document.querySelectorAll('.crown-toggle-checkbox').forEach(cb => {
-            cb.addEventListener('change', handleCrownCheckbox);
+        
+        // সব বিদ্যমান প্রোবলেম টাইপে ইভেন্ট লিসেনার যোগ করা
+        document.querySelectorAll('.problem-type').forEach(el => {
+            el.addEventListener('change', handleProblemTypeChange);
         });
+        
         document.querySelectorAll('.discount-percent, .discount-amount').forEach(el => {
             el.addEventListener('input', discountInputHandler);
         });
@@ -2450,7 +2456,7 @@
             el.addEventListener('input', calculateTotals);
         });
 
-        // Reset Form
+        // Reset Form - আপডেটেড
         function resetForm() {
             document.getElementById('patientName').value = '';
             document.getElementById('patientPhone').value = '';
@@ -2487,7 +2493,7 @@
             calculateTotals();
         }
 
-        // Form Submit
+        // Form Submit - আপডেটেড
         document.getElementById('patientForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
@@ -2519,10 +2525,18 @@
                     hasValidProblem = true;
                     
                     const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
-                    const isCrown = p.querySelector('.crown-toggle-checkbox')?.checked;
-                    const crownQty = isCrown ? (parseFloat(p.querySelector('.crown-qty')?.value) || 0) : 0;
-                    const crownPrice = isCrown ? (parseFloat(p.querySelector('.crown-price')?.value) || 0) : 0;
-                    const crownCost = crownQty * crownPrice;
+                    const isCrown = type === 'ডেন্টাল ক্রাউন';
+                    
+                    let crownQty = 0, crownPrice = 0, crownCost = 0, crownType = '', crownShade = '';
+                    
+                    if (isCrown) {
+                        crownQty = parseFloat(p.querySelector('.crown-qty')?.value) || 0;
+                        crownPrice = parseFloat(p.querySelector('.crown-price')?.value) || 0;
+                        crownCost = crownQty * crownPrice;
+                        crownType = p.querySelector('.crown-type')?.value || '';
+                        crownShade = p.querySelector('.crown-shade')?.value || '';
+                    }
+                    
                     const problemTotal = cost + crownCost;
 
                     let discount = 0;
@@ -2543,8 +2557,8 @@
                         description: p.querySelector('.problem-desc')?.value || '',
                         cost: cost,
                         isCrown: isCrown,
-                        crownType: isCrown ? (p.querySelector('.crown-type')?.value || '') : '',
-                        crownShade: isCrown ? (p.querySelector('.crown-shade')?.value || '') : '',
+                        crownType: crownType,
+                        crownShade: crownShade,
                         crownQty: crownQty,
                         crownPrice: crownPrice,
                         crownCost: crownCost,
@@ -2674,24 +2688,24 @@
             }
         });
 
-        // Dashboard Stats
+        // Dashboard Stats - আপডেটেড (মোট বকেয়া দেখাবে)
         async function loadDashboardStats() {
             try {
                 const snapshot = await db.collection("patients").get();
                 let totalPatients = 0;
-                let totalBill = 0;
+                let totalDue = 0;
                 
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const treatments = data.treatments || [];
                     treatments.forEach(t => {
-                        totalBill += t.totalBill || 0;
+                        totalDue += t.totalDue || 0;
                     });
                     totalPatients++;
                 });
                 
                 animateNumber('totalPatients', 0, totalPatients, 1000);
-                animateNumber('totalBill', 0, totalBill, 1000, '৳ ');
+                animateNumber('totalDue', 0, totalDue, 1000, '৳ ');
             } catch (err) { 
                 console.error('Stats error:', err);
             }
@@ -2699,6 +2713,7 @@
 
         function animateNumber(elementId, start, end, duration, prefix = '') {
             const element = document.getElementById(elementId);
+            if (!element) return;
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
@@ -3013,12 +3028,12 @@
                         
                         <div class="problem-list">
                             ${(t.problems || [t]).slice(0, 2).map(p => `
-                                <div class="problem-item">
-                                    <div class="problem-name">${p.problem || 'চিকিৎসা'}</div>
-                                    <div class="problem-detail">বিল: ৳${p.cost || 0}</div>
+                                <div class="problem-item" style="background: white; padding: 10px; border-radius: 14px; margin-bottom: 8px;">
+                                    <div style="font-weight: 600;">${p.problem || 'চিকিৎসা'}</div>
+                                    <div style="color: var(--gray);">বিল: ৳${p.cost || 0}</div>
                                 </div>
                             `).join('')}
-                            ${(t.problems?.length || 0) > 2 ? `<div style="color: var(--gray); font-size: 0.85rem;">+ আরও ${t.problems.length - 2}টি</div>` : ''}
+                            ${(t.problems?.length || 0) > 2 ? `<div style="color: var(--gray); font-size: 0.85rem; margin-top: 8px;">+ আরও ${t.problems.length - 2}টি</div>` : ''}
                         </div>
                         
                         <div style="display: flex; justify-content: space-between; margin-top: 10px;">
