@@ -3686,16 +3686,16 @@
             .catch((error) => {
                 console.error('Persistence error:', error);
             });
-      // Firebase অথেনটিকেশন গার্ড
+   // Firebase অথেনটিকেশন গার্ড - লগইন চেক
   firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
-      // ইউজার লগইন না থাকলে লগইন পৃষ্ঠায় রিডাইরেক্ট করুন
+      // ইউজার লগইন না থাকলে লগইন পৃষ্ঠায় পাঠিয়ে দাও
       console.log('লগইন করা নেই, লগইন পৃষ্ঠায় যাচ্ছে...');
-      window.location.href = '/log.html';
-    } else {
-      console.log('লগইনকৃত ইউজার:', user.email);
-      // এখানে আপনার মূল অ্যাপ্লিকেশন লোড হবে
+      window.location.href = '/saad/log.html';
+      return;
     }
+    console.log('লগইনকৃত ইউজার:', user.email);
+    // এখানেই আপনার বাকি অ্যাপ্লিকেশন কোড চালু হবে
   });
     </script>
 </body>
