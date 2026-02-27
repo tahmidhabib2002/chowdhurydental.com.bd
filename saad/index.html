@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>চৌধুরী ডেন্টাল কেয়ার</title>
+    <!-- ⚡ ফোর্স রিলোড - Service Worker আনরেজিস্টার করুন -->
+    <script>
+        (function() {
+            // পুরনো Service Worker আনরেজিস্টার করুন
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        console.log('Service Worker আনরেজিস্টার করা হচ্ছে:', registration);
+                        registration.unregister();
+                    }
+                });
+            }
+            
+            // লোকাল স্টোরেজ ক্লিয়ার করুন
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // ক্যাশ API ক্লিয়ার করুন
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        console.log('ক্যাশ ডিলিট করা হচ্ছে:', name);
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            console.log('ক্যাশ ক্লিয়ার করা হয়েছে!');
+        })();
+    </script>
+
     
     <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
