@@ -2,20 +2,21 @@
   "name": "চৌধুরী ডেন্টাল কেয়ার",
   "short_name": "চৌধুরী ডেন্টাল",
   "description": "ডেন্টাল কেস ম্যানেজমেন্ট সিস্টেম",
-  "start_url": "/saad/log.html",
+  "start_url": "/saad/index.html",
+  "scope": "/saad/",
   "display": "standalone",
   "background_color": "#0a5c4b",
   "theme_color": "#064635",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/saad/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/saad/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
