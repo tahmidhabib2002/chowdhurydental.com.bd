@@ -19,7 +19,6 @@
     <meta name="theme-color" content="#1a4d4a">
 
     <style>
-        /* আপনার বিদ্যমান সকল CSS এখানে থাকবে, শুধু প্রয়োজনীয় কিছু সংযোজন */
         * {
             margin: 0;
             padding: 0;
@@ -64,19 +63,22 @@
             animation: fadeIn 0.4s ease forwards;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-        .fade-in { animation: fadeIn 0.4s ease; }
-        .slide-up { animation: slideUp 0.4s ease; }
-        .slide-down { animation: slideDown 0.4s ease; }
-        .scale-in { animation: scaleIn 0.3s ease; }
-        .pulse { animation: pulse 2s infinite; }
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
 
-        /* --- হেডার ও নেভিগেশন (আপনার বিদ্যমান স্টাইল) --- */
         .mobile-header {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
@@ -87,17 +89,52 @@
             top: 0;
             z-index: 100;
             padding-top: calc(22px + var(--safe-top));
-            transition: all 0.3s ease;
         }
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .clinic-name { font-size: 1.9rem; font-weight: 700; font-family: 'Noto Serif Bengali', serif; line-height: 1.2; letter-spacing: -0.5px; }
-        .clinic-sub { font-size: 0.95rem; opacity: 0.9; margin-top: 4px; display: flex; align-items: center; gap: 6px; }
-        .menu-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: white; width: 48px; height: 48px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s ease; }
-        
-        /* --- সার্চ বার (নতুন) --- */
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .clinic-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            font-family: 'Noto Serif Bengali', serif;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .clinic-sub {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
         .search-container {
             padding: 15px 20px 5px 20px;
         }
+
         .search-box {
             display: flex;
             align-items: center;
@@ -107,10 +144,12 @@
             box-shadow: var(--shadow-md);
             border: 2px solid var(--primary-light);
         }
+
         .search-box i {
             color: var(--primary);
             font-size: 1.2rem;
         }
+
         .search-box input {
             flex: 1;
             border: none;
@@ -119,6 +158,7 @@
             outline: none;
             background: transparent;
         }
+
         .search-box button {
             background: var(--primary);
             border: none;
@@ -129,85 +169,694 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .search-box button:hover { background: var(--primary-dark); }
 
-        /* --- স্ট্যাটস ও অ্যাকশন গ্রিড (আপনার বিদ্যমান স্টাইল) --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 20px; margin-top: -15px; }
-        .stat-card { background: white; padding: 22px 18px; border-radius: var(--border-radius); box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 18px; border-bottom: 4px solid var(--primary); transition: all 0.3s ease; animation: slideUp 0.4s ease; cursor: pointer; }
-        .stat-card.danger { border-bottom-color: var(--danger); }
-        .stat-icon { width: 60px; height: 60px; background: var(--primary-light); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.8rem; transition: all 0.3s ease; }
-        .stat-card:hover .stat-icon { transform: scale(1.1) rotate(5deg); }
-        .stat-info h3 { font-size: 0.95rem; color: var(--gray); font-weight: 500; }
-        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--dark); line-height: 1.2; }
+        .search-box button:hover { 
+            background: var(--primary-dark); 
+        }
 
-        .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 20px 20px; }
-        .action-card { background: white; border-radius: 20px; padding: 18px 8px; text-align: center; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; animation: scaleIn 0.4s ease; }
-        .action-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: var(--shadow-md); }
-        .action-card:active { transform: scale(0.95); }
-        .action-icon { width: 52px; height: 52px; background: var(--primary-light); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--primary); font-size: 1.6rem; transition: all 0.3s ease; }
-        .action-card:hover .action-icon { transform: rotate(360deg); }
-        .action-title { font-weight: 700; color: var(--dark); margin-bottom: 4px; font-size: 1rem; }
-        .action-desc { font-size: 0.7rem; color: var(--gray); }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 20px;
+            margin-top: -15px;
+        }
 
-        /* --- সেকশন কার্ড (আপনার বিদ্যমান স্টাইল) --- */
-        .section-card { background: white; border-radius: 32px; padding: 24px; margin: 0 20px 25px; box-shadow: var(--shadow-md); transition: all 0.3s ease; animation: slideUp 0.4s ease; }
-        .section-title { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; font-size: 1.4rem; font-weight: 700; color: var(--primary-dark); border-bottom: 2px solid var(--light-gray); padding-bottom: 18px; }
+        .stat-card {
+            background: white;
+            padding: 22px 18px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border-bottom: 4px solid var(--primary);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+            cursor: pointer;
+        }
 
-        /* --- ফর্ম এলিমেন্টস (আপনার বিদ্যমান স্টাইল) --- */
-        .form-group { margin-bottom: 22px; animation: slideUp 0.3s ease; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); font-size: 0.95rem; }
-        .form-control { width: 100%; padding: 15px 18px; border: 2px solid var(--light-gray); border-radius: 18px; font-size: 1rem; transition: all 0.2s ease; background: white; }
-        .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 5px rgba(26, 77, 74, 0.1); transform: translateY(-2px); }
+        .stat-card.danger { 
+            border-bottom-color: var(--danger); 
+        }
 
-        /* আপডেট: নম্বর ইনপুট থেকে ডিফল্ট স্পিনার সরানো */
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-info h3 {
+            font-size: 0.95rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 0 20px 20px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 8px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--primary-light);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: var(--primary);
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .action-desc {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            margin: 0 20px 25px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid var(--light-gray);
+            border-radius: 18px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(26, 77, 74, 0.1);
+            transform: translateY(-2px);
+        }
+
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
             margin: 0; 
         }
-        input[type=number] { -moz-appearance: textfield; }
+        
+        input[type=number] { 
+            -moz-appearance: textfield; 
+        }
 
-        .gender-group { display: flex; gap: 25px; align-items: center; background: #f8fafc; padding: 14px 18px; border-radius: 18px; border: 2px solid var(--light-gray); }
-        .problem-container { margin-bottom: 20px; }
-        .problem-item { background: #f8fafc; border-radius: 24px; padding: 22px; margin-bottom: 18px; border: 1px solid var(--light-gray); position: relative; transition: all 0.3s ease; animation: slideUp 0.4s ease; }
-        .problem-item:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
-        .problem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-        .problem-badge { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 6px 18px; border-radius: 40px; font-size: 0.9rem; font-weight: 600; }
-        .remove-problem { background: none; border: none; color: var(--danger); font-size: 1.3rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
-        .remove-problem:hover { background: var(--danger-light); transform: rotate(90deg); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-        .crown-options { background: linear-gradient(135deg, #f8f4ff, #f0eaff); border-radius: 20px; padding: 18px; margin-top: 15px; display: none; animation: scaleIn 0.3s ease; border: 2px solid var(--primary-light); }
-        .crown-options.active { display: block; }
-        .shade-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
-        .shade-item { background: white; border: 2px solid var(--light-gray); border-radius: 14px; padding: 12px 5px; text-align: center; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; }
-        .shade-item.active { background: var(--primary); color: white; border-color: var(--primary); animation: pulse 1s; }
-        .image-upload-area { border: 3px dashed var(--primary); border-radius: 24px; padding: 30px; text-align: center; background: var(--primary-light); margin: 25px 0; cursor: pointer; transition: all 0.3s ease; }
-        .image-preview { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
-        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 16px; border: 3px solid var(--primary); transition: all 0.3s ease; animation: scaleIn 0.3s ease; cursor: pointer; }
-        .total-section { background: linear-gradient(145deg, #f8fafc, #f0f5fa); border-radius: 24px; padding: 22px; margin: 25px 0; animation: scaleIn 0.4s ease; }
-        .total-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #dee2e6; transition: all 0.2s ease; }
-        .grand-total { font-size: 1.8rem; color: var(--primary); }
-        .due-amount { color: var(--danger); font-size: 2rem; font-weight: 700; }
-        .submit-btn { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; padding: 20px; border-radius: 24px; font-size: 1.3rem; font-weight: 700; width: 100%; display: flex; align-items: center; justify-content: center; gap: 15px; cursor: pointer; box-shadow: var(--shadow-lg); margin-top: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .gender-group {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: 2px solid var(--light-gray);
+        }
 
-        /* --- প্রোফাইল সেকশন (আপনার বিদ্যমান স্টাইল) --- */
-        .profile-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-radius: 32px; padding: 28px 22px; margin: 0 20px 20px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden; animation: slideDown 0.4s ease; }
-        .header-nav { display: flex; justify-content: space-between; margin-bottom: 25px; position: relative; z-index: 2; }
-        .nav-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; width: 48px; height: 48px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s ease; }
-        .patient-name { font-size: 2.2rem; font-weight: 700; margin-bottom: 20px; line-height: 1.3; position: relative; z-index: 2; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .info-grid { display: flex; flex-direction: column; gap: 15px; position: relative; z-index: 2; }
-        .info-item { display: flex; align-items: center; gap: 14px; font-size: 1rem; opacity: 0.95; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 16px; backdrop-filter: blur(5px); }
-        .patient-switcher { background: rgba(0,0,0,0.2); border-radius: 24px; padding: 14px 20px; margin-top: 25px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); position: relative; z-index: 2; }
-        .switch-btn { background: white; border: none; padding: 10px 22px; border-radius: 40px; color: var(--primary); font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
-        .profile-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 20px; }
-        .profile-stat { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--shadow-md); text-align: center; transition: all 0.3s ease; animation: scaleIn 0.4s ease; border-bottom: 4px solid transparent; }
+        .gender-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        .gender-group input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .problem-container {
+            margin-bottom: 20px;
+        }
+
+        .problem-item {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 18px;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .problem-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .problem-badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .remove-problem {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 1.3rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-problem:hover {
+            background: var(--danger-light);
+            transform: rotate(90deg);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .crown-options {
+            background: linear-gradient(135deg, #f8f4ff, #f0eaff);
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 15px;
+            display: none;
+            animation: scaleIn 0.3s ease;
+            border: 2px solid var(--primary-light);
+        }
+
+        .crown-options.active {
+            display: block;
+        }
+
+        .shade-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .shade-item {
+            background: white;
+            border: 2px solid var(--light-gray);
+            border-radius: 14px;
+            padding: 12px 5px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shade-item:hover {
+            transform: scale(0.95);
+            border-color: var(--primary);
+        }
+
+        .shade-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            animation: pulse 1s;
+        }
+
+        .image-upload-area {
+            border: 3px dashed var(--primary);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            background: var(--primary-light);
+            margin: 25px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-area:hover {
+            background: #c5e0da;
+            transform: scale(0.98);
+        }
+
+        .image-upload-area i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 3px solid var(--primary);
+            transition: all 0.3s ease;
+            animation: scaleIn 0.3s ease;
+            cursor: pointer;
+        }
+
+        .preview-img:hover {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .total-section {
+            background: linear-gradient(145deg, #f8fafc, #f0f5fa);
+            border-radius: 24px;
+            padding: 22px;
+            margin: 25px 0;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+        }
+
+        .total-row:hover {
+            transform: translateX(5px);
+        }
+
+        .grand-total {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .due-amount {
+            color: var(--danger);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 24px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 30px rgba(26, 77, 74, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn.loading {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .recent-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+            padding: 18px;
+            background: #f8fafc;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: slideUp 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .recent-item:hover {
+            background: var(--primary-light);
+            transform: translateX(8px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .recent-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-soft));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-right: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .recent-item:hover .recent-avatar {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .recent-info {
+            flex: 1;
+        }
+
+        .recent-name {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .recent-phone {
+            color: var(--primary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .recent-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 32px;
+            padding: 28px 22px;
+            margin: 0 20px 20px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            animation: slideDown 0.4s ease;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s infinite;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(0.95);
+        }
+
+        .patient-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            opacity: 0.95;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+        }
+
+        .info-item i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .patient-switcher {
+            background: rgba(0,0,0,0.2);
+            border-radius: 24px;
+            padding: 14px 20px;
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .switch-btn {
+            background: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px;
+        }
+
+        .profile-stat {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: scaleIn 0.4s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .profile-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
         .profile-stat.primary { border-bottom-color: var(--primary); }
         .profile-stat.success { border-bottom-color: var(--success); }
         .profile-stat.danger { border-bottom-color: var(--danger); }
-        .profile-stat-value { font-size: 2.2rem; font-weight: 700; color: var(--dark); }
-        .profile-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px; }
 
-        /* --- মেসেজ বাটন (আপডেট করা হয়েছে) --- */
+        .profile-stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .profile-stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .profile-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px;
+        }
+
+        .profile-action {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 16px 8px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-action:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            background: var(--primary-light);
+        }
+
+        .profile-action i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
         .message-action-btn {
             background: linear-gradient(135deg, var(--info), #2d4b7a);
             color: white;
@@ -228,13 +877,531 @@
             overflow: hidden;
         }
 
-        /* --- মোডাল (আপনার বিদ্যমান স্টাইল) --- */
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: flex-end; z-index: 2000; backdrop-filter: blur(8px); }
-        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
-        .modal-content { background: white; width: 100%; border-radius: 40px 40px 0 0; padding: 30px 25px; max-height: 85vh; overflow-y: auto; animation: slideUp 0.4s ease; }
-        .modal-title { font-size: 1.7rem; color: var(--primary); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        .message-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
 
-        /* --- মেসেজ মোডাল (আপডেট) --- */
+        .image-gallery-section {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h3 {
+            font-size: 1.3rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .treatment-count {
+            background: var(--primary-light);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid var(--primary-light);
+            cursor: pointer;
+            aspect-ratio: 1;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(2deg);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(26, 77, 74, 0.9), transparent);
+            color: white;
+            padding: 8px;
+            font-size: 0.8rem;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .prescription-section {
+            margin: 20px;
+        }
+
+        .prescription-card {
+            background: linear-gradient(145deg, #f8fafc, #f0f5fa);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid var(--light-gray);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+        }
+
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed var(--primary);
+        }
+
+        .clinic-name-pres {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Noto Serif Bengali', serif;
+        }
+
+        .prescription-date {
+            background: var(--primary-light);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .patient-info-pres {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-item-pres {
+            font-size: 1rem;
+        }
+
+        .info-label {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .problems-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .problems-table th {
+            background: var(--primary-light);
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+        }
+
+        .problems-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.95rem;
+        }
+
+        .crown-badge {
+            background: var(--warning-light);
+            color: var(--warning);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .total-pres {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .history-section {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            margin: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-tab {
+            padding: 10px 24px;
+            border: 2px solid var(--light-gray);
+            border-radius: 40px;
+            background: white;
+            color: var(--gray);
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            animation: pulse 1s;
+        }
+
+        .treatment-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 22px;
+            border-left: 8px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 18px;
+            animation: slideUp 0.3s ease;
+            border: 2px solid transparent;
+            border-left-width: 8px;
+        }
+
+        .treatment-card:hover {
+            transform: translateX(8px) translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .treatment-card.paid { 
+            border-left-color: var(--success); 
+            background: linear-gradient(145deg, #f8fafc, var(--success-light));
+        }
+        
+        .treatment-card.due { 
+            border-left-color: var(--danger); 
+            background: linear-gradient(145deg, #f8fafc, var(--danger-light));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .card-date {
+            background: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--gray);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-amount {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: flex-end;
+            z-index: 2000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 40px 40px 0 0;
+            padding: 30px 25px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        .modal-title {
+            font-size: 1.7rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .fab-menu {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .fab-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 35px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .fab-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .fab-label {
+            background: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.3s ease;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 14px 15px;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
+            border-radius: 35px 35px 0 0;
+            padding-bottom: calc(14px + var(--safe-bottom));
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray);
+            font-size: 0.85rem;
+            gap: 5px;
+            padding: 10px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .nav-icon {
+            font-size: 1.6rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .image-viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .image-viewer-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-viewer-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .image-viewer-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+
+        .close-viewer:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--light-gray);
+        }
+
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            padding: 18px 22px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideDown 0.3s ease;
+            border-left: 6px solid;
+        }
+
+        .message-success { border-left-color: var(--success); color: var(--success); }
+        .message-error { border-left-color: var(--danger); color: var(--danger); }
+        .message-info { border-left-color: var(--primary); color: var(--primary); }
+
         .message-preview {
             background: #f8fafc;
             border-radius: 16px;
@@ -243,35 +1410,26 @@
             border-left: 4px solid var(--primary);
             font-size: 1rem;
             line-height: 1.6;
-            white-space: pre-wrap; /* লাইন ব্রেক রাখার জন্য */
+            white-space: pre-wrap;
         }
 
-        /* --- বটম নেভিগেশন --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 14px 15px; box-shadow: 0 -5px 25px rgba(0,0,0,0.1); border-radius: 35px 35px 0 0; padding-bottom: calc(14px + var(--safe-bottom)); z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--gray); font-size: 0.85rem; gap: 5px; padding: 10px 12px; border-radius: 20px; transition: all 0.3s ease; flex: 1; cursor: pointer; }
-        .nav-item.active { color: var(--primary); background: var(--primary-light); }
-        .nav-icon { font-size: 1.6rem; }
+        #historyList {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
 
-        /* --- লোডিং ওভারলে, ইমেজ ভিউয়ার, এম্পটি স্টেট (আপনার বিদ্যমান) --- */
-        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.95); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(5px); }
-        .loading-overlay.active { display: flex; }
-        .spinner { width: 60px; height: 60px; border: 5px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .image-viewer-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
-        .image-viewer-modal.active { display: flex; }
-        .empty-state { text-align: center; padding: 50px 20px; color: var(--gray); }
-        .empty-state i { font-size: 4rem; margin-bottom: 20px; color: var(--light-gray); }
-
-        /* --- রেসপন্সিভ --- */
         @media (max-width: 480px) {
             .action-grid { grid-template-columns: repeat(2, 1fr); }
             .profile-actions { grid-template-columns: repeat(2, 1fr); }
+            .patient-info-pres { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <!-- লোডিং ওভারলে -->
-    <div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
 
     <!-- মেসেজ কন্টেইনার -->
     <div id="messageContainer"></div>
@@ -279,7 +1437,9 @@
     <!-- ইমেজ ভিউয়ার মোডাল -->
     <div class="image-viewer-modal" id="imageViewerModal" onclick="if(event.target===this) this.classList.remove('active')">
         <div class="image-viewer-content">
-            <button class="close-viewer" onclick="document.getElementById('imageViewerModal').classList.remove('active')"><i class="fas fa-times"></i></button>
+            <button class="close-viewer" onclick="document.getElementById('imageViewerModal').classList.remove('active')">
+                <i class="fas fa-times"></i>
+            </button>
             <img id="viewerImage" src="" alt="">
         </div>
     </div>
@@ -289,13 +1449,18 @@
         <div class="header-top">
             <div>
                 <div class="clinic-name">চৌধুরী ডেন্টাল</div>
-                <div class="clinic-sub"><i class="fas fa-tooth"></i><span>সম্পূর্ণ ব্যবস্থাপনা</span></div>
+                <div class="clinic-sub">
+                    <i class="fas fa-tooth"></i>
+                    <span>সম্পূর্ণ ব্যবস্থাপনা</span>
+                </div>
             </div>
-            <button class="menu-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+            <button class="menu-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
         </div>
     </header>
 
-    <!-- সার্চ বার (নতুন) -->
+    <!-- সার্চ বার -->
     <div class="search-container">
         <div class="search-box">
             <i class="fas fa-search"></i>
@@ -308,51 +1473,104 @@
     <div class="stats-grid" id="homeStats">
         <div class="stat-card" onclick="document.querySelector('[data-section=\"home\"]').click()">
             <div class="stat-icon"><i class="fas fa-users"></i></div>
-            <div class="stat-info"><h3>মোট রোগী</h3><div class="stat-number" id="totalPatients">0</div></div>
+            <div class="stat-info">
+                <h3>মোট রোগী</h3>
+                <div class="stat-number" id="totalPatients">0</div>
+            </div>
         </div>
         <div class="stat-card danger" onclick="document.querySelector('[data-section=\"home\"]').click()">
             <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
-            <div class="stat-info"><h3>মোট বকেয়া</h3><div class="stat-number" id="totalDue">৳ 0</div></div>
+            <div class="stat-info">
+                <h3>মোট বকেয়া</h3>
+                <div class="stat-number" id="totalDue">৳ 0</div>
+            </div>
         </div>
     </div>
 
-    <!-- অ্যাকশন বাটন (প্রোফাইল বাটন সরিয়ে সার্চের সাথে রিপ্লেস করা হয়েছে) -->
+    <!-- অ্যাকশন বাটন -->
     <div class="action-grid">
-        <div class="action-card" id="newPatientBtn"><div class="action-icon"><i class="fas fa-user-plus"></i></div><div class="action-title">রোগী এড</div><div class="action-desc">নতুন এন্ট্রি</div></div>
-        <div class="action-card" id="patientHistoryBtn"><div class="action-icon"><i class="fas fa-history"></i></div><div class="action-title">হিস্ট্রি</div><div class="action-desc">আগের চিকিৎসা</div></div>
-        <div class="action-card" id="phoneNumbersBtn"><div class="action-icon"><i class="fas fa-phone"></i></div><div class="action-title">নাম্বার লিস্ট</div><div class="action-desc">সকল নাম্বার</div></div>
-        <!-- "প্রোফাইল দেখুন" বাটনটি সরিয়ে দেওয়া হয়েছে -->
+        <div class="action-card" id="newPatientBtn">
+            <div class="action-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="action-title">রোগী এড</div>
+            <div class="action-desc">নতুন এন্ট্রি</div>
+        </div>
+        <div class="action-card" id="patientHistoryBtn">
+            <div class="action-icon"><i class="fas fa-history"></i></div>
+            <div class="action-title">হিস্ট্রি</div>
+            <div class="action-desc">আগের চিকিৎসা</div>
+        </div>
+        <div class="action-card" id="phoneNumbersBtn">
+            <div class="action-icon"><i class="fas fa-phone"></i></div>
+            <div class="action-title">নাম্বার লিস্ট</div>
+            <div class="action-desc">সকল নাম্বার</div>
+        </div>
     </div>
 
     <!-- হোম সেকশন -->
     <div id="homeSection">
         <div class="section-card" id="recentSection">
-            <div class="section-title"><i class="fas fa-history"></i><span>সর্বশেষ রোগী</span></div>
-            <div class="recent-list" id="recentPatientsList"><div class="empty-state"><i class="fas fa-spinner fa-spin fa-3x"></i><p>লোড হচ্ছে...</p></div></div>
+            <div class="section-title">
+                <i class="fas fa-history"></i>
+                <span>সর্বশেষ রোগী</span>
+            </div>
+            <div class="recent-list" id="recentPatientsList">
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin fa-3x"></i>
+                    <p>লোড হচ্ছে...</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- নতুন রোগী ফর্ম সেকশন -->
     <div class="section-card" id="newPatientSection" style="display: none;">
-        <div class="section-title"><i class="fas fa-user-plus"></i><span>নতুন রোগী এন্ট্রি</span></div>
+        <div class="section-title">
+            <i class="fas fa-user-plus"></i>
+            <span>নতুন রোগী এন্ট্রি</span>
+        </div>
+
         <form id="patientForm">
             <input type="hidden" id="editPatientId" value="">
             <input type="hidden" id="fromProfileId" value="">
             
-            <div class="form-group"><label class="form-label">রোগীর নাম *</label><input type="text" id="patientName" class="form-control" placeholder="যেমন: মোঃ রফিকুল ইসলাম" required></div>
-
-            <div class="form-row">
-                <div class="form-group"><label class="form-label">বয়স</label><input type="number" id="patientAge" class="form-control" placeholder="বয়স" min="0" max="120"></div>
-                <div class="form-group"><label class="form-label">লিঙ্গ</label><div class="gender-group"><label><input type="radio" name="gender" value="পুরুষ"> পুরুষ</label><label><input type="radio" name="gender" value="মহিলা"> মহিলা</label></div></div>
+            <div class="form-group">
+                <label class="form-label">রোগীর নাম *</label>
+                <input type="text" id="patientName" class="form-control" placeholder="যেমন: মোঃ রফিকুল ইসলাম" required>
             </div>
 
-            <div class="form-group"><label class="form-label">মোবাইল নাম্বার *</label><input type="tel" id="patientPhone" class="form-control" placeholder="01XXXXXXXXX" required></div>
-            <div class="form-group"><label class="form-label">ঠিকানা</label><input type="text" id="patientAddress" class="form-control" placeholder="বিস্তারিত ঠিকানা"></div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">বয়স</label>
+                    <input type="number" id="patientAge" class="form-control" placeholder="বয়স" min="0" max="120">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">লিঙ্গ</label>
+                    <div class="gender-group">
+                        <label><input type="radio" name="gender" value="পুরুষ"> পুরুষ</label>
+                        <label><input type="radio" name="gender" value="মহিলা"> মহিলা</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">মোবাইল নাম্বার *</label>
+                <input type="tel" id="patientPhone" class="form-control" placeholder="01XXXXXXXXX" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">ঠিকানা</label>
+                <input type="text" id="patientAddress" class="form-control" placeholder="বিস্তারিত ঠিকানা">
+            </div>
 
             <!-- একাধিক সমস্যা সেকশন -->
             <div class="problem-container" id="problemsContainer">
                 <div class="problem-item" id="problemTemplate">
-                    <div class="problem-header"><span class="problem-badge">চিকিৎসা #১</span><button type="button" class="remove-problem" style="display: none;"><i class="fas fa-times"></i></button></div>
+                    <div class="problem-header">
+                        <span class="problem-badge">চিকিৎসা #১</span>
+                        <button type="button" class="remove-problem" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                     
                     <div class="form-group">
                         <label class="form-label">চিকিৎসার ধরন *</label>
@@ -369,7 +1587,15 @@
 
                     <!-- ক্রাউন অপশন -->
                     <div class="crown-options crown-section">
-                        <div class="form-group"><label class="form-label">ক্রাউনের ধরন</label><select class="form-control crown-type"><option value="পোর্সেলিন">পোর্সেলিন ক্রাউন</option><option value="জিরকোনিয়া">জিরকোনিয়া</option><option value="মেটাল">মেটাল</option></select></div>
+                        <div class="form-group">
+                            <label class="form-label">ক্রাউনের ধরন</label>
+                            <select class="form-control crown-type">
+                                <option value="পোর্সেলিন">পোর্সেলিন ক্রাউন</option>
+                                <option value="জিরকোনিয়া">জিরকোনিয়া</option>
+                                <option value="মেটাল">মেটাল</option>
+                            </select>
+                        </div>
+
                         <label class="form-label">শেড</label>
                         <div class="shade-grid">
                             <div class="shade-item active" data-shade="A2">A2</div>
@@ -380,40 +1606,86 @@
                         <input type="hidden" class="crown-shade" value="A2">
 
                         <div class="form-row">
-                            <div class="form-group"><label class="form-label">কয়টি</label><input type="number" class="form-control crown-qty" min="1" value="1"></div>
-                            <div class="form-group"><label class="form-label">প্রতি দাম (৳)</label><input type="number" class="form-control crown-price" min="0" placeholder="মূল্য"></div>
+                            <div class="form-group">
+                                <label class="form-label">কয়টি</label>
+                                <input type="number" class="form-control crown-qty" min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">প্রতি দাম (৳)</label>
+                                <input type="number" class="form-control crown-price" min="0" placeholder="মূল্য">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group"><label class="form-label">বিস্তারিত</label><textarea class="form-control problem-desc" rows="2" placeholder="বিশেষ তথ্য (যদি থাকে)"></textarea></div>
-                    <!-- আপডেট: placeholder যোগ করা হয়েছে, value="0" সরানো হয়েছে -->
-                    <div class="form-group"><label class="form-label">মোট খরচ (৳) *</label><input type="number" class="form-control problem-cost" min="0" placeholder="যেমন: ৫০০০" required></div>
-
-                    <div class="form-row">
-                        <div class="form-group"><label class="form-label">ডিসকাউন্ট (%)</label><input type="number" class="form-control discount-percent" min="0" max="100" placeholder="শতাংশ"></div>
-                        <div class="form-group"><label class="form-label">ডিসকাউন্ট (৳)</label><input type="number" class="form-control discount-amount" min="0" placeholder="টাকায়"></div>
+                    <div class="form-group">
+                        <label class="form-label">বিস্তারিত</label>
+                        <textarea class="form-control problem-desc" rows="2" placeholder="বিশেষ তথ্য (যদি থাকে)"></textarea>
                     </div>
 
-                    <div class="form-group"><label class="form-label">আজকের জমা (৳)</label><input type="number" class="form-control problem-paid" min="0" placeholder="জমার পরিমাণ"></div>
+                    <div class="form-group">
+                        <label class="form-label">মোট খরচ (৳) *</label>
+                        <input type="number" class="form-control problem-cost" min="0" placeholder="যেমন: ৫০০০" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">ডিসকাউন্ট (%)</label>
+                            <input type="number" class="form-control discount-percent" min="0" max="100" placeholder="শতাংশ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ডিসকাউন্ট (৳)</label>
+                            <input type="number" class="form-control discount-amount" min="0" placeholder="টাকায়">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">আজকের জমা (৳)</label>
+                        <input type="number" class="form-control problem-paid" min="0" placeholder="জমার পরিমাণ">
+                    </div>
                 </div>
             </div>
 
-            <button type="button" class="add-problem-btn" id="addProblemBtn" style="background: var(--primary-light); border: 2px dashed var(--primary); border-radius: 18px; padding: 16px; width: 100%; color: var(--primary); font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.3s ease;"><i class="fas fa-plus-circle"></i> আরেকটি সমস্যা যোগ করুন</button>
+            <button type="button" class="add-problem-btn" id="addProblemBtn" style="background: var(--primary-light); border: 2px dashed var(--primary); border-radius: 18px; padding: 16px; width: 100%; color: var(--primary); font-weight: 600; cursor: pointer; margin-bottom: 20px; transition: all 0.3s ease;">
+                <i class="fas fa-plus-circle"></i>
+                আরেকটি সমস্যা যোগ করুন
+            </button>
 
-            <div class="image-upload-area" id="imageUploadArea"><i class="fas fa-cloud-upload-alt"></i><p>প্রেসক্রিপশনের ছবি আপলোড করুন</p><input type="file" id="prescriptionImages" accept="image/*" multiple style="display: none;"></div>
+            <div class="image-upload-area" id="imageUploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>প্রেসক্রিপশনের ছবি আপলোড করুন</p>
+                <input type="file" id="prescriptionImages" accept="image/*" multiple style="display: none;">
+            </div>
             <div class="image-preview" id="imagePreview"></div>
             <input type="hidden" id="uploadedImages" value="">
 
             <!-- টোটাল সেকশন -->
             <div class="total-section">
-                <div class="total-row"><span class="total-label">মোট বিল</span><span class="total-amount" id="totalBillAmount">৳ 0</span></div>
-                <div class="total-row"><span class="total-label">মোট ডিসকাউন্ট</span><span class="total-amount" id="totalDiscount">৳ 0</span></div>
-                <div class="total-row"><span class="total-label">নেট বিল</span><span class="total-amount grand-total" id="netBill">৳ 0</span></div>
-                <div class="total-row"><span class="total-label">মোট জমা</span><span class="total-amount" id="totalPaid">৳ 0</span></div>
-                <div class="total-row"><span class="total-label">বাকি</span><span class="due-amount" id="totalDueAmount">৳ 0</span></div>
+                <div class="total-row">
+                    <span class="total-label">মোট বিল</span>
+                    <span class="total-amount" id="totalBillAmount">৳ 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">মোট ডিসকাউন্ট</span>
+                    <span class="total-amount" id="totalDiscount">৳ 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">নেট বিল</span>
+                    <span class="total-amount grand-total" id="netBill">৳ 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">মোট জমা</span>
+                    <span class="total-amount" id="totalPaid">৳ 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">বাকি</span>
+                    <span class="due-amount" id="totalDueAmount">৳ 0</span>
+                </div>
             </div>
 
-            <button type="submit" class="submit-btn" id="submitBtn"><i class="fas fa-save"></i> সংরক্ষণ করুন</button>
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <i class="fas fa-save"></i>
+                সংরক্ষণ করুন
+            </button>
         </form>
     </div>
 
@@ -424,56 +1696,154 @@
                 <button class="nav-btn" id="backFromProfile"><i class="fas fa-arrow-left"></i></button>
                 <button class="nav-btn" id="homeFromProfile"><i class="fas fa-home"></i></button>
             </div>
+            
             <h1 class="patient-name" id="profilePatientName">—</h1>
+            
             <div class="info-grid">
                 <div class="info-item"><i class="fas fa-phone-alt"></i> <span id="profilePatientPhone">মোবাইল: —</span></div>
                 <div class="info-item"><i class="fas fa-map-marker-alt"></i> <span id="profilePatientAddress">ঠিকানা: —</span></div>
                 <div class="info-item"><i class="fas fa-calendar-alt"></i> <span id="profilePatientAge">বয়স: —</span></div>
             </div>
-            <div class="patient-switcher" id="patientSwitcher" style="display: none;"><div><i class="fas fa-users"></i> <span id="patientCount">১/১</span></div><button class="switch-btn" id="switchPatientBtn">পরিবর্তন</button></div>
+            
+            <div class="patient-switcher" id="patientSwitcher" style="display: none;">
+                <div><i class="fas fa-users"></i> <span id="patientCount">১/১</span></div>
+                <button class="switch-btn" id="switchPatientBtn">পরিবর্তন</button>
+            </div>
         </div>
 
         <div class="profile-stats">
-            <div class="profile-stat primary"><div class="profile-stat-value" id="profileTotalBill">৳০</div><div class="profile-stat-label">মোট বিল</div></div>
-            <div class="profile-stat success"><div class="profile-stat-value" id="profileTotalPaid">৳০</div><div class="profile-stat-label">জমা</div></div>
-            <div class="profile-stat danger"><div class="profile-stat-value" id="profileTotalDue">৳০</div><div class="profile-stat-label">বকেয়া</div></div>
-            <div class="profile-stat primary"><div class="profile-stat-value" id="profileTotalTreatments">০</div><div class="profile-stat-label">চিকিৎসা</div></div>
+            <div class="profile-stat primary">
+                <div class="profile-stat-value" id="profileTotalBill">৳০</div>
+                <div class="profile-stat-label">মোট বিল</div>
+            </div>
+            <div class="profile-stat success">
+                <div class="profile-stat-value" id="profileTotalPaid">৳০</div>
+                <div class="profile-stat-label">জমা</div>
+            </div>
+            <div class="profile-stat danger">
+                <div class="profile-stat-value" id="profileTotalDue">৳০</div>
+                <div class="profile-stat-label">বকেয়া</div>
+            </div>
+            <div class="profile-stat primary">
+                <div class="profile-stat-value" id="profileTotalTreatments">০</div>
+                <div class="profile-stat-label">চিকিৎসা</div>
+            </div>
         </div>
 
         <div class="profile-actions">
-            <button class="profile-action" id="profileAddPayment"><i class="fas fa-coins"></i><span>টাকা জমা</span></button>
-            <button class="profile-action" id="profileAddTreatment"><i class="fas fa-tooth"></i><span>নতুন চিকিৎসা</span></button>
-            <button class="profile-action" id="profileEditPatient"><i class="fas fa-user-edit"></i><span>সম্পাদনা</span></button>
-            <button class="profile-action" id="profileDiscountBtn"><i class="fas fa-percentage"></i><span>ডিসকাউন্ট</span></button>
+            <button class="profile-action" id="profileAddPayment">
+                <i class="fas fa-coins"></i>
+                <span>টাকা জমা</span>
+            </button>
+            <button class="profile-action" id="profileAddTreatment">
+                <i class="fas fa-tooth"></i>
+                <span>নতুন চিকিৎসা</span>
+            </button>
+            <button class="profile-action" id="profileEditPatient">
+                <i class="fas fa-user-edit"></i>
+                <span>সম্পাদনা</span>
+            </button>
+            <button class="profile-action" id="profileDiscountBtn">
+                <i class="fas fa-percentage"></i>
+                <span>ডিসকাউন্ট</span>
+            </button>
         </div>
 
-        <!-- মেসেজ বাটন (আপডেট করা হয়েছে) -->
         <button class="message-action-btn" id="openMessageModalBtn">
             <span><i class="fas fa-comment-dots"></i> মেসেজ পাঠান</span>
             <i class="fas fa-chevron-right"></i>
         </button>
 
-        <!-- অন্যান্য প্রোফাইল এলিমেন্ট (গ্যালারি, প্রেসক্রিপশন, হিস্ট্রি) -->
-        <div class="image-gallery-section"><div class="section-header"><h3><i class="fas fa-images"></i> প্রেসক্রিপশনের ছবি</h3><span class="treatment-count" id="imageCount">০ টি</span></div><div id="imageGallery" class="image-gallery"><div class="empty-state"><i class="fas fa-images"></i><p>কোনো ছবি নেই</p></div></div></div>
-        <div class="prescription-section"><div class="section-header"><h3><i class="fas fa-prescription"></i> সর্বশেষ প্রেসক্রিপশন</h3></div><div class="prescription-card" id="prescriptionCard"></div></div>
-        <div class="history-section"><div class="section-header"><h3><i class="fas fa-notes-medical"></i> চিকিৎসার ইতিহাস</h3><span class="treatment-count" id="historyCount">০ টি</span></div><div class="filter-tabs"><button class="filter-tab active" data-filter="all">সকল</button><button class="filter-tab" data-filter="due">বকেয়া</button><button class="filter-tab" data-filter="paid">পরিশোধিত</button></div><div class="history-list" id="treatmentHistory"><div class="empty-state"><i class="fas fa-spinner fa-spin fa-3x"></i><p>লোড হচ্ছে...</p></div></div></div>
+        <div class="image-gallery-section">
+            <div class="section-header">
+                <h3><i class="fas fa-images"></i> প্রেসক্রিপশনের ছবি</h3>
+                <span class="treatment-count" id="imageCount">০ টি</span>
+            </div>
+            
+            <div id="imageGallery" class="image-gallery">
+                <div class="empty-state">
+                    <i class="fas fa-images"></i>
+                    <p>কোনো ছবি নেই</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="prescription-section">
+            <div class="section-header">
+                <h3><i class="fas fa-prescription"></i> সর্বশেষ প্রেসক্রিপশন</h3>
+            </div>
+            <div class="prescription-card" id="prescriptionCard"></div>
+        </div>
+
+        <div class="history-section">
+            <div class="section-header">
+                <h3><i class="fas fa-notes-medical"></i> চিকিৎসার ইতিহাস</h3>
+                <span class="treatment-count" id="historyCount">০ টি</span>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">সকল</button>
+                <button class="filter-tab" data-filter="due">বকেয়া</button>
+                <button class="filter-tab" data-filter="paid">পরিশোধিত</button>
+            </div>
+
+            <div class="history-list" id="treatmentHistory">
+                <div class="empty-state"><i class="fas fa-spinner fa-spin fa-3x"></i><p>লোড হচ্ছে...</p></div>
+            </div>
+        </div>
     </div>
 
     <!-- মোডালগুলি -->
-    <div class="modal" id="paymentModal"><div class="modal-content"><h2 class="modal-title"><i class="fas fa-hand-holding-usd"></i> টাকা জমা দিন</h2><form id="paymentForm"><div class="form-group"><label>পরিমাণ (৳)</label><input type="number" id="paymentAmount" class="form-control" min="1" required></div><div class="form-group"><label>মন্তব্য</label><textarea id="paymentNotes" class="form-control" rows="3" placeholder="ঐচ্ছিক"></textarea></div><div style="display: flex; gap: 12px;"><button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">জমা দিন</button><button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('paymentModal')">বাতিল</button></div></form></div></div>
-    <div class="modal" id="discountModal"><div class="modal-content"><h2 class="modal-title"><i class="fas fa-percentage"></i> ডিসকাউন্ট দিন</h2><form id="discountForm"><div class="form-group"><label>চিকিৎসা নির্বাচন</label><select id="treatmentSelect" class="form-control" required><option value="">নির্বাচন করুন</option></select></div><div class="form-group"><label>পরিমাণ (৳)</label><input type="number" id="discountAmount" class="form-control" min="1" required></div><div style="display: flex; gap: 12px;"><button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">প্রয়োগ করুন</button><button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('discountModal')">বাতিল</button></div></form></div></div>
-    
-    <!-- মেসেজ মোডাল (আপডেট) -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h2 class="modal-title"><i class="fas fa-hand-holding-usd"></i> টাকা জমা দিন</h2>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label>পরিমাণ (৳)</label>
+                    <input type="number" id="paymentAmount" class="form-control" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>মন্তব্য</label>
+                    <textarea id="paymentNotes" class="form-control" rows="3" placeholder="ঐচ্ছিক"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">জমা দিন</button>
+                    <button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('paymentModal')">বাতিল</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="discountModal">
+        <div class="modal-content">
+            <h2 class="modal-title"><i class="fas fa-percentage"></i> ডিসকাউন্ট দিন</h2>
+            <form id="discountForm">
+                <div class="form-group">
+                    <label>চিকিৎসা নির্বাচন</label>
+                    <select id="treatmentSelect" class="form-control" required>
+                        <option value="">নির্বাচন করুন</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>পরিমাণ (৳)</label>
+                    <input type="number" id="discountAmount" class="form-control" min="1" required>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="submit" class="submit-btn" style="flex: 2; padding: 16px;">প্রয়োগ করুন</button>
+                    <button type="button" class="submit-btn" style="flex: 1; background: var(--danger);" onclick="closeModal('discountModal')">বাতিল</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal" id="messageModal">
         <div class="modal-content">
             <h2 class="modal-title"><i class="fas fa-comment-dots"></i> মেসেজ পাঠান</h2>
             
-            <!-- প্রিভিউ সেকশন (এখন এখানে রোগীর নাম ও বয়স স্বয়ংক্রিয়ভাবে বসবে) -->
             <div class="message-preview" id="messagePreview">
-                <div id="previewText">রোগীর নাম ও বয়স এখানে দেখাবে...</div>
+                <div id="previewText">রোগীর নাম ও বয়স এখানে দেখাবে...</div>
             </div>
 
-            <!-- শুধুমাত্র কাস্টম মেসেজ ফিল্ড -->
             <div class="form-group">
                 <label>আপনার মেসেজ লিখুন</label>
                 <textarea id="customMessage" class="form-control" rows="6" placeholder="আপনার মেসেজ এখানে লিখুন..."></textarea>
@@ -486,11 +1856,35 @@
         </div>
     </div>
 
-    <div class="modal" id="historyModal"><div class="modal-content"><h2 class="modal-title"><i class="fas fa-history"></i><span>চিকিৎসার ইতিহাস</span></h2><input type="text" class="form-control" id="searchHistory" placeholder="খুঁজুন..." style="margin-bottom: 20px;"><div class="patient-list" id="historyList"></div></div></div>
-    <div class="modal" id="numbersModal"><div class="modal-content"><h2 class="modal-title"><i class="fas fa-phone"></i><span>সকল ফোন নাম্বার</span></h2><button class="submit-btn" id="copyAllNumbers" style="margin-bottom: 20px; background: var(--info);"><i class="fas fa-copy"></i> সব কপি করুন</button><div class="patient-list" id="numbersList"></div></div></div>
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <h2 class="modal-title">
+                <i class="fas fa-history"></i>
+                <span>চিকিৎসার ইতিহাস</span>
+            </h2>
+            <input type="text" class="form-control" id="searchHistory" placeholder="খুঁজুন..." style="margin-bottom: 20px;">
+            <div class="patient-list" id="historyList"></div>
+        </div>
+    </div>
 
-    <!-- FAB মেনু (আপনার বিদ্যমান) -->
-    <div class="fab-menu" id="fabMenu"><button class="fab-btn" id="fabProfileBtn"><i class="fas fa-user"></i></button><div class="fab-label" id="fabLabel">সর্বশেষ রোগী</div></div>
+    <div class="modal" id="numbersModal">
+        <div class="modal-content">
+            <h2 class="modal-title">
+                <i class="fas fa-phone"></i>
+                <span>সকল ফোন নাম্বার</span>
+            </h2>
+            <button class="submit-btn" id="copyAllNumbers" style="margin-bottom: 20px; background: var(--info);">
+                <i class="fas fa-copy"></i> সব কপি করুন
+            </button>
+            <div class="patient-list" id="numbersList"></div>
+        </div>
+    </div>
+
+    <!-- FAB মেনু -->
+    <div class="fab-menu" id="fabMenu">
+        <button class="fab-btn" id="fabProfileBtn"><i class="fas fa-user"></i></button>
+        <div class="fab-label" id="fabLabel">সর্বশেষ রোগী</div>
+    </div>
 
     <!-- নিচের নেভিগেশন -->
     <nav class="bottom-nav">
@@ -501,7 +1895,14 @@
     </nav>
 
     <script>
-        // Firebase Config (আপনার প্রদত্ত)
+        // Service Worker রেজিস্টার
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
+
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAxz46ug-CAywevI-PzmOp7ba5iiCK9dfM",
             authDomain: "plasma-raceway-465016-v0.firebaseapp.com",
@@ -511,7 +1912,11 @@
             appId: "1:23620370976:web:3bb119ceb9e15608a33245"
         };
 
-        const CLOUDINARY_CONFIG = { cloudName: 'dsdca3db1', uploadPreset: 'Dental' };
+        // Cloudinary Config
+        const CLOUDINARY_CONFIG = {
+            cloudName: 'dsdca3db1',
+            uploadPreset: 'Dental'
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -528,8 +1933,13 @@
         let currentFilter = 'all';
 
         // Utility Functions
-        function showLoading() { document.getElementById('loadingOverlay').classList.add('active'); }
-        function hideLoading() { document.getElementById('loadingOverlay').classList.remove('active'); }
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
 
         function showMessage(msg, type = 'info') {
             const container = document.getElementById('messageContainer');
@@ -537,23 +1947,78 @@
             msgDiv.className = `message-box message-${type}`;
             msgDiv.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
             container.appendChild(msgDiv);
-            setTimeout(() => { msgDiv.style.animation = 'fadeOut 0.3s ease'; setTimeout(() => msgDiv.remove(), 300); }, 3000);
+            setTimeout(() => {
+                msgDiv.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => msgDiv.remove(), 300);
+            }, 3000);
         }
 
-        function escapeHtml(unsafe) { /* ... আপনার বিদ্যমান ফাংশন ... */ if (!unsafe) return unsafe; return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+        function escapeHtml(unsafe) {
+            if (!unsafe) return unsafe;
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-        window.closeModal = function(modalId) { document.getElementById(modalId).classList.remove('active'); };
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        };
 
         // মোডালের বাইরে ক্লিক করলে বন্ধ হবে
-        document.querySelectorAll('.modal').forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); }); });
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
 
-        window.viewImage = function(imageUrl) { document.getElementById('viewerImage').src = imageUrl; document.getElementById('imageViewerModal').classList.add('active'); };
+        window.viewImage = function(imageUrl) {
+            document.getElementById('viewerImage').src = imageUrl;
+            document.getElementById('imageViewerModal').classList.add('active');
+        };
 
-        // --- প্রোফাইল দেখানোর ফাংশন (আপডেট) ---
-        window.showProfile = async function(profileId) {
+        // সার্চ ফাংশন
+        async function searchPatientByPhone(phone) {
+            if (!phone || phone.length < 11) {
+                showMessage(' সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন', 'warning');
+                return;
+            }
+            
             showLoading();
             try {
+                const snapshot = await db.collection("patients").where("phone", "==", phone).get();
+                if (snapshot.empty) {
+                    showMessage('এই নাম্বারের কোনো রোগী পাওয়া যায়নি', 'info');
+                } else {
+                    const firstDoc = snapshot.docs[0];
+                    showProfile(firstDoc.id);
+                }
+            } catch (err) {
+                console.error('Search error:', err);
+                showMessage('সার্চ করতে সমস্যা', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // প্রোফাইল দেখানোর ফাংশন
+        window.showProfile = async function(profileId) {
+            // যেকোনো খোলা মডাল বন্ধ করো
+            closeModal('historyModal');
+            closeModal('numbersModal');
+
+            showLoading();
+            
+            try {
                 const doc = await db.collection("patients").doc(profileId).get();
+                
                 if (doc.exists) {
                     const data = doc.data();
                     currentPatient = { id: doc.id, data: data };
@@ -575,64 +2040,202 @@
                     if (phone) {
                         const q = await db.collection("patients").where("phone", "==", phone).get();
                         allPatientsWithSamePhone = [];
-                        q.forEach(d => { allPatientsWithSamePhone.push({ id: d.id, data: d.data() }); });
+                        q.forEach(d => {
+                            allPatientsWithSamePhone.push({ id: d.id, data: d.data() });
+                        });
                         
                         if (allPatientsWithSamePhone.length > 1) {
                             currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === doc.id);
                             document.getElementById('patientSwitcher').style.display = 'flex';
                             document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
-                        } else { document.getElementById('patientSwitcher').style.display = 'none'; }
+                        } else {
+                            document.getElementById('patientSwitcher').style.display = 'none';
+                        }
                     }
-                } else { showMessage('রোগী পাওয়া যায়নি', 'error'); }
-            } catch (err) { console.error('Profile error:', err); showMessage('প্রোফাইল লোড করতে সমস্যা', 'error'); } finally { hideLoading(); }
-        };
-
-        // --- সার্চ ফাংশন (নতুন) ---
-        async function searchPatientByPhone(phone) {
-            if (!phone || phone.length < 11) { // মোটামুটি ১১ ডিজিটের ভ্যালিডেশন
-                showMessage(' সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন', 'warning');
-                return;
-            }
-            showLoading();
-            try {
-                // ঠিক ফোন নাম্বার ম্যাচ করার জন্য কোয়েরি
-                const snapshot = await db.collection("patients").where("phone", "==", phone).get();
-                if (snapshot.empty) {
-                    showMessage('এই নাম্বারের কোনো রোগী পাওয়া যায়নি', 'info');
                 } else {
-                    // প্রথম ম্যাচ পাওয়া রোগীর প্রোফাইল দেখাও
-                    const firstDoc = snapshot.docs[0];
-                    showProfile(firstDoc.id);
+                    showMessage('রোগী পাওয়া যায়নি', 'error');
                 }
             } catch (err) {
-                console.error('Search error:', err);
-                showMessage('সার্চ করতে সমস্যা', 'error');
+                console.error('Profile error:', err);
+                showMessage('প্রোফাইল লোড করতে সমস্যা', 'error');
             } finally {
                 hideLoading();
             }
+        };
+
+        // Cloudinary Upload
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Upload failed');
+            const data = await response.json();
+            return data.secure_url;
         }
 
-        // --- Cloudinary Upload, Image Handler, Problem Handlers (আপনার বিদ্যমান, অপরিবর্তিত) ---
-        async function uploadToCloudinary(file) { /* ... */ }
-        document.getElementById('imageUploadArea')?.addEventListener('click', () => { document.getElementById('prescriptionImages').click(); });
-        document.getElementById('prescriptionImages')?.addEventListener('change', async function(e) { /* ... */ });
+        // Image Upload Handler
+        document.getElementById('imageUploadArea')?.addEventListener('click', () => {
+            document.getElementById('prescriptionImages').click();
+        });
 
-        function toggleCrownOptions(problemItem, show) { /* ... */ }
-        function handleProblemTypeChange(e) { /* ... */ }
-        function discountInputHandler(e) { /* ... */ }
-        function attachShadeListeners(container) { /* ... */ }
-        function calculateTotals() { /* ... */ }
+        document.getElementById('prescriptionImages')?.addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
 
-        // Add Problem Button
+            showLoading();
+
+            try {
+                for (const file of files) {
+                    // প্রিভিউ দেখান
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-img';
+                        img.onclick = () => viewImage(img.src);
+                        document.getElementById('imagePreview').appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+
+                    // ক্লাউডিনারিতে আপলোড
+                    const imageUrl = await uploadToCloudinary(file);
+                    uploadedImageUrls.push(imageUrl);
+                }
+
+                document.getElementById('uploadedImages').value = JSON.stringify(uploadedImageUrls);
+                showMessage(`${files.length}টি ছবি আপলোড হয়েছে`, 'success');
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('আপলোডে সমস্যা', 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // ক্রাউন অপশন টগল
+        function toggleCrownOptions(problemItem, show) {
+            const crownDiv = problemItem.querySelector('.crown-options');
+            if (show) {
+                crownDiv.classList.add('active');
+            } else {
+                crownDiv.classList.remove('active');
+                const crownQty = problemItem.querySelector('.crown-qty');
+                const crownPrice = problemItem.querySelector('.crown-price');
+                if (crownQty) crownQty.value = '1';
+                if (crownPrice) crownPrice.value = '';
+            }
+            calculateTotals();
+        }
+
+        // প্রোবলেম টাইপ চেঞ্জ হ্যান্ডলার
+        function handleProblemTypeChange(e) {
+            const problemItem = e.target.closest('.problem-item');
+            const selectedValue = e.target.value;
+            
+            if (selectedValue === 'ডেন্টাল ক্রাউন') {
+                toggleCrownOptions(problemItem, true);
+            } else {
+                toggleCrownOptions(problemItem, false);
+            }
+        }
+
+        // ডিসকাউন্ট হ্যান্ডলার
+        function discountInputHandler(e) {
+            const problemItem = e.target.closest('.problem-item');
+            const percent = problemItem.querySelector('.discount-percent');
+            const amount = problemItem.querySelector('.discount-amount');
+            
+            if (e.target.classList.contains('discount-percent') && percent.value) {
+                amount.value = '';
+            } else if (e.target.classList.contains('discount-amount') && amount.value) {
+                percent.value = '';
+            }
+            calculateTotals();
+        }
+
+        // শেড লিসেনার
+        function attachShadeListeners(container) {
+            container.querySelectorAll('.shade-item').forEach(shade => {
+                shade.addEventListener('click', function() {
+                    const grid = this.closest('.shade-grid');
+                    grid.querySelectorAll('.shade-item').forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                    const shadeInput = this.closest('.crown-options').querySelector('.crown-shade');
+                    if (shadeInput) shadeInput.value = this.dataset.shade;
+                });
+            });
+        }
+
+        // টোটাল ক্যালকুলেট
+        function calculateTotals() {
+            const problems = document.querySelectorAll('.problem-item');
+            let totalBill = 0, totalDiscount = 0, totalPaid = 0;
+            
+            problems.forEach(p => {
+                const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
+                const problemType = p.querySelector('.problem-type')?.value;
+                const isCrown = problemType === 'ডেন্টাল ক্রাউন';
+                
+                let crownCost = 0;
+                if (isCrown) {
+                    const crownQty = parseFloat(p.querySelector('.crown-qty')?.value) || 0;
+                    const crownPrice = parseFloat(p.querySelector('.crown-price')?.value) || 0;
+                    crownCost = crownQty * crownPrice;
+                }
+                
+                const problemTotal = cost + crownCost;
+                
+                let discount = 0;
+                const discountPercent = parseFloat(p.querySelector('.discount-percent')?.value) || 0;
+                const discountAmount = parseFloat(p.querySelector('.discount-amount')?.value) || 0;
+                
+                if (discountPercent > 0) {
+                    discount = (problemTotal * discountPercent) / 100;
+                } else if (discountAmount > 0) {
+                    discount = discountAmount;
+                }
+                
+                const paid = parseFloat(p.querySelector('.problem-paid')?.value) || 0;
+                
+                totalBill += problemTotal;
+                totalDiscount += discount;
+                totalPaid += paid;
+            });
+            
+            const netBill = totalBill - totalDiscount;
+            const due = Math.max(0, netBill - totalPaid);
+            
+            document.getElementById('totalBillAmount').innerHTML = `৳ ${totalBill}`;
+            document.getElementById('totalDiscount').innerHTML = `৳ ${totalDiscount}`;
+            document.getElementById('netBill').innerHTML = `৳ ${netBill}`;
+            document.getElementById('totalPaid').innerHTML = `৳ ${totalPaid}`;
+            document.getElementById('totalDueAmount').innerHTML = `৳ ${due}`;
+        }
+
+        // Add Problem
         document.getElementById('addProblemBtn')?.addEventListener('click', () => {
             const template = document.getElementById('problemTemplate');
             const clone = template.cloneNode(true);
             problemCount++;
+            
             clone.id = '';
             clone.querySelector('.problem-badge').textContent = `চিকিৎসা #${problemCount}`;
-            // সব ফিল্ড রিসেট (value="" করে দেওয়া)
-            clone.querySelectorAll('input, select, textarea').forEach(el => { if (el.type !== 'hidden') { if (el.type === 'checkbox') el.checked = false; else el.value = ''; } });
-            // ডিফল্ট ভ্যালু সেট (শুধু প্রয়োজনীয়)
+            
+            // সব ফিল্ড রিসেট
+            clone.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.type !== 'hidden') {
+                    if (el.type === 'checkbox') el.checked = false;
+                    else el.value = '';
+                }
+            });
+            
+            // ডিফল্ট ভ্যালু সেট
             clone.querySelector('.crown-qty').value = '1';
             clone.querySelector('.crown-price').value = '';
             clone.querySelector('.problem-cost').value = '';
@@ -641,29 +2244,503 @@
             clone.querySelector('.problem-paid').value = '';
             clone.querySelector('.crown-options').classList.remove('active');
             
+            // রিমুভ বাটন দেখান
             const removeBtn = clone.querySelector('.remove-problem');
             removeBtn.style.display = 'flex';
+            
+            // ইভেন্ট লিসেনার অ্যাটাচ
             attachShadeListeners(clone);
+            
             clone.querySelector('.problem-type').addEventListener('change', handleProblemTypeChange);
+            
             clone.querySelector('.discount-percent').addEventListener('input', discountInputHandler);
             clone.querySelector('.discount-amount').addEventListener('input', discountInputHandler);
-            clone.querySelectorAll('.problem-cost, .problem-paid, .crown-qty, .crown-price').forEach(el => { el.addEventListener('input', calculateTotals); });
-            removeBtn.addEventListener('click', function() { clone.remove(); calculateTotals(); problemCount = document.querySelectorAll('.problem-item').length; const firstRemoveBtn = document.querySelector('#problemsContainer .problem-item:first-child .remove-problem'); if (firstRemoveBtn) firstRemoveBtn.style.display = 'none'; });
+            
+            clone.querySelectorAll('.problem-cost, .problem-paid, .crown-qty, .crown-price').forEach(el => {
+                el.addEventListener('input', calculateTotals);
+            });
+            
+            removeBtn.addEventListener('click', function() {
+                clone.remove();
+                calculateTotals();
+                problemCount = document.querySelectorAll('.problem-item').length;
+                
+                // প্রথম আইটেমের রিমুভ বাটন লুকান
+                const firstRemoveBtn = document.querySelector('#problemsContainer .problem-item:first-child .remove-problem');
+                if (firstRemoveBtn) {
+                    firstRemoveBtn.style.display = 'none';
+                }
+            });
+            
             document.getElementById('problemsContainer').appendChild(clone);
             calculateTotals();
         });
 
-        // ফর্ম সাবমিট (আপনার বিদ্যমান, কিন্তু ইনপুট ফিল্ডে value="" সেট করা আছে, তাই সাবমিটে NaN এড়াতে parseFloat-এর আগে || 0 ব্যবহার করুন)
-        document.getElementById('patientForm')?.addEventListener('submit', async (e) => { /* ... আপনার বিদ্যমান কোড ... তবে নিশ্চিত করুন parseFloat-এর আগে || 0 ব্যবহার করছেন। যেমন: const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0; */ });
+        // Initialize Form Listeners
+        attachShadeListeners(document);
+        
+        document.querySelectorAll('.problem-type').forEach(el => {
+            el.addEventListener('change', handleProblemTypeChange);
+        });
+        
+        document.querySelectorAll('.discount-percent, .discount-amount').forEach(el => {
+            el.addEventListener('input', discountInputHandler);
+        });
+        
+        document.querySelectorAll('.problem-cost, .problem-paid, .crown-qty, .crown-price').forEach(el => {
+            el.addEventListener('input', calculateTotals);
+        });
 
-        // ড্যাশবোর্ড ও রিসেন্ট লোড (আপনার বিদ্যমান)
-        async function loadDashboardStats() { /* ... */ }
-        function animateNumber(elementId, start, end, duration, prefix = '') { /* ... */ }
-        async function loadRecentPatients() { /* ... */ }
-        async function openHistoryModal() { /* ... */ }
-        async function openNumbersModal() { /* ... */ }
+        // ফর্ম রিসেট
+        function resetForm() {
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientPhone').value = '';
+            document.getElementById('patientAge').value = '';
+            document.getElementById('patientAddress').value = '';
+            document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+            document.getElementById('editPatientId').value = '';
+            document.getElementById('fromProfileId').value = '';
+            
+            const container = document.getElementById('problemsContainer');
+            while (container.children.length > 1) {
+                container.lastElementChild.remove();
+            }
+            
+            const first = container.firstElementChild;
+            first.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.type === 'checkbox') el.checked = false;
+                else if (el.type !== 'hidden') el.value = '';
+            });
+            
+            first.querySelector('.crown-qty').value = '1';
+            first.querySelector('.crown-price').value = '';
+            first.querySelector('.problem-cost').value = '';
+            first.querySelector('.discount-percent').value = '';
+            first.querySelector('.discount-amount').value = '';
+            first.querySelector('.problem-paid').value = '';
+            first.querySelector('.crown-options').classList.remove('active');
+            
+            first.querySelector('.remove-problem').style.display = 'none';
+            
+            problemCount = 1;
+            uploadedImageUrls = [];
+            document.getElementById('uploadedImages').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            
+            calculateTotals();
+        }
 
-        // প্রোফাইল ডেটা ডিসপ্লে (আপডেট করা হয়েছে, মেসেজের জন্য ডিফল্ট টেক্সট তৈরি এখানে)
+        // ফর্ম সাবমিট
+        document.getElementById('patientForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            
+            const name = document.getElementById('patientName').value.trim();
+            const phone = document.getElementById('patientPhone').value.trim();
+            
+            if (!name || !phone) {
+                showMessage('নাম ও মোবাইল নাম্বার আবশ্যক', 'error');
+                submitBtn.classList.remove('loading');
+                return;
+            }
+            
+            if (!/^01[3-9]\d{8}$/.test(phone)) {
+                showMessage('সঠিক মোবাইল নাম্বার দিন', 'error');
+                submitBtn.classList.remove('loading');
+                return;
+            }
+
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || '';
+
+            const problems = [];
+            let hasValidProblem = false;
+
+            document.querySelectorAll('.problem-item').forEach(p => {
+                const type = p.querySelector('.problem-type')?.value;
+                if (type) {
+                    hasValidProblem = true;
+                    
+                    const cost = parseFloat(p.querySelector('.problem-cost')?.value) || 0;
+                    const isCrown = type === 'ডেন্টাল ক্রাউন';
+                    
+                    let crownQty = 0, crownPrice = 0, crownCost = 0, crownType = '', crownShade = '';
+                    
+                    if (isCrown) {
+                        crownQty = parseFloat(p.querySelector('.crown-qty')?.value) || 0;
+                        crownPrice = parseFloat(p.querySelector('.crown-price')?.value) || 0;
+                        crownCost = crownQty * crownPrice;
+                        crownType = p.querySelector('.crown-type')?.value || '';
+                        crownShade = p.querySelector('.crown-shade')?.value || '';
+                    }
+                    
+                    const problemTotal = cost + crownCost;
+
+                    let discount = 0;
+                    const discountPercent = parseFloat(p.querySelector('.discount-percent')?.value) || 0;
+                    const discountAmount = parseFloat(p.querySelector('.discount-amount')?.value) || 0;
+                    
+                    if (discountPercent > 0) {
+                        discount = (problemTotal * discountPercent) / 100;
+                    } else if (discountAmount > 0) {
+                        discount = discountAmount;
+                    }
+
+                    const paid = parseFloat(p.querySelector('.problem-paid')?.value) || 0;
+                    
+                    problems.push({
+                        id: Date.now() + Math.random(),
+                        problem: type,
+                        description: p.querySelector('.problem-desc')?.value || '',
+                        cost: cost,
+                        isCrown: isCrown,
+                        crownType: crownType,
+                        crownShade: crownShade,
+                        crownQty: crownQty,
+                        crownPrice: crownPrice,
+                        crownCost: crownCost,
+                        totalCost: problemTotal,
+                        discountPercent: discountPercent,
+                        discountAmount: discountAmount,
+                        discount: discount,
+                        paid: paid
+                    });
+                }
+            });
+
+            if (!hasValidProblem) {
+                showMessage('কমপক্ষে একটি সমস্যা নির্বাচন করুন', 'error');
+                submitBtn.classList.remove('loading');
+                return;
+            }
+
+            let totalBill = 0, totalDiscount = 0, totalPaid = 0;
+            problems.forEach(p => {
+                totalBill += p.totalCost;
+                totalDiscount += p.discount;
+                totalPaid += p.paid;
+            });
+            
+            const netBill = totalBill - totalDiscount;
+            const due = Math.max(0, netBill - totalPaid);
+
+            const now = new Date();
+            const dateTime = now.toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' });
+
+            const treatment = {
+                id: Date.now(),
+                date: dateTime,
+                timestamp: now.toISOString(),
+                problems: problems,
+                totalBill: totalBill,
+                totalDiscount: totalDiscount,
+                netBill: netBill,
+                totalPaid: totalPaid,
+                totalDue: due,
+                paymentHistory: [],
+                discountHistory: [],
+                images: uploadedImageUrls
+            };
+
+            showLoading();
+
+            try {
+                const editId = document.getElementById('editPatientId')?.value;
+                
+                if (editId) {
+                    // বিদ্যমান রোগীর নতুন চিকিৎসা
+                    const patientRef = db.collection("patients").doc(editId);
+                    const patientDoc = await patientRef.get();
+                    
+                    if (patientDoc.exists) {
+                        const existingData = patientDoc.data();
+                        const existingTreatments = existingData.treatments || [];
+                        
+                        await patientRef.update({
+                            name: name,
+                            phone: phone,
+                            age: document.getElementById('patientAge').value || '',
+                            gender: gender,
+                            address: document.getElementById('patientAddress').value || '',
+                            treatments: [...existingTreatments, treatment],
+                            lastUpdated: now.toISOString()
+                        });
+                        
+                        hideLoading();
+                        submitBtn.classList.remove('loading');
+                        showMessage('✅ নতুন চিকিৎসা যোগ হয়েছে!', 'success');
+                        
+                        setTimeout(() => {
+                            showProfile(editId);
+                        }, 1500);
+                        return;
+                    }
+                }
+
+                // নতুন রোগী
+                const profileId = `${phone}_${name.replace(/\s+/g, '_')}`;
+                const patientRef = db.collection("patients").doc(profileId);
+                const patientDoc = await patientRef.get();
+                
+                if (patientDoc.exists) {
+                    // বিদ্যমান রোগী
+                    const existingData = patientDoc.data();
+                    const existingTreatments = existingData.treatments || [];
+                    
+                    await patientRef.update({
+                        treatments: [...existingTreatments, treatment],
+                        lastUpdated: now.toISOString()
+                    });
+                    
+                    hideLoading();
+                    submitBtn.classList.remove('loading');
+                    showMessage('✅ নতুন চিকিৎসা যোগ হয়েছে!', 'success');
+                    
+                    setTimeout(() => {
+                        showProfile(profileId);
+                    }, 1500);
+                    
+                } else {
+                    // সম্পূর্ণ নতুন রোগী
+                    await patientRef.set({
+                        name: name,
+                        phone: phone,
+                        age: document.getElementById('patientAge').value || '',
+                        gender: gender,
+                        address: document.getElementById('patientAddress').value || '',
+                        treatments: [treatment],
+                        createdAt: now.toISOString(),
+                        lastUpdated: now.toISOString()
+                    });
+                    
+                    hideLoading();
+                    submitBtn.classList.remove('loading');
+                    showMessage('✅ নতুন রোগী সংরক্ষিত হয়েছে!', 'success');
+                    
+                    setTimeout(() => {
+                        showProfile(profileId);
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Save error:', err);
+                hideLoading();
+                submitBtn.classList.remove('loading');
+                showMessage('সংরক্ষণে সমস্যা! ' + err.message, 'error');
+            }
+        });
+
+        // Dashboard Stats
+        async function loadDashboardStats() {
+            try {
+                const snapshot = await db.collection("patients").get();
+                let totalPatients = 0;
+                let totalDue = 0;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const treatments = data.treatments || [];
+                    treatments.forEach(t => {
+                        totalDue += t.totalDue || 0;
+                    });
+                    totalPatients++;
+                });
+                
+                document.getElementById('totalPatients').innerHTML = totalPatients;
+                document.getElementById('totalDue').innerHTML = `৳ ${totalDue}`;
+            } catch (err) { 
+                console.error('Stats error:', err);
+            }
+        }
+
+        // Recent Patients
+        async function loadRecentPatients() {
+            const container = document.getElementById('recentPatientsList');
+            
+            try {
+                const snapshot = await db.collection("patients")
+                    .orderBy("lastUpdated", "desc")
+                    .limit(10)
+                    .get();
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>কোনো রোগী নেই</p></div>';
+                    document.getElementById('fabMenu').style.display = 'none';
+                    return;
+                }
+                
+                let html = '';
+                let firstPatient = null;
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const name = escapeHtml(data.name) || 'অজানা';
+                    const phone = escapeHtml(data.phone) || '—';
+                    const lastDate = data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' }) : '';
+                    
+                    if (!firstPatient) {
+                        firstPatient = { name, phone, id: doc.id };
+                    }
+                    
+                    html += `
+                        <div class="recent-item" onclick="showProfile('${doc.id}')">
+                            <div class="recent-avatar"><i class="fas fa-user"></i></div>
+                            <div class="recent-info">
+                                <div class="recent-name">${name}</div>
+                                <div class="recent-phone"><i class="fas fa-phone-alt"></i> ${phone}</div>
+                                <div class="recent-date"><i class="fas fa-calendar-alt"></i> ${lastDate}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+                const fabMenu = document.getElementById('fabMenu');
+                if (firstPatient) {
+                    fabMenu.style.display = 'flex';
+                    document.getElementById('fabLabel').textContent = firstPatient.name;
+                    document.getElementById('fabProfileBtn').onclick = () => showProfile(firstPatient.id);
+                } else {
+                    fabMenu.style.display = 'none';
+                }
+                
+            } catch (err) {
+                console.error('Recent patients error:', err);
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
+            }
+        }
+
+        // History Modal
+        async function openHistoryModal() {
+            const modal = document.getElementById('historyModal');
+            const container = document.getElementById('historyList');
+            
+            modal.classList.add('active');
+            showLoading();
+            
+            try {
+                const snapshot = await db.collection("patients")
+                    .orderBy("lastUpdated", "desc")
+                    .get();
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>কোনো ইতিহাস নেই</p></div>';
+                    hideLoading();
+                    return;
+                }
+                
+                let html = '';
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const treatments = data.treatments || [];
+                    
+                    if (treatments.length > 0) {
+                        const lastTreatment = treatments[treatments.length - 1];
+                        const treatmentDate = lastTreatment?.date || 'তারিখ নেই';
+                        
+                        html += `
+                            <div class="recent-item" onclick="showProfile('${doc.id}')">
+                                <div class="recent-avatar"><i class="fas fa-history"></i></div>
+                                <div class="recent-info">
+                                    <div class="recent-name">${escapeHtml(data.name) || 'অজানা'}</div>
+                                    <div class="recent-phone"><i class="fas fa-phone-alt"></i> ${escapeHtml(data.phone) || '—'}</div>
+                                    <div class="recent-date">
+                                        <i class="fas fa-calendar-alt"></i> ${treatmentDate}
+                                    </div>
+                                    <div class="recent-date">
+                                        <i class="fas fa-tooth"></i> ${treatments.length} টি চিকিৎসা
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                container.innerHTML = html || '<div class="empty-state"><i class="fas fa-history"></i><p>কোনো ইতিহাস নেই</p></div>';
+                
+                // সার্চ ফাংশনালিটি
+                const searchInput = document.getElementById('searchHistory');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        const search = e.target.value.toLowerCase();
+                        document.querySelectorAll('#historyList .recent-item').forEach(item => {
+                            const text = item.innerText.toLowerCase();
+                            item.style.display = text.includes(search) ? 'flex' : 'none';
+                        });
+                    });
+                }
+                
+            } catch (err) {
+                console.error('History error:', err);
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Numbers Modal
+        async function openNumbersModal() {
+            const modal = document.getElementById('numbersModal');
+            const container = document.getElementById('numbersList');
+            
+            modal.classList.add('active');
+            showLoading();
+            
+            try {
+                const snapshot = await db.collection("patients").get();
+                const phoneSet = new Set();
+                const phoneList = [];
+                
+                snapshot.forEach(doc => {
+                    const phone = doc.data().phone;
+                    if (phone && phone !== '—' && !phoneSet.has(phone)) {
+                        phoneSet.add(phone);
+                        phoneList.push({
+                            phone: phone,
+                            name: doc.data().name || 'অজানা'
+                        });
+                    }
+                });
+                
+                phoneList.sort((a, b) => a.phone.localeCompare(b.phone));
+                
+                if (phoneList.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-phone"></i><p>কোনো নাম্বার নেই</p></div>';
+                } else {
+                    container.innerHTML = phoneList.map(item => `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; transition: all 0.2s;">
+                            <div>
+                                <div style="font-weight: 600;">${escapeHtml(item.name)}</div>
+                                <div style="color: var(--primary);"><i class="fas fa-phone-alt" style="margin-right: 10px;"></i> ${item.phone}</div>
+                            </div>
+                            <button class="add-problem-btn" style="padding: 8px 18px; width: auto; background: var(--primary-light); border: none; border-radius: 30px; color: var(--primary); font-weight: 600; cursor: pointer;" onclick="copyNumber('${item.phone}')">
+                                <i class="fas fa-copy"></i> কপি
+                            </button>
+                        </div>
+                    `).join('');
+                }
+                
+                document.getElementById('copyAllNumbers').onclick = async () => {
+                    const numbers = phoneList.map(item => item.phone).join('\n');
+                    await navigator.clipboard.writeText(numbers);
+                    showMessage(`${phoneList.length}টি নাম্বার কপি হয়েছে`, 'success');
+                };
+                
+            } catch (err) {
+                console.error('Numbers error:', err);
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
+            } finally {
+                hideLoading();
+            }
+        }
+
+        window.copyNumber = async function(phone) {
+            await navigator.clipboard.writeText(phone);
+            showMessage('📋 নাম্বার কপি হয়েছে', 'success');
+        };
+
+        // প্রোফাইল ডেটা ডিসপ্লে
         function displayPatientData(data) {
             if (!data) return;
             
@@ -672,16 +2749,509 @@
             document.getElementById('profilePatientAddress').textContent = `ঠিকানা: ${escapeHtml(data.address) || '—'}`;
             document.getElementById('profilePatientAge').textContent = `বয়স: ${escapeHtml(data.age) || '—'} বছর`;
             
-            // ... বাকি হিসাবনিকাশ আপনার বিদ্যমান ...
             let totalBill = 0, totalPaid = 0, totalDue = 0;
-            allTreatments = (data.treatments || []).map((t, index) => { /* ... */ }).reverse();
-            // ... স্ট্যাট আপডেট ...
-
-            // মেসেজের জন্য ডিফল্ট টেক্সট তৈরি করে রাখা (পরবর্তীতে মডাল খোলার সময় ব্যবহার হবে)
-            // এখানে কিছু করার দরকার নেই, কারণ মডাল খোলার সময় তৈরি হবে।
+            
+            allTreatments = (data.treatments || []).map((t, index) => {
+                let bill = 0, paid = 0, discount = 0;
+                
+                if (t.problems && Array.isArray(t.problems)) {
+                    t.problems.forEach(p => {
+                        bill += p.totalCost || p.cost || 0;
+                        paid += p.paid || 0;
+                        discount += p.discount || 0;
+                    });
+                }
+                
+                if (t.totalBill) bill = t.totalBill;
+                if (t.totalPaid) paid = t.totalPaid;
+                if (t.totalDiscount) discount = t.totalDiscount;
+                
+                const netBill = bill - discount;
+                const due = Math.max(0, netBill - paid);
+                
+                totalBill += bill;
+                totalPaid += paid;
+                totalDue += due;
+                
+                return {
+                    ...t,
+                    bill: bill,
+                    paid: paid,
+                    discount: discount,
+                    due: due,
+                    originalIndex: index
+                };
+            }).reverse();
+            
+            document.getElementById('profileTotalBill').innerHTML = `৳ ${totalBill}`;
+            document.getElementById('profileTotalPaid').innerHTML = `৳ ${totalPaid}`;
+            document.getElementById('profileTotalDue').innerHTML = `৳ ${totalDue}`;
+            document.getElementById('profileTotalTreatments').innerHTML = allTreatments.length;
+            document.getElementById('historyCount').textContent = `${allTreatments.length} টি`;
+            
+            updateImageGallery(allTreatments);
+            updateTreatmentHistory();
+            populateTreatmentSelect();
+            
+            if (allTreatments.length > 0) {
+                document.getElementById('prescriptionCard').innerHTML = generatePrescriptionPreview(allTreatments[0]);
+            } else {
+                document.getElementById('prescriptionCard').innerHTML = '<div class="empty-state"><i class="fas fa-prescription"></i><p>কোনো প্রেসক্রিপশন নেই</p></div>';
+            }
         }
 
-        // --- মেসেজ মোডাল খোলার ফাংশন (আপডেট) ---
+        function updateImageGallery(treatments) {
+            const gallery = document.getElementById('imageGallery');
+            let allImages = [];
+            
+            treatments.forEach(t => {
+                if (t.images && Array.isArray(t.images) && t.images.length) {
+                    allImages = allImages.concat(t.images);
+                }
+            });
+            
+            if (allImages.length === 0) {
+                gallery.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>কোনো ছবি নেই</p></div>';
+                document.getElementById('imageCount').textContent = '০ টি';
+                return;
+            }
+            
+            let html = '';
+            allImages.forEach((img, i) => {
+                html += `
+                    <div class="gallery-item" onclick="viewImage('${img}')">
+                        <img src="${img}" alt="Image ${i+1}">
+                        <div class="overlay"><i class="fas fa-search-plus"></i> দেখুন</div>
+                    </div>
+                `;
+            });
+            
+            gallery.innerHTML = html;
+            document.getElementById('imageCount').textContent = `${allImages.length} টি`;
+        }
+
+        function generatePrescriptionPreview(treatment) {
+            if (!treatment || !currentPatient) return '<div class="empty-state">প্রেসক্রিপশন পাওয়া যায়নি</div>';
+            
+            const patient = currentPatient.data;
+            const date = new Date(treatment.timestamp || Date.now()).toLocaleDateString('bn-BD', { 
+                timeZone: 'Asia/Dhaka',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            const problems = treatment.problems || [];
+            
+            let problemsHtml = '';
+            let totalBill = 0;
+            
+            problems.forEach(p => {
+                totalBill += p.cost || 0;
+                problemsHtml += `
+                    <tr>
+                        <td>${escapeHtml(p.problem) || 'চিকিৎসা'}</td>
+                        <td>৳${p.cost || 0}</td>
+                        <td>${p.isCrown ? `<span class="crown-badge"><i class="fas fa-crown"></i> ${escapeHtml(p.crownType) || ''}</span>` : '—'}</td>
+                    </tr>
+                `;
+            });
+            
+            return `
+                <div class="prescription-header">
+                    <div class="clinic-name-pres">চৌধুরী ডেন্টাল কেয়ার</div>
+                    <div class="prescription-date">📅 ${date}</div>
+                </div>
+                
+                <div class="patient-info-pres">
+                    <div class="info-item-pres">
+                        <span class="info-label">রোগীর নাম</span>
+                        <div class="info-value">${escapeHtml(patient.name) || '—'}</div>
+                    </div>
+                    <div class="info-item-pres">
+                        <span class="info-label">মোবাইল</span>
+                        <div class="info-value">${escapeHtml(patient.phone) || '—'}</div>
+                    </div>
+                    <div class="info-item-pres">
+                        <span class="info-label">বয়স/লিঙ্গ</span>
+                        <div class="info-value">${escapeHtml(patient.age) || '—'} ${escapeHtml(patient.gender) || ''}</div>
+                    </div>
+                    <div class="info-item-pres">
+                        <span class="info-label">ঠিকানা</span>
+                        <div class="info-value">${escapeHtml(patient.address) || '—'}</div>
+                    </div>
+                </div>
+                
+                <table class="problems-table">
+                    <thead>
+                        <tr>
+                            <th>চিকিৎসা</th>
+                            <th>খরচ</th>
+                            <th>ক্রাউন</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${problemsHtml || '<tr><td colspan="3" style="text-align: center;">কোনো চিকিৎসা নেই</td></tr>'}
+                    </tbody>
+                </table>
+                
+                <div class="total-pres">
+                    <div>
+                        <div><i class="fas fa-file-invoice"></i> মোট: ৳${totalBill}</div>
+                        <div><i class="fas fa-hand-holding-usd"></i> জমা: ৳${treatment.paid || 0}</div>
+                        <div><i class="fas fa-percentage"></i> ডিসকাউন্ট: ৳${treatment.discount || 0}</div>
+                    </div>
+                    <div>
+                        <div class="grand-total" style="color: ${treatment.due > 0 ? 'var(--danger)' : 'var(--success)'}">
+                            <i class="fas ${treatment.due > 0 ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
+                            বাকি: ৳${treatment.due || 0}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateTreatmentHistory() {
+            let filtered = allTreatments;
+            
+            if (currentFilter === 'due') {
+                filtered = allTreatments.filter(t => t.due > 0);
+            } else if (currentFilter === 'paid') {
+                filtered = allTreatments.filter(t => t.due <= 0);
+            }
+            
+            const container = document.getElementById('treatmentHistory');
+            
+            if (!filtered.length) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-notes-medical"></i><p>কোনো চিকিৎসা নেই</p></div>';
+                return;
+            }
+            
+            let html = '';
+            filtered.forEach(t => {
+                const cardClass = t.due <= 0 ? 'paid' : 'due';
+                const problems = t.problems || [];
+                const firstProblems = problems.slice(0, 2);
+                
+                html += `
+                    <div class="treatment-card ${cardClass}" onclick="updatePrescriptionFromHistory(${t.originalIndex})">
+                        <div class="card-header">
+                            <span class="card-date">
+                                <i class="fas fa-calendar-alt"></i> ${t.date || 'তারিখ নেই'}
+                            </span>
+                            <span class="card-amount">৳${t.bill || 0}</span>
+                        </div>
+                        
+                        <div class="problem-list">
+                            ${firstProblems.map(p => `
+                                <div style="background: white; padding: 10px; border-radius: 14px; margin-bottom: 8px;">
+                                    <div style="font-weight: 600;">${escapeHtml(p.problem) || 'চিকিৎসা'}</div>
+                                    <div style="color: var(--gray);">
+                                        <span>খরচ: ৳${p.cost || 0}</span>
+                                        ${p.isCrown ? `<span style="margin-left: 10px;"><i class="fas fa-crown"></i> ${escapeHtml(p.crownType) || ''}</span>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                            ${problems.length > 2 ? `<div style="color: var(--gray); font-size: 0.85rem; margin-top: 8px;">+ আরও ${problems.length - 2}টি চিকিৎসা</div>` : ''}
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; padding: 8px; background: rgba(0,0,0,0.02); border-radius: 12px;">
+                            <span><i class="fas fa-hand-holding-usd"></i> জমা: ৳${t.paid || 0}</span>
+                            <span><i class="fas fa-percentage"></i> ডিসকাউন্ট: ৳${t.discount || 0}</span>
+                        </div>
+                        
+                        <div style="margin-top: 8px; font-weight: bold; font-size: 1.1rem; color: ${t.due > 0 ? 'var(--danger)' : 'var(--success)'}">
+                            <i class="fas ${t.due > 0 ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
+                            বাকি: ৳${t.due || 0}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        window.updatePrescriptionFromHistory = function(index) {
+            const treatment = allTreatments.find(t => t.originalIndex === index);
+            if (treatment) {
+                document.getElementById('prescriptionCard').innerHTML = generatePrescriptionPreview(treatment);
+                document.querySelector('.prescription-section').scrollIntoView({ behavior: 'smooth' });
+                showMessage('প্রেসক্রিপশন আপডেট হয়েছে', 'success');
+            }
+        };
+
+        function populateTreatmentSelect() {
+            const select = document.getElementById('treatmentSelect');
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">নির্বাচন করুন</option>';
+            
+            allTreatments.forEach((t, index) => {
+                if (t.due > 0) {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${t.date} - বকেয়া: ৳${t.due}`;
+                    select.appendChild(option);
+                }
+            });
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = item.dataset.section;
+                
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                
+                document.getElementById('homeSection').style.display = 'none';
+                document.getElementById('newPatientSection').style.display = 'none';
+                document.getElementById('profileSection').style.display = 'none';
+                
+                if (section === 'home') {
+                    document.getElementById('homeSection').style.display = 'block';
+                    loadRecentPatients();
+                    loadDashboardStats();
+                } else if (section === 'new') {
+                    document.getElementById('newPatientSection').style.display = 'block';
+                    resetForm();
+                } else if (section === 'profile') {
+                    if (currentPatient) {
+                        document.getElementById('profileSection').style.display = 'block';
+                        displayPatientData(currentPatient.data);
+                    } else {
+                        showMessage('প্রথমে একটি রোগী নির্বাচন করুন', 'info');
+                        document.querySelector('[data-section="home"]').click();
+                    }
+                } else if (section === 'numbers') {
+                    openNumbersModal();
+                    document.querySelector('[data-section="home"]').classList.add('active');
+                    document.getElementById('homeSection').style.display = 'block';
+                }
+            });
+        });
+
+        // Action Buttons
+        document.getElementById('newPatientBtn').addEventListener('click', () => {
+            document.querySelector('[data-section="new"]').click();
+        });
+        
+        document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
+        document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
+        
+        // Profile Actions
+        document.getElementById('backFromProfile').addEventListener('click', () => {
+            document.querySelector('[data-section="home"]').click();
+        });
+        
+        document.getElementById('homeFromProfile').addEventListener('click', () => {
+            document.querySelector('[data-section="home"]').click();
+        });
+        
+        document.getElementById('switchPatientBtn').addEventListener('click', () => {
+            if (allPatientsWithSamePhone.length > 1) {
+                currentPatientIndex = (currentPatientIndex + 1) % allPatientsWithSamePhone.length;
+                const next = allPatientsWithSamePhone[currentPatientIndex];
+                showProfile(next.id);
+            }
+        });
+        
+        document.getElementById('profileAddPayment').addEventListener('click', () => {
+            const dueText = document.getElementById('profileTotalDue').textContent;
+            const due = parseFloat(dueText.replace('৳', '')) || 0;
+            
+            if (due <= 0) {
+                showMessage('কোনো বকেয়া নেই', 'warning');
+                return;
+            }
+            document.getElementById('paymentModal').classList.add('active');
+        });
+        
+        document.getElementById('profileAddTreatment').addEventListener('click', () => {
+            if (currentPatient) {
+                document.getElementById('editPatientId').value = currentPatient.id;
+                document.getElementById('patientName').value = currentPatient.data.name || '';
+                document.getElementById('patientPhone').value = currentPatient.data.phone || '';
+                document.getElementById('patientAge').value = currentPatient.data.age || '';
+                document.getElementById('patientAddress').value = currentPatient.data.address || '';
+                
+                const gender = currentPatient.data.gender;
+                if (gender) {
+                    document.querySelectorAll('input[name="gender"]').forEach(r => {
+                        if (r.value === gender) r.checked = true;
+                    });
+                }
+                
+                document.querySelector('[data-section="new"]').click();
+            }
+        });
+        
+        document.getElementById('profileEditPatient').addEventListener('click', () => {
+            if (currentPatient) {
+                document.getElementById('editPatientId').value = currentPatient.id;
+                document.getElementById('patientName').value = currentPatient.data.name || '';
+                document.getElementById('patientPhone').value = currentPatient.data.phone || '';
+                document.getElementById('patientAge').value = currentPatient.data.age || '';
+                document.getElementById('patientAddress').value = currentPatient.data.address || '';
+                
+                const gender = currentPatient.data.gender;
+                if (gender) {
+                    document.querySelectorAll('input[name="gender"]').forEach(r => {
+                        if (r.value === gender) r.checked = true;
+                    });
+                }
+                
+                document.querySelector('[data-section="new"]').click();
+            }
+        });
+        
+        document.getElementById('profileDiscountBtn').addEventListener('click', () => {
+            if (allTreatments.some(t => t.due > 0)) {
+                populateTreatmentSelect();
+                document.getElementById('discountModal').classList.add('active');
+            } else {
+                showMessage('কোনো বকেয়া নেই', 'warning');
+            }
+        });
+
+        // Payment Form
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            const notes = document.getElementById('paymentNotes').value;
+            
+            if (!amount || amount <= 0) {
+                showMessage('সঠিক পরিমাণ দিন', 'error');
+                return;
+            }
+            
+            if (!currentPatient) {
+                showMessage('রোগী নির্বাচন করা হয়নি', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const patientRef = db.collection("patients").doc(currentPatient.id);
+                const doc = await patientRef.get();
+                const data = doc.data();
+                let treatments = data.treatments || [];
+                
+                let remaining = amount;
+                
+                const updatedTreatments = treatments.map(t => {
+                    if (remaining <= 0) return t;
+                    
+                    const due = t.totalDue || 0;
+                    if (due <= 0) return t;
+                    
+                    const pay = Math.min(remaining, due);
+                    remaining -= pay;
+                    
+                    const paymentLog = {
+                        amount: pay,
+                        date: new Date().toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' }),
+                        notes: notes
+                    };
+                    
+                    const paymentHistory = [...(t.paymentHistory || []), paymentLog];
+                    const newPaid = (t.totalPaid || 0) + pay;
+                    const newDue = (t.totalDue || 0) - pay;
+                    
+                    return {
+                        ...t,
+                        paymentHistory,
+                        totalPaid: newPaid,
+                        totalDue: newDue
+                    };
+                });
+                
+                await patientRef.update({ treatments: updatedTreatments });
+                
+                showMessage(`✅ ৳${amount} জমা হয়েছে`, 'success');
+                closeModal('paymentModal');
+                document.getElementById('paymentForm').reset();
+                
+                await showProfile(currentPatient.id);
+                
+            } catch (err) {
+                console.error('Payment error:', err);
+                showMessage('পেমেন্ট নিতে সমস্যা', 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // Discount Form
+        document.getElementById('discountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const index = parseInt(document.getElementById('treatmentSelect').value);
+            const amount = parseFloat(document.getElementById('discountAmount').value);
+            
+            if (isNaN(index) || !amount || amount <= 0) {
+                showMessage('সব তথ্য দিন', 'error');
+                return;
+            }
+            
+            if (!currentPatient) {
+                showMessage('রোগী নির্বাচন করা হয়নি', 'error');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const patientRef = db.collection("patients").doc(currentPatient.id);
+                const doc = await patientRef.get();
+                const data = doc.data();
+                let treatments = [...(data.treatments || [])];
+                
+                const treatment = treatments[index];
+                const due = treatment.totalDue || 0;
+                
+                if (amount > due) {
+                    showMessage(`ডিসকাউন্ট বকেয়ার বেশি হতে পারবে না! বকেয়া: ৳${due}`, 'error');
+                    hideLoading();
+                    return;
+                }
+                
+                const discountLog = {
+                    amount: amount,
+                    date: new Date().toLocaleDateString('bn-BD', { timeZone: 'Asia/Dhaka' })
+                };
+                
+                const discountHistory = [...(treatment.discountHistory || []), discountLog];
+                const newDiscount = (treatment.totalDiscount || 0) + amount;
+                const newDue = due - amount;
+                
+                treatments[index] = {
+                    ...treatment,
+                    discountHistory,
+                    totalDiscount: newDiscount,
+                    totalDue: newDue
+                };
+                
+                await patientRef.update({ treatments });
+                
+                showMessage(`✅ ৳${amount} ডিসকাউন্ট দেওয়া হয়েছে`, 'success');
+                closeModal('discountModal');
+                document.getElementById('discountAmount').value = '';
+                
+                await showProfile(currentPatient.id);
+                
+            } catch (err) {
+                console.error('Discount error:', err);
+                showMessage('ডিসকাউন্ট দিতে সমস্যা', 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // Message Modal
         document.getElementById('openMessageModalBtn').addEventListener('click', () => {
             if (!currentPatient) {
                 showMessage('কোনো রোগী নির্বাচন করা হয়নি', 'warning');
@@ -692,28 +3262,23 @@
             const previewDiv = document.getElementById('previewText');
             const customMessageArea = document.getElementById('customMessage');
             
-            // রোগীর তথ্য থেকে নাম ও বয়স বের করা
             const patientName = currentPatient.data.name || 'রোগী';
             const patientAge = currentPatient.data.age ? `${currentPatient.data.age} বছর` : 'বয়স উল্লেখ নেই';
             
-            // ডিফল্ট মেসেজ তৈরি (শুধু নাম ও বয়স)
             const defaultMessage = `${patientName}\n${patientAge}`;
             
-            // প্রিভিউতে দেখানো এবং কাস্টম এরিয়াতে বসানো
             previewDiv.innerText = defaultMessage;
-            customMessageArea.value = defaultMessage; // কাস্টম এরিয়াতেও ডিফল্ট বসবে, যা ইউজার এডিট করতে পারবেন
+            customMessageArea.value = defaultMessage;
             
             modal.classList.add('active');
         });
 
-        // --- মেসেজ পাঠানোর ফাংশন (আপডেট) ---
         document.getElementById('sendMessageBtn').addEventListener('click', async () => {
             if (!currentPatient) {
                 showMessage('রোগী নির্বাচন করুন', 'warning');
                 return;
             }
             
-            // কাস্টম এরিয়া থেকে মেসেজ নেওয়া (যেখানে ইউজার যা ইচ্ছে লিখতে পারেন)
             const messageToSend = document.getElementById('customMessage').value.trim();
             
             if (!messageToSend) {
@@ -734,84 +3299,22 @@
             closeModal('messageModal');
         });
 
-        // --- নেভিগেশন ও বাটন ইভেন্ট (আপডেট) ---
-        // হিস্ট্রি মডাল থেকে প্রোফাইল ওপেন করার সময় মডাল বন্ধ হবে
-        window.showProfile = async function(profileId) {
-            // ... উপরের showProfile ফাংশন ...
-            // (এটি ইতিমধ্যে আপডেট করা আছে। এটিকে আবার পুরোটা এখানে না লিখে, 
-            // আমরা নিশ্চিত করছি যে এটি কল হলে মডাল বন্ধ হয়ে যাবে। 
-            // নিচের লাইনটি showProfile-এর ভেতরে যোগ করতে হবে, কিন্তু আমরা ইতিমধ্যে উপরে showProfile আপডেট করেছি।
-            // তাই শুধু নিশ্চিত করার জন্য নিচের লাইনটি showProfile-এর শুরুতে যোগ করুন:)
-            // closeModal('historyModal'); // এই লাইনটি showProfile ফাংশনের শুরুতে যোগ করুন (যেমন উপরে আমরা আপডেট করেছি)
-        }
+        // Filter Tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                updateTreatmentHistory();
+            });
+        });
 
-        // উপরের showProfile-এ আমরা এটি যোগ করিনি। তাই এখানে একটি ছোট মডিফিকেশন দরকার।
-        // চলুন showProfile ফাংশনটি আবার এখানে সম্পূর্ণ আপডেট করে দিচ্ছি (সংক্ষেপে) এবং এতে closeModal যোগ করছি।
-
-        // নিচের window.showProfile = async function(profileId) { ... } পুরোটা রিপ্লেস করুন এই আপডেট ভার্সন দিয়ে:
-
-        window.showProfile = async function(profileId) {
-            // ** নতুন লাইন: যেকোনো খোলা মডাল বন্ধ করো **
-            closeModal('historyModal');
-            closeModal('numbersModal');
-            // *************************
-
-            showLoading();
-            try {
-                const doc = await db.collection("patients").doc(profileId).get();
-                if (doc.exists) {
-                    const data = doc.data();
-                    currentPatient = { id: doc.id, data: data };
-                    
-                    document.getElementById('homeSection').style.display = 'none';
-                    document.getElementById('newPatientSection').style.display = 'none';
-                    document.getElementById('profileSection').style.display = 'block';
-                    
-                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                    document.querySelector('[data-section="profile"]').classList.add('active');
-                    
-                    displayPatientData(data);
-                    
-                    const phone = data.phone;
-                    if (phone) {
-                        const q = await db.collection("patients").where("phone", "==", phone).get();
-                        allPatientsWithSamePhone = [];
-                        q.forEach(d => { allPatientsWithSamePhone.push({ id: d.id, data: d.data() }); });
-                        
-                        if (allPatientsWithSamePhone.length > 1) {
-                            currentPatientIndex = allPatientsWithSamePhone.findIndex(p => p.id === doc.id);
-                            document.getElementById('patientSwitcher').style.display = 'flex';
-                            document.getElementById('patientCount').textContent = `${currentPatientIndex+1}/${allPatientsWithSamePhone.length}`;
-                        } else { document.getElementById('patientSwitcher').style.display = 'none'; }
-                    }
-                } else { showMessage('রোগী পাওয়া যায়নি', 'error'); }
-            } catch (err) { console.error('Profile error:', err); showMessage('প্রোফাইল লোড করতে সমস্যা', 'error'); } finally { hideLoading(); }
-        };
-
-
-        // অন্যান্য ইভেন্ট লিসেনার (আপনার বিদ্যমান)
-        document.querySelectorAll('.nav-item').forEach(item => { /* ... */ });
-        document.getElementById('newPatientBtn').addEventListener('click', () => { document.querySelector('[data-section="new"]').click(); });
-        document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
-        document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
-        document.getElementById('backFromProfile').addEventListener('click', () => { document.querySelector('[data-section="home"]').click(); });
-        document.getElementById('homeFromProfile').addEventListener('click', () => { document.querySelector('[data-section="home"]').click(); });
-        document.getElementById('switchPatientBtn').addEventListener('click', () => { /* ... */ });
-        document.getElementById('profileAddPayment').addEventListener('click', () => { /* ... */ });
-        document.getElementById('profileAddTreatment').addEventListener('click', () => { /* ... */ });
-        document.getElementById('profileEditPatient').addEventListener('click', () => { /* ... */ });
-        document.getElementById('profileDiscountBtn').addEventListener('click', () => { /* ... */ });
-        document.getElementById('paymentForm').addEventListener('submit', async (e) => { /* ... */ });
-        document.getElementById('discountForm').addEventListener('submit', async (e) => { /* ... */ });
-        document.querySelectorAll('.filter-tab').forEach(tab => { /* ... */ });
-        document.getElementById('logoutBtn').addEventListener('click', async () => { /* ... */ });
-
-        // সার্চ বাটন ইভেন্ট (নতুন)
+        // Search Button
         document.getElementById('searchBtn').addEventListener('click', () => {
             const phone = document.getElementById('searchPhoneInput').value.trim();
             searchPatientByPhone(phone);
         });
-        // এন্টার চাপলেও সার্চ হবে
+
         document.getElementById('searchPhoneInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const phone = e.target.value.trim();
@@ -819,20 +3322,41 @@
             }
         });
 
-        // অটো লগইন ও ডাটা লোড
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (confirm('লগ আউট করবেন?')) {
+                await auth.signOut();
+            }
+        });
+
+        // Auth State
         auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
             .then(() => {
                 auth.onAuthStateChanged((user) => {
-                    if (!user) { window.location.href = "log.html"; } 
-                    else {
+                    if (!user) {
+                        window.location.href = "log.html";
+                    } else {
                         console.log('User logged in:', user.email);
                         loadDashboardStats();
                         loadRecentPatients();
-                        // checkUrlParams(); // আপনার যদি থাকে
+                        
+                        const lastLogin = localStorage.getItem('lastLogin');
+                        const now = Date.now();
+                        
+                        if (lastLogin) {
+                            const daysSinceLastLogin = (now - parseInt(lastLogin)) / (1000 * 60 * 60 * 24);
+                            if (daysSinceLastLogin > 7) {
+                                auth.signOut();
+                            }
+                        }
+                        
+                        localStorage.setItem('lastLogin', now.toString());
                     }
                 });
             })
-            .catch((error) => { console.error('Persistence error:', error); });
+            .catch((error) => {
+                console.error('Persistence error:', error);
+            });
     </script>
 </body>
 </html>
