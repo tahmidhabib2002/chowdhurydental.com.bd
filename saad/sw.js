@@ -1,51 +1,60 @@
-const CACHE_NAME = 'chowdhury-dental-v3'; // ভার্সন চেঞ্জ করুন v2 থেকে v3
-const urlsToCache = [
-  '/saad/log.html',
-  '/saad/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js',
-  'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js'
-];
+const CACHE_NAME = 'chowdhury-dental-v4';
+const SAAD_PATH = '/saad/';
 
 self.addEventListener('install', event => {
-  console.log('নতুন Service Worker ইন্সটল হচ্ছে...');
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('নতুন ফাইল ক্যাশ করা হচ্ছে...');
-      return cache.addAll(urlsToCache);
+      return cache.addAll([
+        SAAD_PATH + 'index.html',
+        SAAD_PATH + 'dashboard.html',
+        SAAD_PATH + 'manifest.json',
+        'https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+      ]);
     })
   );
 });
 
 self.addEventListener('fetch', event => {
+  // শুধুমাত্র /saad/ পাথের রিকোয়েস্ট হ্যান্ডেল করবে
+  if (!event.request.url.includes('/saad/') && !event.request.url.startsWith('https://fonts.') && !event.request.url.startsWith('https://cdnjs.')) {
+    // অন্য কোনো ডোমেইনে রিকোয়েস্ট গেলে ব্লক করবেন না
+    return;
+  }
+
+  // HTML নেভিগেশন - সবসময় index.html দেখাবে
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          return caches.match(SAAD_PATH + 'index.html');
+        })
+    );
+    return;
+  }
+
+  // স্ট্যাটিক ফাইল - ক্যাশ থেকে দেখাবে
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          console.log('ক্যাশ থেকে পাওয়া গেছে:', event.request.url);
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request).then(response => {
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, response.clone());
           return response;
-        }
-        console.log('নেটওয়ার্ক থেকে নেওয়া হচ্ছে:', event.request.url);
-        return fetch(event.request);
-      })
+        });
+      });
+    })
   );
 });
 
 self.addEventListener('activate', event => {
-  console.log('নতুন Service Worker অ্যাক্টিভেট হচ্ছে...');
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            console.log('পুরনো ক্যাশ ডিলিট করা হচ্ছে:', key);
-            return caches.delete(key);
-          }
-        })
+        keys.filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       );
     })
   );
+  self.clients.claim();
 });
