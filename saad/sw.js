@@ -6,7 +6,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll([
-        SAAD_PATH + 'index.html',
+        SAAD_PATH + 'log.html',
         SAAD_PATH + 'dashboard.html',
         SAAD_PATH + 'manifest.json',
         'https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap',
