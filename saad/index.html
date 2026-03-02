@@ -741,96 +741,43 @@
             margin-top: 4px;
         }
 
-        /* ইমেজ ভিউয়ার */
-        .image-viewer-modal {
+        /* মোডাল */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.7);
             display: none;
-            justify-content: center;
-            align-items: center;
+            align-items: flex-end;
             z-index: 2000;
-            padding: 20px;
+            backdrop-filter: blur(8px);
         }
 
-        .image-viewer-modal.active {
+        .modal.active {
             display: flex;
             animation: fadeIn 0.3s ease;
         }
 
-        .image-viewer-content {
-            position: relative;
-            max-width: 95%;
-            max-height: 95%;
-            animation: scaleIn 0.3s ease;
-        }
-
-        .image-viewer-content img {
-            max-width: 100%;
-            max-height: 90vh;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .close-viewer {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-size: 1.3rem;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: all 0.2s ease;
-        }
-
-        .close-viewer:hover {
-            background: rgba(255,255,255,0.3);
-            transform: rotate(90deg);
-        }
-
-        /* এম্পটি স্টেট */
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--gray);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: var(--light-gray);
-        }
-
-        /* মেসেজ বক্স */
-        .message-box {
-            position: fixed;
-            bottom: 120px;
-            left: 20px;
-            right: 20px;
+        .modal-content {
             background: white;
-            padding: 18px 22px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
+            width: 100%;
+            border-radius: 40px 40px 0 0;
+            padding: 30px 25px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        .modal-title {
+            font-size: 1.7rem;
+            color: var(--primary);
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             gap: 15px;
-            font-weight: 600;
-            z-index: 10000;
-            animation: slideUp 0.3s ease;
-            border-left: 6px solid;
         }
-
-        .message-success { border-left-color: var(--success); color: var(--success-dark); }
-        .message-error { border-left-color: var(--danger); color: var(--danger); }
-        .message-info { border-left-color: var(--primary); color: var(--primary-dark); }
 
         /* FAB মেনু */
         .fab-menu {
@@ -970,6 +917,97 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ইমেজ ভিউয়ার */
+        .image-viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .image-viewer-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-viewer-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .image-viewer-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+
+        .close-viewer:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        /* এম্পটি স্টেট */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--light-gray);
+        }
+
+        /* মেসেজ বক্স */
+        .message-box {
+            position: fixed;
+            bottom: 120px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            padding: 18px 22px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideUp 0.3s ease;
+            border-left: 6px solid;
+        }
+
+        .message-success { border-left-color: var(--success); color: var(--success-dark); }
+        .message-error { border-left-color: var(--danger); color: var(--danger); }
+        .message-info { border-left-color: var(--primary); color: var(--primary-dark); }
+
         /* রেসপনসিভ */
         @media (max-width: 480px) {
             .action-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1046,10 +1084,10 @@
             <div class="action-title">নাম্বার লিস্ট</div>
             <div class="action-desc">সকল নাম্বার</div>
         </div>
-        <div class="action-card" id="profileViewBtn">
-            <div class="action-icon"><i class="fas fa-user-md"></i></div>
-            <div class="action-title">প্রোফাইল</div>
-            <div class="action-desc">দেখুন</div>
+        <div class="action-card" id="homeBtn">
+            <div class="action-icon"><i class="fas fa-home"></i></div>
+            <div class="action-title">হোম</div>
+            <div class="action-desc">মূল পৃষ্ঠা</div>
         </div>
     </div>
 
@@ -1116,7 +1154,7 @@
                         </button>
                     </div>
                     
-                     <div class="form-group">
+                    <div class="form-group">
                         <label class="form-label">সমস্যা / চিকিৎসার ধরন *</label>
                         <select class="form-control problem-type" required>
                             <option value="">নির্বাচন করুন</option>
@@ -1156,7 +1194,7 @@
                             </select>
                         </div>
                         <label class="form-label">শেড</label>
-                           <div class="shade-grid">
+                        <div class="shade-grid">
                             <div class="shade-item" data-shade="A1">A1</div>
                             <div class="shade-item" data-shade="A2">A2</div>
                             <div class="shade-item" data-shade="A3">A3</div>
@@ -1262,7 +1300,20 @@
         </form>
     </div>
 
-    <!-- মোডালগুলি - শুধু প্রয়োজনীয়গুলো রাখা হলো -->
+    <!-- FAB মেনু -->
+    <div class="fab-menu" id="fabMenu">
+        <button class="fab-btn" id="fabProfileBtn"><i class="fas fa-user"></i></button>
+        <div class="fab-label" id="fabLabel">সর্বশেষ রোগী</div>
+    </div>
+
+    <!-- নিচের নেভিগেশন -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" data-section="home"><i class="fas fa-home nav-icon"></i><span>হোম</span></a>
+        <a href="#" class="nav-item" data-section="new"><i class="fas fa-user-plus nav-icon"></i><span>নতুন</span></a>
+        <a href="#" class="nav-item" data-section="numbers"><i class="fas fa-phone nav-icon"></i><span>নাম্বার</span></a>
+    </nav>
+
+    <!-- মোডালগুলি -->
     <div class="modal" id="historyModal">
         <div class="modal-content">
             <h2 class="modal-title">
@@ -1288,19 +1339,6 @@
             <button class="submit-btn" style="margin-top: 20px; background: var(--danger);" onclick="closeModal('numbersModal')">বন্ধ করুন</button>
         </div>
     </div>
-
-    <!-- FAB মেনু -->
-    <div class="fab-menu" id="fabMenu">
-        <button class="fab-btn" id="fabProfileBtn"><i class="fas fa-user"></i></button>
-        <div class="fab-label" id="fabLabel">সর্বশেষ রোগী</div>
-    </div>
-
-    <!-- নিচের নেভিগেশন -->
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item active" data-section="home"><i class="fas fa-home nav-icon"></i><span>হোম</span></a>
-        <a href="#" class="nav-item" data-section="new"><i class="fas fa-user-plus nav-icon"></i><span>নতুন</span></a>
-        <a href="#" class="nav-item" data-section="numbers"><i class="fas fa-phone nav-icon"></i><span>নাম্বার</span></a>
-    </nav>
 
     <script>
         // Service Worker রেজিস্টার
@@ -1335,6 +1373,8 @@
         let uploadedImageUrls = [];
         let problemCount = 1;
         let currentPatient = null;
+        let allPatientsWithSamePhone = [];
+        let currentPatientIndex = 0;
 
         // Utility Functions
         function showLoading() {
@@ -1742,8 +1782,8 @@
                         showMessage('✅ নতুন চিকিৎসা যোগ হয়েছে!', 'success');
                         
                         setTimeout(() => {
-                            // প্রোফাইল দেখানোর বদলে হোমে ফিরে যান
-                            document.querySelector('[data-section="home"]').click();
+                            // Redirect to profile page with patient ID
+                            window.location.href = `profile.html?id=${editId}`;
                         }, 1500);
                         return;
                     }
@@ -1767,8 +1807,8 @@
                     showMessage('✅ নতুন চিকিৎসা যোগ হয়েছে!', 'success');
                     
                     setTimeout(() => {
-                        // প্রোফাইল দেখানোর বদলে হোমে ফিরে যান
-                        document.querySelector('[data-section="home"]').click();
+                        // Redirect to profile page with patient ID
+                        window.location.href = `profile.html?id=${profileId}`;
                     }, 1500);
                     
                 } else {
@@ -1788,8 +1828,8 @@
                     showMessage('✅ নতুন রোগী সংরক্ষিত হয়েছে!', 'success');
                     
                     setTimeout(() => {
-                        // প্রোফাইল দেখানোর বদলে হোমে ফিরে যান
-                        document.querySelector('[data-section="home"]').click();
+                        // Redirect to profile page with patient ID
+                        window.location.href = `profile.html?id=${profileId}`;
                     }, 1500);
                 }
             } catch (err) {
@@ -1842,7 +1882,7 @@
             animate();
         }
 
-        // Recent Patients - প্রোফাইল ওপেন করার বদলে আলাদা ফাইলে পাঠানো হবে
+        // Recent Patients
         async function loadRecentPatients() {
             const container = document.getElementById('recentPatientsList');
             
@@ -1868,9 +1908,8 @@
                         firstPatient = { name, phone, id: doc.id };
                     }
                     
-                    // প্রোফাইল পৃষ্ঠায় পাঠানোর জন্য onclick আপডেট করা হলো
                     html += `
-                        <div class="recent-item" onclick="openPatientProfile('${doc.id}')">
+                        <div class="recent-item" onclick="window.location.href='profile.html?id=${doc.id}'">
                             <div class="recent-avatar"><i class="fas fa-user"></i></div>
                             <div class="recent-info">
                                 <div class="recent-name">${name}</div>
@@ -1887,7 +1926,7 @@
                 if (firstPatient) {
                     fabMenu.style.display = 'flex';
                     document.getElementById('fabLabel').textContent = firstPatient.name;
-                    document.getElementById('fabProfileBtn').onclick = () => openPatientProfile(firstPatient.id);
+                    document.getElementById('fabProfileBtn').onclick = () => window.location.href = `profile.html?id=${firstPatient.id}`;
                 } else {
                     fabMenu.style.display = 'none';
                 }
@@ -1897,12 +1936,6 @@
                 container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>লোড করতে সমস্যা</p></div>';
             }
         }
-
-        // নতুন ফাংশন: রোগীর প্রোফাইল আলাদা ফাইলে খোলা
-        window.openPatientProfile = function(patientId) {
-            // এখানে আপনার প্রোফাইল ফাইলের পাথ দিন
-            window.location.href = `profile.html?id=${patientId}`;
-        };
 
         // History Modal
         async function openHistoryModal() {
@@ -1922,9 +1955,8 @@
                     const treatments = data.treatments || [];
                     
                     treatments.forEach(t => {
-                        // প্রোফাইল খোলার জন্য onclick আপডেট
                         html += `
-                            <div class="recent-item" onclick="openPatientProfile('${doc.id}')">
+                            <div class="recent-item" onclick="window.location.href='profile.html?id=${doc.id}'">
                                 <div class="recent-avatar"><i class="fas fa-history"></i></div>
                                 <div class="recent-info">
                                     <div class="recent-name">${data.name || 'অজানা'}</div>
@@ -2000,6 +2032,14 @@
             showMessage('📋 নাম্বার কপি হয়েছে', 'success');
         };
 
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (confirm('লগ আউট করবেন?')) {
+                await auth.signOut();
+                window.location.href = "log.html";
+            }
+        });
+
         // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', (e) => {
@@ -2035,51 +2075,9 @@
         document.getElementById('patientHistoryBtn').addEventListener('click', openHistoryModal);
         document.getElementById('phoneNumbersBtn').addEventListener('click', openNumbersModal);
         
-        document.getElementById('profileViewBtn').addEventListener('click', () => {
-            // প্রোফাইল ভিউ বাটন - শেষ রোগীর প্রোফাইল দেখাবে অথবা মেসেজ দেখাবে
-            const recentItems = document.querySelectorAll('.recent-item');
-            if (recentItems.length > 0) {
-                // প্রথম রোগীর আইডি বের করে প্রোফাইল খুলবে
-                const firstItem = recentItems[0];
-                const onclickAttr = firstItem.getAttribute('onclick');
-                const match = onclickAttr.match(/openPatientProfile\('([^']+)'\)/);
-                if (match && match[1]) {
-                    openPatientProfile(match[1]);
-                } else {
-                    showMessage('কোনো রোগী নির্বাচন করা হয়নি', 'info');
-                }
-            } else {
-                showMessage('কোনো রোগী নেই', 'info');
-            }
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            document.querySelector('[data-section="home"]').click();
         });
-
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            if (confirm('লগ আউট করবেন?')) {
-                await auth.signOut();
-                window.location.href = "log.html";
-            }
-        });
-
-        // Check URL Params
-        function checkUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            const edit = params.get('edit');
-            const name = params.get('name');
-            const phone = params.get('phone');
-            
-            if (edit) {
-                document.getElementById('editPatientId').value = edit;
-                document.querySelector('[data-section="new"]').click();
-            }
-            
-            if (name) document.getElementById('patientName').value = decodeURIComponent(name);
-            if (phone) document.getElementById('patientPhone').value = phone;
-            
-            if (params.get('new') === 'true') {
-                document.querySelector('[data-section="new"]').click();
-            }
-        }
 
         // Auth State
         auth.onAuthStateChanged((user) => {
@@ -2088,7 +2086,6 @@
             } else {
                 loadDashboardStats();
                 loadRecentPatients();
-                checkUrlParams();
             }
         });
     </script>
