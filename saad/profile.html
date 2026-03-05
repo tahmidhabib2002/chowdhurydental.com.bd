@@ -657,7 +657,6 @@
     document.getElementById('editPatientBtn').addEventListener('click',()=>{if(CP){const d=CP.data;const p=new URLSearchParams({edit:CP.id,name:d.name,phone:d.phone,address:d.address||'',age:d.age||'',gender:d.gender||''});window.location.href=`index.html?${p.toString()}`;}});
     document.getElementById('discountBtn').addEventListener('click',()=>{if(aT.some(t=>t.due>0)){popSelect();document.getElementById('discountModal').classList.add('active');}else sM('কোনো বকেয়া নেই','warning');});
 
-    auth.onAuthStateChanged(user=>{if(!user)window.location.href='log.html';else{const pid=gPId();if(pid)loadProfile(pid);else sM('রোগী আইডি পাওয়া যায়নি','error');}});
-    </script>
+   </script>
 </body>
 </html>
