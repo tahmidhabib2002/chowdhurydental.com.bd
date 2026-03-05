@@ -6,16 +6,15 @@
     <title>যোগাযোগ - Chowdhury Dental</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="contact.css">
 
+    <!-- EmailJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-       (function(){
-          emailjs.init("-n8tk5sKyOgB9RahF"); 
-       })();
+        (function(){
+            emailjs.init("mgr_hDpn5ZimgiqMV");
+        })();
     </script>
 </head>
 <body>
@@ -106,9 +105,23 @@
                         <p>নিচের ফর্মটি পূরণ করুন, আমরা দ্রুত যোগাযোগ করব</p>
                     </div>
                     
+                    <!-- Success Message (default hidden) -->
+                    <div id="successMsg" style="display:none; background:#e8f5e9; border:1px solid #4caf50; border-radius:12px; padding:20px; text-align:center; margin-bottom:20px;">
+                        <i class="fas fa-check-circle" style="color:#4caf50; font-size:2rem; margin-bottom:10px;"></i>
+                        <h3 style="color:#2e7d32; margin-bottom:5px;">রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে!</h3>
+                        <p style="color:#388e3c;">আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব। আপনার ইমেইলে একটি confirmation পাঠানো হয়েছে।</p>
+                    </div>
+
+                    <!-- Error Message (default hidden) -->
+                    <div id="errorMsg" style="display:none; background:#ffebee; border:1px solid #f44336; border-radius:12px; padding:20px; text-align:center; margin-bottom:20px;">
+                        <i class="fas fa-exclamation-circle" style="color:#f44336; font-size:2rem; margin-bottom:10px;"></i>
+                        <h3 style="color:#c62828; margin-bottom:5px;">কিছু ভুল হয়েছে!</h3>
+                        <p style="color:#d32f2f;">দুঃখিত, আবার চেষ্টা করুন অথবা সরাসরি ফোন করুন।</p>
+                    </div>
+                    
                     <form id="appointmentForm">
                         <div class="form-group">
-                            <label>আপনার নাম </label>
+                            <label>আপনার নাম *</label>
                             <div class="input-icon">
                                 <i class="fas fa-user"></i>
                                 <input type="text" id="name" name="from_name" placeholder="আপনার পূর্ণ নাম" required>
@@ -116,7 +129,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label>ফোন নম্বর </label>
+                            <label>ফোন নম্বর *</label>
                             <div class="input-icon">
                                 <i class="fas fa-phone-alt"></i>
                                 <input type="tel" id="phone" name="phone_number" placeholder="০১৬০৮-৫৮০০০২" required>
@@ -124,15 +137,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label>ইমেইল  </label>
+                            <label>ইমেইল <span style="font-size:0.8em; color:#888;">(ঐচ্ছিক)</span></label>
                             <div class="input-icon">
                                 <i class="fas fa-envelope"></i>
-                                <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                                <input type="email" id="email" name="email" placeholder="example@gmail.com">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>অ্যাপয়েন্টমেন্টের তারিখ </label>
+                            <label>অ্যাপয়েন্টমেন্টের তারিখ</label>
                             <div class="input-icon">
                                 <i class="fas fa-calendar"></i>
                                 <input type="date" id="date" name="date">
@@ -144,14 +157,14 @@
                             <div class="input-icon">
                                 <i class="fas fa-tooth"></i>
                                 <select id="service" name="service_type">
-                                    <option value="General Checkup">সেবা নির্বাচন করুন</option>
-                                    <option value="Root Canal">রুট ক্যানেল</option>
-                                    <option value="Crown/Bridge">ক্রাউন/ব্রিজ</option>
-                                    <option value="Extraction">দাঁত তোলা</option>
-                                    <option value="Whitening">দাঁত সাদাকরণ</option>
-                                    <option value="Gum Treatment">মাড়ির চিকিৎসা</option>
-                                    <option value="Child Dental">শিশুদের চিকিৎসা</option>
-                                    <option value="Emergency">জরুরি চিকিৎসা</option>
+                                    <option value="উল্লেখ করা হয়নি">সেবা নির্বাচন করুন</option>
+                                    <option value="রুট ক্যানেল">রুট ক্যানেল</option>
+                                    <option value="ক্রাউন/ব্রিজ">ক্রাউন/ব্রিজ</option>
+                                    <option value="দাঁত তোলা">দাঁত তোলা</option>
+                                    <option value="দাঁত সাদাকরণ">দাঁত সাদাকরণ</option>
+                                    <option value="মাড়ির চিকিৎসা">মাড়ির চিকিৎসা</option>
+                                    <option value="শিশুদের চিকিৎসা">শিশুদের চিকিৎসা</option>
+                                    <option value="জরুরি চিকিৎসা">জরুরি চিকিৎসা</option>
                                 </select>
                             </div>
                         </div>
@@ -161,7 +174,7 @@
                             <textarea id="message" name="message" placeholder="আপনার সমস্যার বিস্তারিত লিখুন..." required></textarea>
                         </div>
                         
-                        <button type="submit" class="btn-submit">
+                        <button type="submit" class="btn-submit" id="submitBtn">
                             রিকুয়েস্ট পাঠান <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
@@ -173,7 +186,7 @@
                         <div>
                             <h3>আমাদের ঠিকানা</h3>
                             <p>মোল্লা জামে মসজিদের ২য় তলা,<br>আরজু হোটেলের সামনে, সদর রোড,<br>লালমোহন, ভোলা - ৮৩৩০</p>
-                            <a href="https://goo.gl/maps/example" target="_blank" class="link-text">ম্যাপে দেখুন <i class="fas fa-arrow-right"></i></a>
+                            <a href="https://maps.app.goo.gl/chowdhurydental" target="_blank" class="link-text">ম্যাপে দেখুন <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                     
@@ -199,7 +212,7 @@
                     <div class="emergency-box">
                         <i class="fas fa-ambulance"></i>
                         <h3>জরুরি সেবা ২৪/৭</h3>
-                        <p>তীব্র ব্যথায় আমাদের সাথে যোগাযোগ করুন।</p>
+                        <p>তীব্র ব্যথায় আমাদের সাথে যোগাযোগ করুন।</p>
                         <a href="tel:+8801608580002" class="btn-emergency">কল করুন</a>
                     </div>
                 </div>
@@ -272,42 +285,48 @@
     <script src="script.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    const appointmentForm = document.getElementById('appointmentForm');
+    document.addEventListener('DOMContentLoaded', function () {
 
-    appointmentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+        const form = document.getElementById('appointmentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
 
-        const submitBtn = appointmentForm.querySelector('.btn-submit');
-        const originalText = submitBtn.innerHTML;
-        
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> পাঠানো হচ্ছে...';
-        submitBtn.disabled = true;
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        const templateParams = {
-            from_name: document.getElementById('name').value,
-            phone_number: document.getElementById('phone').value,
-            email: document.getElementById('email').value,
-            service_type: document.getElementById('service').value,
-            message: document.getElementById('message').value,
-            date: document.getElementById('date').value
-        };
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> পাঠানো হচ্ছে...';
+            submitBtn.disabled = true;
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
 
-        // আপনার ড্যাশবোর্ড থেকে প্রাপ্ত সঠিক আইডি
-        emailjs.send('service_oy5veii', 'template_ktfmdqc', templateParams)
-            .then(function(response) {
-                alert('ধন্যবাদ! আপনার রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।');
-                appointmentForm.reset();
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, function(error) {
-                console.error('FAILED...', error);
-                alert('দুঃখিত! কিছু ভুল হয়েছে। আবার চেষ্টা করুন।');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            });
+            const templateParams = {
+                from_name:    document.getElementById('name').value,
+                phone_number: document.getElementById('phone').value,
+                email:        document.getElementById('email').value || 'ইমেইল দেওয়া হয়নি',
+                date:         document.getElementById('date').value || 'তারিখ উল্লেখ নেই',
+                service_type: document.getElementById('service').value,
+                message:      document.getElementById('message').value
+            };
+
+            emailjs.send('service_oy5veii', 'template_33jcj48', templateParams)
+                .then(function () {
+                    successMsg.style.display = 'block';
+                    successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    form.reset();
+                    submitBtn.innerHTML = 'রিকুয়েস্ট পাঠান <i class="fas fa-paper-plane"></i>';
+                    submitBtn.disabled = false;
+                })
+                .catch(function (error) {
+                    console.error('EmailJS Error:', error);
+                    errorMsg.style.display = 'block';
+                    errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    submitBtn.innerHTML = 'রিকুয়েস্ট পাঠান <i class="fas fa-paper-plane"></i>';
+                    submitBtn.disabled = false;
+                });
+        });
     });
-});
-    </script>
+</script>
+
 </body>
 </html>
