@@ -17,7 +17,6 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/saad/manifest.json">
     <meta name="theme-color" content="#1a4d4a">
-    <link rel="manifest" href="/saad/manifest.json">
 
     <style>
         * {
@@ -1344,7 +1343,7 @@
         // Service Worker রেজিস্টার
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+                navigator.serviceWorker.register('/saad/sw.js').catch(err => console.log('SW error:', err));
             });
         }
 
