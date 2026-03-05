@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/saad/manifest.json">
     <meta name="theme-color" content="#0f3d3a">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Hind Siliguri','Noto Serif Bengali',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -657,6 +657,7 @@
     document.getElementById('editPatientBtn').addEventListener('click',()=>{if(CP){const d=CP.data;const p=new URLSearchParams({edit:CP.id,name:d.name,phone:d.phone,address:d.address||'',age:d.age||'',gender:d.gender||''});window.location.href=`index.html?${p.toString()}`;}});
     document.getElementById('discountBtn').addEventListener('click',()=>{if(aT.some(t=>t.due>0)){popSelect();document.getElementById('discountModal').classList.add('active');}else sM('কোনো বকেয়া নেই','warning');});
 
-   </script>
+    auth.onAuthStateChanged(user=>{if(!user)window.location.href='log.html';else{const pid=gPId();if(pid)loadProfile(pid);else sM('রোগী আইডি পাওয়া যায়নি','error');}});
+    </script>
 </body>
 </html>
