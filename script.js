@@ -1272,6 +1272,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     document.body.appendChild(installButton);
 });
 
+
 // ওয়েবসাইট লোড হওয়ার 1 সেকেন্ড পর পপ-আপ দেখাবে
 window.onload = function() {
     setTimeout(function() {
